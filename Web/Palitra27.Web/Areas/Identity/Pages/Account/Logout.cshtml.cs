@@ -24,22 +24,20 @@
             this.logger = logger;
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
+            string returnUrl = "/Home/Index";
+            await this.signInManager.SignOutAsync();
+            this.logger.LogInformation("User logged out.");
+            return this.Redirect(returnUrl);
         }
 
         public async Task<IActionResult> OnPost(string returnUrl = null)
         {
             await this.signInManager.SignOutAsync();
             this.logger.LogInformation("User logged out.");
-            if (returnUrl != null)
-            {
-                return this.LocalRedirect(returnUrl);
-            }
-            else
-            {
-                return this.Page();
-            }
+            returnUrl = "/Home/Index";
+            return this.Redirect(returnUrl);
         }
     }
 }

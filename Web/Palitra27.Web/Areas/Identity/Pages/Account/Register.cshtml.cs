@@ -50,7 +50,7 @@
             returnUrl = returnUrl ?? this.Url.Content("~/");
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Email, Email = this.Input.Email };
+                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
@@ -68,7 +68,6 @@
                         "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    await this.signInManager.SignInAsync(user, isPersistent: false);
                     return this.LocalRedirect(returnUrl);
                 }
 
@@ -85,9 +84,10 @@
         public class InputModel
         {
             [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Display(Name = "Username")]
+            public string Username { get; set; }
+
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -99,6 +99,11 @@
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
         }
     }
 }
