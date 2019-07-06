@@ -2,17 +2,6 @@
 {
     using System.Reflection;
 
-    using Palitra27.Data;
-    using Palitra27.Data.Common;
-    using Palitra27.Data.Common.Repositories;
-    using Palitra27.Data.Models;
-    using Palitra27.Data.Repositories;
-    using Palitra27.Data.Seeding;
-    using Palitra27.Services.Data;
-    using Palitra27.Services.Mapping;
-    using Palitra27.Services.Messaging;
-    using Palitra27.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -24,6 +13,16 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Palitra27.Data;
+    using Palitra27.Data.Common;
+    using Palitra27.Data.Common.Repositories;
+    using Palitra27.Data.Models;
+    using Palitra27.Data.Repositories;
+    using Palitra27.Data.Seeding;
+    using Palitra27.Services.Data;
+    using Palitra27.Services.Mapping;
+    using Palitra27.Services.Messaging;
+    using Palitra27.Web.ViewModels;
 
     public class Startup
     {
