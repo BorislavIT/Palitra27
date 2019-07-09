@@ -2,9 +2,8 @@
 {
     using System.Linq;
 
-    using Palitra27.Data.Common.Models;
-
     using Microsoft.EntityFrameworkCore;
+    using Palitra27.Data.Common.Models;
 
     internal static class EntityIndexesConfiguration
     {

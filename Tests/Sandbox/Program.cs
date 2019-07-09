@@ -4,6 +4,13 @@
     using System.Diagnostics;
     using System.IO;
 
+    using CommandLine;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Identity.UI.Services;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Palitra27.Data;
     using Palitra27.Data.Common;
     using Palitra27.Data.Common.Repositories;
@@ -12,15 +19,6 @@
     using Palitra27.Data.Seeding;
     using Palitra27.Services.Data;
     using Palitra27.Services.Messaging;
-
-    using CommandLine;
-
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Identity.UI.Services;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
 
     public static class Program
     {

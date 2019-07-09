@@ -29,7 +29,6 @@
                 {
                     throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
                 }
-
             }
         }
     }

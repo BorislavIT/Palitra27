@@ -3,9 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
-    using Palitra27.Data.Common;
-
     using Microsoft.EntityFrameworkCore;
+    using Palitra27.Data.Common;
 
     public class DbQueryRunner : IDbQueryRunner
     {

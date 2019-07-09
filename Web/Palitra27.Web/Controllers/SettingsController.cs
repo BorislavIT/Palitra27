@@ -4,12 +4,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Mvc;
     using Palitra27.Data.Common.Repositories;
     using Palitra27.Data.Models;
     using Palitra27.Services.Mapping;
     using Palitra27.Web.ViewModels.Settings;
-
-    using Microsoft.AspNetCore.Mvc;
 
     public class SettingsController : BaseController
     {

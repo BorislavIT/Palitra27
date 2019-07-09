@@ -1,9 +1,8 @@
 ﻿namespace Palitra27.Web.Areas.Administration.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
     using Palitra27.Services.Data;
     using Palitra27.Web.Areas.Administration.ViewModels.Dashboard;
-
-    using Microsoft.AspNetCore.Mvc;
 
     public class DashboardController : AdministrationController
     {

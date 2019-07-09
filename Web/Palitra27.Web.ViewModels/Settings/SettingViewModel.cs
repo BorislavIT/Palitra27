@@ -1,9 +1,8 @@
 ﻿namespace Palitra27.Web.ViewModels.Settings
 {
+    using AutoMapper;
     using Palitra27.Data.Models;
     using Palitra27.Services.Mapping;
-
-    using AutoMapper;
 
     public class SettingViewModel : IMapFrom<Setting>, IHaveCustomMappings
     {

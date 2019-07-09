@@ -6,11 +6,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Palitra27.Data.Common.Models;
-    using Palitra27.Data.Models;
-
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
+    using Palitra27.Data.Common.Models;
+    using Palitra27.Data.Models;
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
@@ -25,6 +24,10 @@
         }
 
         public DbSet<Setting> Settings { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<Product> Products { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 

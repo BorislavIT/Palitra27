@@ -4,12 +4,11 @@
     using System.ComponentModel.DataAnnotations;
     using System.Threading.Tasks;
 
-    using Palitra27.Data.Models;
-
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using Palitra27.Data.Models;
 
 #pragma warning disable SA1649 // File name should match first type name
     public class DeletePersonalDataModel : PageModel

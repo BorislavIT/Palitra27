@@ -2,10 +2,9 @@
 {
     using System.Security.Claims;
 
-    using Palitra27.Data.Models;
-
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Palitra27.Data.Models;
 
     public class ApplicationRoleStore : RoleStore<
         ApplicationRole,

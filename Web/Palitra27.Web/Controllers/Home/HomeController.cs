@@ -1,6 +1,8 @@
 ﻿namespace Palitra27.Web.Controllers.Home
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Palitra27.Common;
 
     public class HomeController : BaseController
     {

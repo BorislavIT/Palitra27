@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\Palitra27.Data.Common\Palitra27.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\Palitra27.Data.Models\Palitra27.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\Palitra27.Data\Palitra27.Data.csproj" />
+    <ProjectReference Include="..\..\Web\Palitra27.Web.ViewModels\Palitra27.Web.ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

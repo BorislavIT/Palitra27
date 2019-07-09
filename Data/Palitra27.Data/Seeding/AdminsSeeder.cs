@@ -11,22 +11,20 @@
 
     internal class AdminsSeeder : ISeeder
     {
-        private readonly UserManager<ApplicationUser> userManager;
-
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
-        { 
+        {
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             await SeedAdminAsync(dbContext, userManager);
         }
 
         private static async Task SeedAdminAsync(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
-            var admin = await userManager.FindByNameAsync("admin");
+            var admin = await userManager.FindByNameAsync(GlobalConstants.AdminUsername);
             if (admin == null)
             {
                 var user = new ApplicationUser
                 {
-                    UserName = "admin",
+                    UserName = GlobalConstants.AdminUsername,
                     NormalizedUserName = "ADMIN",
                     Email = "admin@email.com",
                     NormalizedEmail = "ADMIN@EMAIL.COM",
