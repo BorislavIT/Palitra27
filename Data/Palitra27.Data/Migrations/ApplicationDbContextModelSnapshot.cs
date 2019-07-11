@@ -219,13 +219,25 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("CategoryId");
 
+                    b.Property<DateTime>("CreatedOn");
+
+                    b.Property<DateTime?>("DeletedOn");
+
                     b.Property<string>("Image");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("ModifiedOn");
+
+                    b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.ToTable("Products");
                 });

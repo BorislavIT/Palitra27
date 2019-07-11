@@ -10,13 +10,12 @@
 .no-padding {
   padding: 0; }
 
-footer {
-	background-color: #222222;
-}
-
 
 .padding-top-10{
     padding-top:10px;
+}
+.searchBtn{
+    color:white;
 }
 
 .section_gap {
