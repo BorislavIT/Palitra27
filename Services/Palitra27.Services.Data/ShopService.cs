@@ -20,17 +20,23 @@
 
         public IQueryable<Product> Find(ShopViewModel model)
         {
+            var brand = this.context.ProductsBrands.FirstOrDefault(b => b.Name == model.Brand);
+
             IQueryable<Product> products;
+
 
             if (model.PriceUpper == 0)
             {
                 products = this.context.Products
-                    .Where(p => p.Price >= model.PriceLower);
+                    .Where(p => p.Price >= model.PriceLower)
+                    .Where(x => x.Brand == brand);
                 return products;
             }
 
             products = this.context.Products
-                .Where(p => p.Price >= model.PriceLower && p.Price <= model.PriceUpper);
+                .Where(p => p.Price >= model.PriceLower && p.Price <= model.PriceUpper)
+                .Where(x => x.Brand == brand);
+
             return products;
         }
     }

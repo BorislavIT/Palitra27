@@ -1,6 +1,6 @@
-﻿@using Palitra27.Web.ViewModels.Products
+﻿@using Palitra27.Web.ViewModels.Shop;
 
-@model ProductListViewModel
+@model ShopFiltersViewModel
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -29,28 +29,31 @@
                 <div class="sidebar-categories">
                     <div class="head">Browse Categories</div>
                     <ul class="main-categories">
-                        <li class="main-nav-list">
-                            <a data-toggle="collapse" href="#meatFish" aria-expanded="false" aria-controls="meatFish">
-                                <span class="lnr lnr-arrow-right"></span>Thinners<span class="number">(53)</span>
-                            </a>
-                            <ul class="collapse" id="meatFish" data-toggle="collapse" aria-expanded="false" aria-controls="meatFish">
-                                <li class="main-nav-list child filter-list"><input class="pixel-radio" type="radio" name="Category" value="Thinners-511">511<span class="number">(13)</span></li>
-                                <li class="main-nav-list child filter-list"><input  class="pixel-radio" type="radio" name="Category" value="Thinners-522">522<span class="number">(13)</span></li>
-                                <li class="main-nav-list child filter-list"><input class="pixel-radio" type="radio" name="Category" value="Thinners-533">533<span class="number">(13)</span></li>
-                            </ul>
-                        </li>
+                        @foreach (var item in Model.ProductBrandCategoryViewModel.Categories)
+                        {
+                           	<li class="main-nav-list"><a data-toggle="collapse" href="#@item.Name" aria-expanded="false" aria-controls="@item.Name"><span
+								 class="lnr lnr-arrow-right"></span>@item.Name<span class="number">(53)</span></a>
+							<ul class="collapse" id="@item.Name" data-toggle="collapse" aria-expanded="false" aria-controls="@item.Name">
+								<li class="main-nav-list child"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name">511<span class="number">(13)</span></li>
+								<li class="main-nav-list child"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name">522<span class="number">(09)</span></li>
+								<li class="main-nav-list child"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name">533<span class="number">(17)</span></li>
+								<li class="main-nav-list child"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name">544<span class="number">(01)</span></li>
+								<li class="main-nav-list child"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name">555<span class="number">(11)</span></li>
+							</ul>
+						</li>
+                        }
                     </ul>
                 </div>
                 <div class="sidebar-filter mt-50">
                     <div class="top-filter-head">Product Filters</div>
                     <div class="common-filter">
                         <div class="head">Brands</div>
-                        <ul>
-                            <li class="filter-list"><input class="pixel-radio" type="radio" id="apple" name="Brand" value="HBBody"><label for="HBBody">HBBody</label></li>
-                            <li class="filter-list"><input class="pixel-radio" type="radio" id="apple" name="Brand" value="NationalPaints"><label for="NationalPaints">NationalPaints</label></li>
-                            <li class="filter-list"><input class="pixel-radio" type="radio" id="apple" name="Brand" value="Debeer"><label for="Debeer">Debeer</label></li>
-                            <li class="filter-list"><input class="pixel-radio" type="radio" id="apple" name="Brand" value="Palitra"><label for="Palitra">Palitra</label></li>
-                        </ul>
+                        @foreach (var item in Model.ProductBrandCategoryViewModel.Brands)
+                        {
+                            <ul>
+                                <li class="filter-list"><input class="pixel-radio" type="radio" id="@item.Name" name="Brand" value="@item.Name"><label for="HBBody">@item.Name</label></li>
+                            </ul>
+                        }
                     </div>
                     <div>
                         <div class="head">Price</div>
@@ -109,43 +112,43 @@
                 <!-- Start Best Seller -->
                 <section class="lattest-product-area pb-40 category-list">
                     <div class="row">
-                        @foreach (var product in Model.Products)
+                        @foreach (var product in Model.Products.Products)
                         {
-                        <!-- single product -->
-                        <div class="col-lg-4 col-md-6">
-                            <div class="single-product">
-                                <img class="img-fluidd" src="@product.Image" alt="">
-                                <div class="product-details">
-                                    <h6>
-                                        @product.ProductName
-                                    </h6>
-                                    <div class="price">
-                                        <h6>@product.Price</h6>
-                                        <h6 class="l-through">$210.00</h6>
-                                    </div>
-                                    <div class="prd-bottom">
+                            <!-- single product -->
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-product">
+                                    <img class="img-fluidd" src="@product.Image" alt="">
+                                    <div class="product-details">
+                                        <h6>
+                                            @product.ProductName
+                                        </h6>
+                                        <div class="price">
+                                            <h6>@product.Price</h6>
+                                            <h6 class="l-through">$210.00</h6>
+                                        </div>
+                                        <div class="prd-bottom">
 
-                                        <a href="" class="social-info">
-                                            <span class="ti-bag"></span>
-                                            <p class="hover-text">add to bag</p>
-                                        </a>
-                                        <a href="" class="social-info">
-                                            <span class="lnr lnr-heart"></span>
-                                            <p class="hover-text">Wishlist</p>
-                                        </a>
-                                        <a href="" class="social-info">
-                                            <span class="lnr lnr-sync"></span>
-                                            <p class="hover-text">compare</p>
-                                        </a>
-                                        <a href="" class="social-info">
-                                            <span class="lnr lnr-move"></span>
-                                            <p class="hover-text">view more</p>
-                                        </a>
+                                            <a href="" class="social-info">
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text">add to bag</p>
+                                            </a>
+                                            <a href="" class="social-info">
+                                                <span class="lnr lnr-heart"></span>
+                                                <p class="hover-text">Wishlist</p>
+                                            </a>
+                                            <a href="" class="social-info">
+                                                <span class="lnr lnr-sync"></span>
+                                                <p class="hover-text">compare</p>
+                                            </a>
+                                            <a href="" class="social-info">
+                                                <span class="lnr lnr-move"></span>
+                                                <p class="hover-text">view more</p>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- single product -->
+                            <!-- single product -->
                         }
                     </div>
                 </section>
@@ -174,4 +177,3 @@
         </div>
     </div>
 </form>
-

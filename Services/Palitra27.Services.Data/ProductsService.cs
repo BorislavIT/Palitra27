@@ -15,20 +15,25 @@
             this.context = context;
         }
 
-        public IQueryable<Product> Brands()
+        public IQueryable<ProductBrand> FindAllBrands()
         {
-            return this.context.Products;
+            var brands = this.context.ProductsBrands;
+
+            return brands;
         }
 
-        public IQueryable<Product> Categories()
+        public IQueryable<Category> FindAllCategories()
         {
-            return this.context.Products;
+            var categories = this.context.Categories;
+
+            return categories;
         }
 
         public void Create(CreateProductBindingModel model)
         {
+            var brand = this.context.ProductsBrands.FirstOrDefault(c => c.Name == model.Brand);
             var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
-            Product product = new Product() { Category = category, Image = model.Image, Price = model.Price, Name = model.ProductName };
+            Product product = new Product() { Category = category, Image = model.Image, Price = model.Price, Name = model.ProductName, Brand = brand };
             this.context.Products.Add(product);
             this.context.SaveChanges();
         }

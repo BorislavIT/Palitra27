@@ -1,5 +1,7 @@
 ﻿namespace Palitra27.Web.Controllers.Admins
 {
+    using System.Linq;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Common;
@@ -18,7 +20,12 @@
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
         public IActionResult Create()
         {
-            return this.View();
+            var categories = this.productsService.FindAllCategories().ToList();
+            var brands = this.productsService.FindAllBrands().ToList();
+
+            var productCategoryBrandViewModel = new ProductBrandCategoryViewModel { Brands = brands, Categories = categories };
+
+            return this.View(productCategoryBrandViewModel);
         }
 
         [HttpPost]

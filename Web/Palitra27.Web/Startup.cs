@@ -2,6 +2,7 @@
 {
     using System.Reflection;
 
+    using Microsoft.ApplicationInsights;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -127,7 +128,7 @@
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/NotFound");
                 app.UseHsts();
             }
 
@@ -135,6 +136,7 @@
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseAuthentication();
+            app.UseStatusCodePagesWithRedirects("/Error/NotFound");
 
             app.UseMvc(routes =>
             {

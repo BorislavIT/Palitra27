@@ -10,6 +10,8 @@
 
     public class CreateProductBindingModel : IMapTo<Product>
     {
+        public string Brand { get; set; }
+
         public string ProductName { get; set; }
 
         public string Category { get; set; }
