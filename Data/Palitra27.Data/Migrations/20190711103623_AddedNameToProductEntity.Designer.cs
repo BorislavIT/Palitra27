@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Palitra27.Data;
 
 namespace Palitra27.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190711103623_AddedNameToProductEntity")]
+    partial class AddedNameToProductEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,19 +219,9 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BrandId");
-
                     b.Property<string>("CategoryId");
 
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
                     b.Property<string>("Image");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name");
 
@@ -237,25 +229,9 @@ namespace Palitra27.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
-
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("IsDeleted");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Palitra27.Data.Models.ProductBrand", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ProductsBrands");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Setting", b =>
@@ -330,10 +306,6 @@ namespace Palitra27.Data.Migrations
 
             modelBuilder.Entity("Palitra27.Data.Models.Product", b =>
                 {
-                    b.HasOne("Palitra27.Data.Models.ProductBrand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId");
-
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");

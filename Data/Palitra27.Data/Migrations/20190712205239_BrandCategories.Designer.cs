@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Palitra27.Data;
 
 namespace Palitra27.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190712205239_BrandCategories")]
+    partial class BrandCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,7 +257,7 @@ namespace Palitra27.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductsBrands");
+                    b.ToTable("ProductBrand");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Setting", b =>
