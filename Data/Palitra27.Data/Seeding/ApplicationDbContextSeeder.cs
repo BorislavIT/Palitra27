@@ -30,6 +30,7 @@
                               new AdminsSeeder(),
                               new CategoriesSeeder(),
                               new ProductBrandsSeeder(),
+                              new ProductsSeeder(),
                           };
 
             foreach (var seeder in seeders)

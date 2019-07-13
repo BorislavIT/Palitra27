@@ -13,5 +13,11 @@
         public decimal PriceLower { get; set; }
 
         public decimal PriceUpper { get; set; }
+
+        public string Sorting { get; set; }
+
+        public int Show { get; set; }
+
+        public int Page { get; set; }
     }
 }

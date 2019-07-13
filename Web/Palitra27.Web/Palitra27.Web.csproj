@@ -17,6 +17,11 @@
   <ItemGroup>
     <AdditionalFiles Include="..\..\stylecop.json" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\js\vendor\bootstrap.min.js" />
+    <None Include="wwwroot\js\vendor\jquery-2.2.4.min.js" />
+    <None Include="wwwroot\js\vendor\popper.js" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.10.0" />

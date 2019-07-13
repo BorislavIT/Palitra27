@@ -28,6 +28,13 @@
 
         public IActionResult Index()
         {
+            int show = 12;
+            int page = 1;
+            this.ViewBag.CurrentPage = page;
+            var paginatedProducts = this.repository.All().ToList();
+            this.ViewBag.ProductsToShow = show;
+            this.Pagination(paginatedProducts, show);
+
             var products = this.repository.All().To<ProductViewModel>().ToList();
             var productsListViewModel = new ProductListViewModel { Products = products };
 
@@ -41,9 +48,15 @@
         }
 
         [HttpPost]
-        public IActionResult Index(ProductCategoryBrandViewModel model)
+        public IActionResult Index(ShopViewModel model)
         {
-            var products = this.repository.All().Where(p => p.Brand.Name == model.Brand && p.Category.Name == model.Category).To<ProductViewModel>().ToList();
+            var products = this.shopService.Find(model).To<ProductViewModel>().ToList();
+            var paginatedProducts = this.shopService.Find(model).ToList();
+            this.ViewBag.skipProducts = model.Page * model.Show;
+            this.Pagination(paginatedProducts, model.Show);
+            this.ViewBag.CurrentPage = model.Page;
+            this.ViewBag.Show = model.Show;
+            this.ViewBag.Sort = model.Sorting;
 
             var productsListViewModel = new ProductListViewModel { Products = products };
 
@@ -54,6 +67,42 @@
             var shopFiltersViewModel = new ShopFiltersViewModel { ProductBrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
 
             return this.View(shopFiltersViewModel);
+        }
+
+        [NonAction]
+        public void Pagination(List<Product> products, int show)
+        {
+            var productsCount = products.Count;
+
+            var pages = 1;
+            var productsToShow = show;
+            var lastPageProducts = 0;
+
+            if (productsCount <= productsToShow)
+            {
+                this.ViewBag.ProductsToShow = productsToShow;
+                this.ViewBag.Pages = pages;
+                this.ViewBag.LastPageProducts = lastPageProducts;
+            }
+            else if (productsCount > productsToShow)
+            {
+                if (productsCount % productsToShow == 0)
+                {
+                    pages = productsCount / productsToShow;
+                    this.ViewBag.ProductsToShow = productsToShow;
+                    this.ViewBag.Pages = pages;
+                    this.ViewBag.LastPageProducts = lastPageProducts;
+                }
+                else
+                {
+                    pages = (int)(productsCount / productsToShow);
+                    pages++;
+                    lastPageProducts = productsCount % productsToShow;
+                    this.ViewBag.ProductsToShow = productsToShow;
+                    this.ViewBag.Pages = pages;
+                    this.ViewBag.LastPageProducts = lastPageProducts;
+                }
+            }
         }
     }
 }

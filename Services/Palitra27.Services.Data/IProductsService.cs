@@ -9,6 +9,8 @@
     {
         void Create(CreateProductBindingModel model);
 
+        Product FindProductById(string id);
+
         IQueryable<Category> FindAllCategories();
 
         IQueryable<ProductBrand> FindAllBrands();

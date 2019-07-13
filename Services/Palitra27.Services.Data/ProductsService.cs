@@ -37,5 +37,11 @@
             this.context.Products.Add(product);
             this.context.SaveChanges();
         }
+
+        public Product FindProductById(string id)
+        {
+            var product = this.context.Products.FirstOrDefault(p => p.Id == id);
+            return product;
+        }
     }
 }

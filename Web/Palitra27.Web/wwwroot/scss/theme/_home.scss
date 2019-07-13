@@ -52,7 +52,7 @@
 	}
 	.f-icon {
 		margin-bottom: 20px;
-		img {
+		~/img {
 			@include transition();
 		}
 	}
@@ -65,7 +65,7 @@
 	}
 	&:hover {
 		.f-icon {
-			img {
+			~/img {
 				opacity: .5;
 			}
 		}
@@ -202,7 +202,7 @@
 }
 .single-product {
 	margin-bottom: 50px;
-	img {
+	~/img {
 		margin-bottom: 20px;
 		width: 100%;
 	}
@@ -302,7 +302,7 @@
 	background: #f9f9ff;
 	.exclusive-left {
 		position: realtive;
-		background: url(../img/exclusive.jpg) center no-repeat;
+		background: url(../~/img/exclusive.jpg) center no-repeat;
 		background-size: cover;
 		text-align: center;
 		padding: 275px 0;
@@ -411,7 +411,7 @@
 			.single-exclusive-slider {
 				@media (max-width: 991px) {
 					padding-bottom: 80px;
-					img {
+					~/img {
 						max-width: 450px;
 						margin: 0 auto;
 					}
@@ -455,11 +455,11 @@
 
 //--------- start brand Area -------------//
 
-.single-img {
+.single-~/img {
 	@media (max-width: 767px) {
 		min-width: 50%;
 	}
-	img {
+	~/img {
 		opacity: .2;
 		@include transition();
 		@media (max-width: 800px) {
@@ -641,7 +641,7 @@
 	margin-top: 30px;
 	.single-comment {
 		.user-details {
-			img {
+			~/img {
 				width: 70px;
 				height: 70px;
 				border-radius: 50%;
@@ -725,14 +725,14 @@
 				background-size: cover;
 				margin-left: 10px;
 				&:nth-child(1) {
-					background: url(../img/ob1.jpg);
+					background: url(../~/img/ob1.jpg);
 					margin-left: 0;
 				}
 				&:nth-child(2) {
-					background: url(../img/ob2.jpg);
+					background: url(../~/img/ob2.jpg);
 				}
 				&:nth-child(3) {
-					background: url(../img/ob3.jpg);
+					background: url(../~/img/ob3.jpg);
 				}
 				&.active {
 					box-shadow: 2.828px 2.828px 15px 0px rgba(0, 0, 0, 0.1);
@@ -759,14 +759,14 @@
 			.owl-dots {
 				.owl-dot {
 					&:nth-child(1) {
-						background: url(../img/organic-food/ob1.jpg);
+						background: url(../~/img/organic-food/ob1.jpg);
 						margin-left: 0;
 					}
 					&:nth-child(2) {
-						background: url(../img/organic-food/ob2.jpg);
+						background: url(../~/img/organic-food/ob2.jpg);
 					}
 					&:nth-child(3) {
-						background: url(../img/organic-food/ob3.jpg);
+						background: url(../~/img/organic-food/ob3.jpg);
 					}
 					&.active {
 						&:after {
@@ -995,7 +995,7 @@ label {
 	padding: 15px 0;
 	.product-item {
 		margin-left: 15px;
-		img {
+		~/img {
 			border-radius: 3px;
 		}
 		h6 {
