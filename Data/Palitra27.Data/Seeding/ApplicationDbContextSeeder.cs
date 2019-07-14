@@ -31,6 +31,7 @@
                               new CategoriesSeeder(),
                               new ProductBrandsSeeder(),
                               new ProductsSeeder(),
+                              new ReviewsSeeder(),
                           };
 
             foreach (var seeder in seeders)

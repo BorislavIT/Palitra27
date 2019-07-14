@@ -77,7 +77,7 @@
 .f_p_item{
 	text-align: center;
 	margin-bottom: 35px;
-	.f_p_~/img{
+	.f_p_img{
 		position: relative;
 		overflow: hidden;
 		.p_icon{
@@ -120,7 +120,7 @@
 		color: $text-color;
 	}
 	&:hover{
-		.f_p_~/img{
+		.f_p_img{
 			.p_icon{
 				right: 15px;
 			}
@@ -901,7 +901,7 @@
 					.media{
 						.d-flex{
 							padding-right: 30px;
-							~/img{
+							img{
 								border: 1px solid #eeeeee;
 								border-radius: 3px;
 							}
@@ -1432,7 +1432,7 @@
 				left: 5px;
 				top: 8px;
 			}
-			~/img{
+			img{
 				padding-left: 60px;
 			}
 		}
@@ -1575,10 +1575,10 @@
 /* Login form Area css
 ============================================================================================ */
 .login_box_area{
-	.login_box_~/img{
+	.login_box_img{
 		margin-right: -30px;
 		position: relative;
-		~/img{
+		img{
 			width: 100%;
 		}
 		&:before{
@@ -1746,7 +1746,7 @@
     position: relative;
 	margin-top: 10px;
 	margin-bottom: 15px;
-	~/img{
+	img{
 		position: absolute;
 		right: 40px;
 		top: 0px;

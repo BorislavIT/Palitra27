@@ -17,12 +17,12 @@
                 return;
             }
 
-            var productBrandDebeer = new ProductBrand() {Name = "Debeer" };
-            var productBrandHBBody = new ProductBrand() {Name = "HBBody" };
-            var productBrandNationalPaints = new ProductBrand() {Name = "NationalPaints" };
-            var productBrandPalitra = new ProductBrand() {Name = "Palitra" };
+            var productBrandDebeer = new ProductBrand() { Name = "Debeer" };
+            var productBrandHBBody = new ProductBrand() { Name = "HBBody" };
+            var productBrandNationalPaints = new ProductBrand() { Name = "NationalPaints" };
+            var productBrandPalitra = new ProductBrand() { Name = "Palitra" };
 
-            var allProductBrands = new List<ProductBrand>() { productBrandDebeer, productBrandHBBody, productBrandNationalPaints, productBrandPalitra};
+            var allProductBrands = new List<ProductBrand>() { productBrandDebeer, productBrandHBBody, productBrandNationalPaints, productBrandPalitra };
 
             await dbContext.AddRangeAsync(allProductBrands);
         }

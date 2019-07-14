@@ -15,7 +15,7 @@ namespace Palitra27.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -225,15 +225,27 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<DateTime?>("DeletedOn");
 
+                    b.Property<decimal>("Depth");
+
+                    b.Property<string>("Description");
+
+                    b.Property<decimal>("Height");
+
                     b.Property<string>("Image");
 
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("MiniDescription");
 
                     b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
+
+                    b.Property<decimal>("Weight");
+
+                    b.Property<decimal>("Width");
 
                     b.HasKey("Id");
 
@@ -256,6 +268,30 @@ namespace Palitra27.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductsBrands");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateOfCreation");
+
+                    b.Property<string>("Message");
+
+                    b.Property<string>("ProductId");
+
+                    b.Property<int>("Stars");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Setting", b =>
@@ -337,6 +373,17 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.Product", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

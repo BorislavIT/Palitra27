@@ -22,8 +22,8 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
-                <div class="login_box_~/img">
-                    <~/img class="~/img-fluid" src="~/img/login.jpg" alt="">
+                <div class="login_box_img">
+                    <img class="img-fluid" src="~/img/login.jpg" alt="">
                     <div class="hover">
                         <h4>New to our website?</h4>
                         <p>There are advances being made in science and technology everyday, and a good example of this is the</p>
@@ -33,8 +33,9 @@
             </div>
             <div class="col-lg-6">
                 <div class="login_form_inner">
-                    <h3>Create a new account.</h3>
-                    <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <h3>Register Account</h3>
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form class="row login_form" method="post" id="account">
                         <hr />
                         <div class="col-md-12 form-group">
                             <label asp-for="Input.Username"></label>
@@ -65,3 +66,4 @@
         </div>
     </div>
 </section>
+

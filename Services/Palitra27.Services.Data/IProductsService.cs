@@ -14,5 +14,13 @@
         IQueryable<Category> FindAllCategories();
 
         IQueryable<ProductBrand> FindAllBrands();
+
+        Product EditProduct(ProductEditBindingModel model);
+
+        Review AddReview(AddReviewBindingModel model, string userId);
+
+        Product EditDescription(EditDescriptionBindingModel model);
+
+        Product EditSpecifications(EditSpecificationsBindingModel model);
     }
 }

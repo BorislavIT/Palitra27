@@ -27,6 +27,8 @@
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Review> Reviews { get; set; }
+
         public DbSet<Product> Products { get; set; }
 
         public DbSet<ProductBrand> ProductsBrands { get; set; }
