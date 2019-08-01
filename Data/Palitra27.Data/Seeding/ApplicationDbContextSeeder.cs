@@ -32,6 +32,7 @@
                               new ProductBrandsSeeder(),
                               new ProductsSeeder(),
                               new ReviewsSeeder(),
+                              new CountriesSeeder(),
                           };
 
             foreach (var seeder in seeders)

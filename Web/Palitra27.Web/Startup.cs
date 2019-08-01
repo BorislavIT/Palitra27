@@ -1,7 +1,10 @@
 ﻿namespace Palitra27.Web
 {
+    using System;
+    using System.IO;
     using System.Reflection;
 
+    using AutoMapper;
     using Microsoft.ApplicationInsights;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -13,6 +16,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
     using Palitra27.Data;
     using Palitra27.Data.Common;
@@ -23,6 +27,8 @@
     using Palitra27.Services.Data;
     using Palitra27.Services.Mapping;
     using Palitra27.Services.Messaging;
+    using Palitra27.Services.Messaging.SendGrid;
+    using Palitra27.Web.MappingConfigurations;
     using Palitra27.Web.ViewModels;
 
     public class Startup
@@ -35,6 +41,7 @@
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        [Obsolete]
         public void ConfigureServices(IServiceCollection services)
         {
             // Framework services
@@ -75,14 +82,12 @@
                     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 });
 
-            services
-                .Configure<CookiePolicyOptions>(options =>
-                {
-                    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                    options.CheckConsentNeeded = context => true;
-                    options.MinimumSameSitePolicy = SameSiteMode.Lax;
-                    options.ConsentCookie.Name = ".AspNetCore.ConsentCookie";
-                });
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => false;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             services.AddSingleton(this.configuration);
 
@@ -95,12 +100,38 @@
             services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<ApplicationProfile>();
+            });
+
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<IShopService, ShopService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IBrandService, BrandService>();
+            services.AddTransient<IFavouritesService, FavouritesService>();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProductImages")));
+
+            services.Configure<AuthMessageSenderOptions>(configuration);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+            services.AddSession(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.IdleTimeout = new TimeSpan(0, 4, 0, 0);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -137,6 +168,7 @@
             app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseStatusCodePagesWithRedirects("/Error/NotFound");
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

@@ -6,11 +6,10 @@
     using System.Threading.Tasks;
 
     using Palitra27.Data.Models;
+    using Palitra27.Web.ViewModels.Categories;
 
     public interface ICategoryService
     {
-        Category GetCategoryByName(string name);
-
-        Category GetCategoryById(string id);
+        Category CreateCategory(CreateCategoryBindingModel model);
     }
 }

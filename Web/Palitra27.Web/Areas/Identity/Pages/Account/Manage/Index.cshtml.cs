@@ -10,6 +10,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Palitra27.Data.Models;
+    using Palitra27.Services.Data;
 
 #pragma warning disable SA1649 // File name should match first type name
     public class IndexModel : PageModel
@@ -18,15 +19,18 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IEmailSender emailSender;
+        private readonly IUserService userService;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.emailSender = emailSender;
+            this.userService = userService;
         }
 
         public string Username { get; set; }
@@ -57,6 +61,8 @@
             {
                 Email = email,
                 PhoneNumber = phoneNumber,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
             };
 
             this.IsEmailConfirmed = await this.userManager.IsEmailConfirmedAsync(user);
@@ -97,6 +103,16 @@
                     var userId = await this.userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
+            }
+
+            if (Input.FirstName != user.FirstName)
+            {
+                userService.EditFirstName(user, Input.FirstName);
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                userService.EditLastName(user, Input.LastName);
             }
 
             await this.signInManager.RefreshSignInAsync(user);
@@ -143,6 +159,10 @@
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            public string FirstName { get; set; }
+
+            public string LastName { get; set; }
         }
     }
 }

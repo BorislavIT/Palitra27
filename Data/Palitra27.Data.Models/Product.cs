@@ -8,19 +8,19 @@
     {
         public string BrandId { get; set; }
 
-        public ProductBrand Brand { get; set; }
+        public virtual ProductBrand Brand { get; set; }
 
         public string Name { get; set; }
 
         public string CategoryId { get; set; }
 
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
         public decimal Price { get; set; }
 
         public string Image { get; set; }
 
-        public List<Review> Reviews { get; set; } = new List<Review>();
+        public virtual List<Review> Reviews { get; set; } = new List<Review>();
 
         public string MiniDescription { get; set; } = "This product has no Description";
 
@@ -33,5 +33,7 @@
         public decimal Depth { get; set; }
 
         public decimal Weight { get; set; }
+
+        public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
     }
 }

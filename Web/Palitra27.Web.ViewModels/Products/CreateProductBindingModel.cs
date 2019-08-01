@@ -5,10 +5,11 @@
     using System.ComponentModel.DataAnnotations;
     using System.Text;
 
+    using Microsoft.AspNetCore.Http;
     using Palitra27.Data.Models;
     using Palitra27.Services.Mapping;
 
-    public class CreateProductBindingModel : IMapTo<Product>
+    public class CreateProductBindingModel
     {
         public string Brand { get; set; }
 
@@ -18,6 +19,6 @@
 
         public decimal Price { get; set; }
 
-        public string Image { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

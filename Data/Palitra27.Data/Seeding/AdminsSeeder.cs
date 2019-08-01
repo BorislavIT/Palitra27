@@ -22,16 +22,28 @@
             var admin = await userManager.FindByNameAsync(GlobalConstants.AdminUsername);
             if (admin == null)
             {
+                string id = Guid.NewGuid().ToString();
+                var shoppingCart = new ShoppingCart() { Id = id };
+                var favouriteList = new FavouriteList() { Id = id };
                 var user = new ApplicationUser
                 {
+                    Id = id,
                     UserName = GlobalConstants.AdminUsername,
                     NormalizedUserName = "ADMIN",
                     Email = "admin@email.com",
                     NormalizedEmail = "ADMIN@EMAIL.COM",
+                    ShoppingCart = shoppingCart,
+                    ShoppingCartId = id,
+                    FavouriteList = favouriteList,
+                    FavouriteListId = favouriteList.Id,
                 };
 
-                var password = "123321";
+                favouriteList.User = user;
+                favouriteList.UserId = user.Id;
 
+                var password = "123321";
+                await dbContext.ShoppingCarts.AddAsync(shoppingCart);
+                await dbContext.FavouriteLists.AddAsync(favouriteList);
                 var result = await userManager.CreateAsync(user, password);
                 await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
 

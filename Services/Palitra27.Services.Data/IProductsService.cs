@@ -1,13 +1,17 @@
 ﻿namespace Palitra27.Services.Data
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Palitra27.Data.Models;
     using Palitra27.Web.ViewModels.Products;
+    using Microsoft.AspNetCore.Http;
 
     public interface IProductsService
     {
-        void Create(CreateProductBindingModel model);
+        Product Create(CreateProductBindingModel model);
+
+        Product Create(CreateProductBindingModel model, IFormFile Image);
 
         Product FindProductById(string id);
 
@@ -22,5 +26,9 @@
         Product EditDescription(EditDescriptionBindingModel model);
 
         Product EditSpecifications(EditSpecificationsBindingModel model);
+
+        Product GetProductById(string id);
+
+        //void AddImageUrls(string id, IEnumerable<string> imageUrls);
     }
 }

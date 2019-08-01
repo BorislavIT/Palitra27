@@ -1,10 +1,15 @@
 ﻿namespace Palitra27.Web.Controllers.Admins
 {
+    using System;
+    using System.IO;
     using System.Linq;
     using System.Security.Claims;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.FileProviders;
     using Palitra27.Common;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Products;
@@ -12,10 +17,16 @@
     public class AdminController : BaseController
     {
         private readonly IProductsService productsService;
+        private readonly IFileProvider fileprovider;
+        private readonly IHostingEnvironment env;
+        private readonly IImageService imageService;
 
-        public AdminController(IProductsService productsService)
+        public AdminController(IProductsService productsService, IFileProvider fileprovider, IHostingEnvironment env, IImageService imageService)
         {
             this.productsService = productsService;
+            this.fileprovider = fileprovider;
+            this.env = env;
+            this.imageService = imageService;
         }
 
         [Authorize(Roles = GlobalConstants.AdministratorRoleName)]
@@ -32,7 +43,7 @@
         [HttpPost]
         public IActionResult Create(CreateProductBindingModel model)
         {
-            this.productsService.Create(model);
+            var product = this.productsService.Create(model, model.Image);
             return this.Redirect("/");
         }
 

@@ -23,15 +23,29 @@
         {
         }
 
+        public DbSet<OrderProduct> OrderProducts { get; set; }
+
+        public DbSet<Order> Orders { get; set; }
+
         public DbSet<Setting> Settings { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<DiscountCoupon> DiscountCoupons { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
 
         public DbSet<Product> Products { get; set; }
 
         public DbSet<ProductBrand> ProductsBrands { get; set; }
+
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+
+        public DbSet<FavouriteList> FavouriteLists { get; set; }
+
+        public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
@@ -103,6 +117,21 @@
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>()
+             .HasOne(u => u.ShoppingCart)
+             .WithOne(s => s.User)
+             .HasForeignKey<ShoppingCart>(u => u.Id);
+
+            builder.Entity<ApplicationUser>()
+             .HasOne(u => u.FavouriteList)
+             .WithOne(s => s.User)
+              .HasForeignKey<FavouriteList>(u => u.Id);
+
+            builder.Entity<ShoppingCartProduct>()
+                .HasKey(x => new { x.ProductId, x.ShoppingCartId });
+
+            builder.Entity<OrderProduct>().HasKey(x => new { x.OrderId, x.ProductId });
         }
 
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)

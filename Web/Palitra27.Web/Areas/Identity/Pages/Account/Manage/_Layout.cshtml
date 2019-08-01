@@ -1,21 +1,30 @@
-﻿@{ 
+﻿@{
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Manage your account</h1>
-
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Profile</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">Profile</a>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
+</section>
+<!-- End Banner Area -->
+
+<section class="checkout_area">
+    <div class="container">
+        <partial name="_ManageNav" />
+        @RenderBody()
+    </div>
+</section>
+
 
 @section Scripts {
     @RenderSection("Scripts", required: false)

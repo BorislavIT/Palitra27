@@ -2,13 +2,30 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    @if (hasExternalLogins)
-    {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
-    }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+<section class="section_gap_bottom_custom">
+    <nav class="navbar navbar-expand-lg navbar-light pt-0 pb-0">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="@ManageNavPages.IndexNavClass(ViewContext) nav-item nav-link font-weight-bold">
+                    <a asp-page="./Index" class="nav-link">Профил</a>
+                </li>
+                <li class="@ManageNavPages.ChangePasswordNavClass(ViewContext) nav-item nav-link font-weight-bold">
+                    <a id="change-password" asp-page="./ChangePassword" class="nav-link">Смяна на парола</a>
+                </li>
+                @if (hasExternalLogins)
+                {
+                    <li class="@ManageNavPages.ExternalLoginsNavClass(ViewContext) nav-item nav-link font-weight-bold">
+                        <a id="external-login" asp-page="./ExternalLogins" class="nav-link">Външен вход</a>
+                    </li>
+                }
+                @*<li class="@ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) nav-item nav-link">
+                        <a asp-page="./TwoFactorAuthentication" class="nav-link">Двуфакторна идентификация</a>
+                    </li>*@
+                <li class="@ManageNavPages.PersonalDataNavClass(ViewContext) nav-item nav-link font-weight-bold">
+                    <a asp-page="./PersonalData" class="nav-link">Лични данни</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <hr class="my-0 hr-xeon d-none d-lg-block" />
+    </section>

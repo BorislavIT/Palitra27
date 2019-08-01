@@ -158,7 +158,13 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FavouriteListId");
+
+                    b.Property<string>("FirstName");
+
                     b.Property<bool>("IsDeleted");
+
+                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -179,6 +185,8 @@ namespace Palitra27.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<string>("ShoppingCartId");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -212,6 +220,116 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.Country", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.DiscountCoupon", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<string>("OrderId");
+
+                    b.Property<int>("amountInPercent");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("DiscountCoupons");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.FavouriteList", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FavouriteLists");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.Order", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AddressLine1");
+
+                    b.Property<string>("AddressLine2");
+
+                    b.Property<string>("City");
+
+                    b.Property<string>("CountryId");
+
+                    b.Property<DateTime?>("DeliveryDate");
+
+                    b.Property<decimal>("DeliveryPrice");
+
+                    b.Property<string>("FirstName");
+
+                    b.Property<string>("LastName");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<DateTime?>("OrderDate");
+
+                    b.Property<int>("PaymentStatus");
+
+                    b.Property<int>("PaymentType");
+
+                    b.Property<int>("PhoneNumber");
+
+                    b.Property<string>("Region");
+
+                    b.Property<int>("Status");
+
+                    b.Property<decimal>("TotalPrice");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("ZIP");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.OrderProduct", b =>
+                {
+                    b.Property<string>("OrderId");
+
+                    b.Property<string>("ProductId");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProducts");
+                });
+
             modelBuilder.Entity("Palitra27.Data.Models.Product", b =>
                 {
                     b.Property<string>("Id")
@@ -228,6 +346,8 @@ namespace Palitra27.Data.Migrations
                     b.Property<decimal>("Depth");
 
                     b.Property<string>("Description");
+
+                    b.Property<string>("FavouriteListId");
 
                     b.Property<decimal>("Height");
 
@@ -252,6 +372,8 @@ namespace Palitra27.Data.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("FavouriteListId");
 
                     b.HasIndex("IsDeleted");
 
@@ -319,6 +441,30 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("Settings");
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>
+                {
+                    b.Property<string>("Id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ShoppingCarts");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.ShoppingCartProduct", b =>
+                {
+                    b.Property<string>("ProductId");
+
+                    b.Property<string>("ShoppingCartId");
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ProductId", "ShoppingCartId");
+
+                    b.HasIndex("ShoppingCartId");
+
+                    b.ToTable("ShoppingCartProducts");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.ApplicationRole")
@@ -364,6 +510,49 @@ namespace Palitra27.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.DiscountCoupon", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser")
+                        .WithMany("DiscountCoupons")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Palitra27.Data.Models.Order")
+                        .WithMany("DiscountCoupons")
+                        .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.FavouriteList", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
+                        .WithOne("FavouriteList")
+                        .HasForeignKey("Palitra27.Data.Models.FavouriteList", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.Order", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.OrderProduct", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Palitra27.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Palitra27.Data.Models.Product", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.ProductBrand", "Brand")
@@ -373,6 +562,10 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
+
+                    b.HasOne("Palitra27.Data.Models.FavouriteList")
+                        .WithMany("Products")
+                        .HasForeignKey("FavouriteListId");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
@@ -384,6 +577,27 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
+                        .WithOne("ShoppingCart")
+                        .HasForeignKey("Palitra27.Data.Models.ShoppingCart", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Palitra27.Data.Models.ShoppingCartProduct", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.Product", "Product")
+                        .WithMany("ShoppingCartProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Palitra27.Data.Models.ShoppingCart", "ShoppingCart")
+                        .WithMany("ShoppingCartProducts")
+                        .HasForeignKey("ShoppingCartId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

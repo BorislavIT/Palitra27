@@ -11,6 +11,6 @@
             $(this).attr('previousValue', 'checked');
         }
     });
-};
+}
 
 grd('1');

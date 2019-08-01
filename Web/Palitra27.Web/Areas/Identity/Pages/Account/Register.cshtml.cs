@@ -1,5 +1,7 @@
 ﻿namespace Palitra27.Web.Areas.Identity.Pages.Account
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
@@ -10,7 +12,11 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using Palitra27.Common;
+    using Palitra27.Data;
     using Palitra27.Data.Models;
+    using Palitra27.Services.Data;
+    using Palitra27.Web.ViewModels.ShoppingCart;
 
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name
@@ -21,17 +27,23 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
+        private readonly IShoppingCartService shoppingCartService;
+        private readonly ApplicationDbContext dbContext;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IShoppingCartService shoppingCartService, 
+            ApplicationDbContext dbContext)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
             this.emailSender = emailSender;
+            this.shoppingCartService = shoppingCartService;
+            this.dbContext = dbContext;
         }
 
         [BindProperty]
@@ -49,7 +61,11 @@
             returnUrl = returnUrl ?? this.Url.Content("~/");
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Username, Email = this.Input.Email };
+                string id = Guid.NewGuid().ToString();
+                var shoppingCart = new ShoppingCart() { Id = id };
+                var favouriteList = new FavouriteList() { Id = id };
+
+                var user = new ApplicationUser { Id = id, UserName = this.Input.Username, Email = this.Input.Email, ShoppingCart = shoppingCart, ShoppingCartId = shoppingCart.Id, FavouriteList = favouriteList, FavouriteListId = favouriteList.Id };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
@@ -66,6 +82,19 @@
                         this.Input.Email,
                         "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    await signInManager.SignInAsync(user, isPersistent: false);
+
+                    var cart = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(HttpContext.Session, GlobalConstants.SESSION_SHOPPING_CART_KEY);
+                    if (cart != null)
+                    {
+                        foreach (var product in cart)
+                        {
+                            shoppingCartService.AddProductInShoppingCart(product.Id, Input.Username, product.Quantity);
+                        }
+
+                        HttpContext.Session.Remove(GlobalConstants.SESSION_SHOPPING_CART_KEY);
+                    }
 
                     return this.LocalRedirect(returnUrl);
                 }

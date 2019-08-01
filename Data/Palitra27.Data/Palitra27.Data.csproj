@@ -11,8 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190714132937_proudctReviews.cs" />
-    <Compile Remove="Migrations\20190714132937_proudctReviews.Designer.cs" />
+    <Compile Remove="Migrations\20190716182020_asd.cs" />
+    <Compile Remove="Migrations\20190716182020_asd.Designer.cs" />
+    <Compile Remove="Migrations\20190716203312_fdasdsadasgadga.cs" />
+    <Compile Remove="Migrations\20190716203312_fdasdsadasgadga.Designer.cs" />
+    <Compile Remove="Migrations\20190718213641_eajds.cs" />
+    <Compile Remove="Migrations\20190718213641_eajds.Designer.cs" />
+    <Compile Remove="Migrations\20190731131922_gjda.cs" />
+    <Compile Remove="Migrations\20190731131922_gjda.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

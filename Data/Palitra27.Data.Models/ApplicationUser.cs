@@ -4,29 +4,41 @@ namespace Palitra27.Data.Models
     using System;
     using System.Collections.Generic;
 
-    using Palitra27.Data.Common.Models;
-
     using Microsoft.AspNetCore.Identity;
+    using Palitra27.Data.Common.Models;
 
     public class ApplicationUser : IdentityUser, IAuditInfo, IDeletableEntity
     {
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.DiscountCoupons = new HashSet<DiscountCoupon>();
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
-        // Audit info
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
 
-        // Deletable entity
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public string ShoppingCartId { get; set; }
+        public virtual ShoppingCart ShoppingCart { get; set; }
+
+        public  string FavouriteListId { get; set; }
+        public virtual FavouriteList FavouriteList { get; set; }
+
+        public virtual ICollection<DiscountCoupon> DiscountCoupons { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 

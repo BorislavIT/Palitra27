@@ -1,8 +1,10 @@
 ﻿namespace Palitra27.Services.Data
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
-
+    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Palitra27.Data;
     using Palitra27.Data.Models;
@@ -24,6 +26,13 @@
             return brands;
         }
 
+        public Product GetProductById(string id)
+        {
+            return this.context.Products.Include(p => p.Category)
+                                   .Include(x => x.Brand)
+                                   .FirstOrDefault(x => x.Id == id);
+        }
+
         public IQueryable<Category> FindAllCategories()
         {
             var categories = this.context.Categories;
@@ -31,13 +40,15 @@
             return categories;
         }
 
-        public void Create(CreateProductBindingModel model)
+        public Product Create(CreateProductBindingModel model)
         {
             var brand = this.context.ProductsBrands.FirstOrDefault(c => c.Name == model.Brand);
             var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
-            Product product = new Product() { Category = category, Image = model.Image, Price = model.Price, Name = model.ProductName, Brand = brand };
+            Product product = new Product() { Category = category, Price = model.Price, Name = model.ProductName, Brand = brand };
             this.context.Products.Add(product);
             this.context.SaveChanges();
+
+            return product;
         }
 
         public Product FindProductById(string id)
@@ -117,6 +128,29 @@
             this.context.SaveChanges();
 
             return product;
+        }
+
+        public Product Create(CreateProductBindingModel model, IFormFile image)
+        {
+            byte[] asd = this.GetByteArrayFromImage(model.Image);
+            string imreBase64Data = Convert.ToBase64String(asd);
+            string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+            var brand = this.context.ProductsBrands.FirstOrDefault(c => c.Name == model.Brand);
+            var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
+            Product product = new Product() { Category = category, Price = model.Price, Name = model.ProductName, Brand = brand, Image = imgDataURL };
+            this.context.Products.Add(product);
+            this.context.SaveChanges();
+
+            return product;
+        }
+
+        private byte[] GetByteArrayFromImage(IFormFile file)
+        {
+            using (var target = new MemoryStream())
+            {
+                file.CopyTo(target);
+                return target.ToArray();
+            }
         }
     }
 }
