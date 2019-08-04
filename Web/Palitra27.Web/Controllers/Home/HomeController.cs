@@ -1,9 +1,6 @@
 ﻿namespace Palitra27.Web.Controllers.Home
 {
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Palitra27.Common;
     using Palitra27.Services.Data;
 
     public class HomeController : BaseController
@@ -27,10 +24,5 @@
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() => this.View();
-
-        public IActionResult GetAllProducts()
-        {
-            return this.View(this.productsService.GetAllProducts());
-        }
     }
 }

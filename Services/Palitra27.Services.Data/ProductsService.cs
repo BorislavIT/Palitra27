@@ -4,8 +4,11 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
+    using AutoMapper;
     using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
+    using Palitra27.Common.DtoModels.Product;
     using Palitra27.Data;
     using Palitra27.Data.Models;
     using Palitra27.Web.ViewModels.Products;
@@ -13,10 +16,12 @@
     public class ProductsService : IProductsService
     {
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public ProductsService(ApplicationDbContext context)
+        public ProductsService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public IQueryable<ProductBrand> FindAllBrands()
@@ -26,11 +31,14 @@
             return brands;
         }
 
-        public Product GetProductById(string id)
+        public ProductDTO GetOnlyProductById(string id)
         {
-            return this.context.Products.Include(p => p.Category)
+            var product = this.context.Products.Include(p => p.Category)
                                    .Include(x => x.Brand)
                                    .FirstOrDefault(x => x.Id == id);
+
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
         public IQueryable<Category> FindAllCategories()
@@ -40,7 +48,7 @@
             return categories;
         }
 
-        public Product Create(CreateProductBindingModel model)
+        public ProductDTO Create(CreateProductBindingModel model)
         {
             var brand = this.context.ProductsBrands.FirstOrDefault(c => c.Name == model.Brand);
             var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
@@ -48,10 +56,11 @@
             this.context.Products.Add(product);
             this.context.SaveChanges();
 
-            return product;
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
-        public Product FindProductById(string id)
+        public ProductDTO FindProductById(string id)
         {
             var reviews = this.context.Reviews.Where(r => r.ProductId == id).ToList();
             foreach (var item in reviews)
@@ -66,10 +75,11 @@
                 .FirstOrDefault(p => p.Id == id);
             product.Reviews = reviews;
 
-            return product;
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
-        public Product EditProduct(ProductEditBindingModel model)
+        public ProductDTO EditProduct(ProductEditBindingModel model)
         {
             var reviews = this.context.Reviews.Where(r => r.ProductId == model.Id).ToList();
             foreach (var item in reviews)
@@ -95,7 +105,8 @@
 
             this.context.SaveChanges();
 
-            return product;
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
         public Review AddReview(AddReviewBindingModel model, string userId)
@@ -108,29 +119,51 @@
             return review;
         }
 
-        public Product EditDescription(EditDescriptionBindingModel model)
+        public ProductDTO EditDescription(EditDescriptionBindingModel model)
         {
-            var product = this.FindProductById(model.Id);
+            var product = this.FindDomainProduct(model.Id);
             product.Description = model.Description;
+            this.context.Products.Update(product);
             this.context.SaveChanges();
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
+        }
+
+        public Product FindDomainProduct(string id)
+        {
+            var reviews = this.context.Reviews.Where(r => r.ProductId == id).ToList();
+            foreach (var item in reviews)
+            {
+                var user = this.context.Users.FirstOrDefault(u => u.Id == item.UserId);
+                item.User = user;
+            }
+
+            var product = this.context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .FirstOrDefault(p => p.Id == id);
+            product.Reviews = reviews;
+
             return product;
         }
 
-        public Product EditSpecifications(EditSpecificationsBindingModel model)
+        public ProductDTO EditSpecifications(EditSpecificationsBindingModel model)
         {
-            var product = this.FindProductById(model.Id);
+            var product = this.FindDomainProduct(model.Id);
 
             product.Height = model.Height;
             product.Weight = model.Weight;
             product.Width = model.Width;
             product.Depth = model.Depth;
 
+            this.context.Products.Update(product);
             this.context.SaveChanges();
 
-            return product;
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
-        public Product Create(CreateProductBindingModel model, IFormFile image)
+        public ProductDTO Create(CreateProductBindingModel model, IFormFile image)
         {
             byte[] asd = this.GetByteArrayFromImage(model.Image);
             string imreBase64Data = Convert.ToBase64String(asd);
@@ -141,7 +174,8 @@
             this.context.Products.Add(product);
             this.context.SaveChanges();
 
-            return product;
+            var dTO = this.mapper.Map<ProductDTO>(product);
+            return dTO;
         }
 
         private byte[] GetByteArrayFromImage(IFormFile file)
@@ -153,22 +187,36 @@
             }
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<ProductDTO> GetAllProducts()
         {
-            return this.context.Products
+            var products = this.context.Products
                 .Include(x => x.Category)
                 .Include(x => x.Brand)
                 .Include(x => x.Reviews)
                 .ToList();
+            var dTOList = new List<ProductDTO>();
+            foreach (var item in products)
+            {
+                var dTO = this.mapper.Map<ProductDTO>(item);
+                dTOList.Add(dTO);
+            }
+            return dTOList;
         }
 
-        public List<Product> FindAllProductsByQuery(string query)
+        public List<ProductDTO> FindAllProductsByQuery(string query)
         {
             var products = this.context.Products;
 
-            var queryProducts = products.Where(x => x.Name.Contains(query));
+            var queryProducts = products.Where(x => x.Name.Contains(query)).Take(5).ToList();
 
-            return queryProducts.Take(5).ToList();
+            var dTOList = new List<ProductDTO>();
+            foreach (var item in queryProducts)
+            {
+                var dTO = this.mapper.Map<ProductDTO>(item);
+                dTOList.Add(dTO);
+            }
+
+            return dTOList;
         }
     }
 }

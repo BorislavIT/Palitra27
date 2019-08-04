@@ -6,6 +6,8 @@
 
     public class Product : BaseDeletableModel<string>
     {
+        public string Id { get; set; }
+
         public string BrandId { get; set; }
 
         public virtual ProductBrand Brand { get; set; }

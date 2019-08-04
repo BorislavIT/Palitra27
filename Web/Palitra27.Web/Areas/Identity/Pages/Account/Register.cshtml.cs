@@ -63,13 +63,19 @@
             {
                 string id = Guid.NewGuid().ToString();
                 var shoppingCart = new ShoppingCart() { Id = id };
-                var FavouriteList = new FavouriteList() { Id = id };
+                var favouriteList = new FavouriteList() { Id = id };
 
-                var user = new ApplicationUser { Id = id, UserName = this.Input.Username, Email = this.Input.Email, ShoppingCart = shoppingCart, ShoppingCartId = shoppingCart.Id, FavouriteList = FavouriteList, FavouriteListId = FavouriteList.Id };
+                favouriteList.UserId = id;
+                await this.dbContext.FavouriteLists.AddAsync(favouriteList);
+
+                var user = new ApplicationUser { Id = id, UserName = this.Input.Username, Email = this.Input.Email, ShoppingCart = shoppingCart, ShoppingCartId = shoppingCart.Id, FavouriteList = favouriteList, FavouriteListId = favouriteList.Id };
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
+
                 if (result.Succeeded)
                 {
                     this.logger.LogInformation("User created a new account with password.");
+
+                    await this.userManager.AddToRoleAsync(user, GlobalConstants.UserRoleName);
 
                     var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = this.Url.Page(

@@ -6,7 +6,7 @@
 
     public class ContactController : BaseController
     {
-        private const string receivingEmail = "mutenroshiyo69@gmail.com";
+        private const string ReceivingEmail = "mutenroshiyo69@gmail.com";
 
         private readonly IEmailSender emailSender;
 
@@ -23,7 +23,7 @@
         [HttpPost]
         public IActionResult Info(ContactBindingModel model)
         {
-            this.emailSender.SendEmailAsync(receivingEmail, $"{model.Email}", $"<p>Subject:{model.Subject} <br />Message:{model.Message}</p>");
+            this.emailSender.SendEmailAsync(ReceivingEmail, $"{model.Email}", $"<p>Subject:{model.Subject} <br />Message:{model.Message}</p>");
 
             return this.Redirect("/Home/Index");
         }

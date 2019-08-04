@@ -4,34 +4,37 @@
     using System.Linq;
 
     using Microsoft.AspNetCore.Http;
+    using Palitra27.Common.DtoModels.Product;
     using Palitra27.Data.Models;
     using Palitra27.Web.ViewModels.Products;
 
     public interface IProductsService
     {
-        Product Create(CreateProductBindingModel model);
+        ProductDTO Create(CreateProductBindingModel model);
 
-        Product Create(CreateProductBindingModel model, IFormFile Image);
+        ProductDTO Create(CreateProductBindingModel model, IFormFile image);
 
-        Product FindProductById(string id);
+        ProductDTO FindProductById(string id);
 
         IQueryable<Category> FindAllCategories();
 
         IQueryable<ProductBrand> FindAllBrands();
 
-        Product EditProduct(ProductEditBindingModel model);
+        ProductDTO EditProduct(ProductEditBindingModel model);
 
         Review AddReview(AddReviewBindingModel model, string userId);
 
-        Product EditDescription(EditDescriptionBindingModel model);
+        ProductDTO EditDescription(EditDescriptionBindingModel model);
 
-        Product EditSpecifications(EditSpecificationsBindingModel model);
+        ProductDTO EditSpecifications(EditSpecificationsBindingModel model);
 
-        Product GetProductById(string id);
+        ProductDTO GetOnlyProductById(string id);
 
-        IEnumerable<Product> GetAllProducts();
+        IEnumerable<ProductDTO> GetAllProducts();
 
-        List<Product> FindAllProductsByQuery(string query);
+        List<ProductDTO> FindAllProductsByQuery(string query);
+
+        Product FindDomainProduct(string id);
 
         //void AddImageUrls(string id, IEnumerable<string> imageUrls);
     }
