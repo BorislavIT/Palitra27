@@ -24,7 +24,7 @@
             {
                 string id = Guid.NewGuid().ToString();
                 var shoppingCart = new ShoppingCart() { Id = id };
-                var favouriteList = new FavouriteList() { Id = id };
+                var FavouriteList = new FavouriteList() { Id = id };
                 var user = new ApplicationUser
                 {
                     Id = id,
@@ -34,16 +34,16 @@
                     NormalizedEmail = "ADMIN@EMAIL.COM",
                     ShoppingCart = shoppingCart,
                     ShoppingCartId = id,
-                    FavouriteList = favouriteList,
-                    FavouriteListId = favouriteList.Id,
+                    FavouriteList = FavouriteList,
+                    FavouriteListId = FavouriteList.Id,
                 };
 
-                favouriteList.User = user;
-                favouriteList.UserId = user.Id;
+                FavouriteList.User = user;
+                FavouriteList.UserId = user.Id;
 
                 var password = "123321";
                 await dbContext.ShoppingCarts.AddAsync(shoppingCart);
-                await dbContext.FavouriteLists.AddAsync(favouriteList);
+                await dbContext.FavouriteLists.AddAsync(FavouriteList);
                 var result = await userManager.CreateAsync(user, password);
                 await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
 

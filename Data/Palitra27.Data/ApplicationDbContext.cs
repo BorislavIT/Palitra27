@@ -43,6 +43,8 @@
 
         public DbSet<FavouriteList> FavouriteLists { get; set; }
 
+        public DbSet<FavouriteProduct> FavouriteProducts { get; set; }
+
         public DbSet<ShoppingCartProduct> ShoppingCartProducts { get; set; }
 
         public DbSet<Country> Countries { get; set; }
@@ -130,6 +132,9 @@
 
             builder.Entity<ShoppingCartProduct>()
                 .HasKey(x => new { x.ProductId, x.ShoppingCartId });
+
+            builder.Entity<FavouriteProduct>()
+                .HasKey(x => new { x.ProductId, x.FavouriteListId });
 
             builder.Entity<OrderProduct>().HasKey(x => new { x.OrderId, x.ProductId });
         }

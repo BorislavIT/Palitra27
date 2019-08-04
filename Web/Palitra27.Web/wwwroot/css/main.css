@@ -18,6 +18,10 @@
     padding-bottom:20px;
 }
 
+.hiddenProduct{
+    display:none;
+}
+
 a:hover {
     color: black;
 }

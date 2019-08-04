@@ -194,9 +194,9 @@
                                                 <span class="ti-bag"></span>
                                                 <p class="hover-text">add to bag</p>
                                             </a>
-                                            <a href="" class="social-info">
+                                            <a asp-controller="Favourite" asp-action="Add" asp-route-productId="@product.Id" class="social-info">
                                                 <span class="lnr lnr-heart"></span>
-                                                <p class="hover-text">Wishlist</p>
+                                                <p class="hover-text">add to favourites</p>
                                             </a>
                                             <a href="/Product/Info/@product.Id" class="social-info">
                                                 <span class="lnr lnr-move"></span>

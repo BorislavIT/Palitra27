@@ -152,5 +152,23 @@
                 return target.ToArray();
             }
         }
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return this.context.Products
+                .Include(x => x.Category)
+                .Include(x => x.Brand)
+                .Include(x => x.Reviews)
+                .ToList();
+        }
+
+        public List<Product> FindAllProductsByQuery(string query)
+        {
+            var products = this.context.Products;
+
+            var queryProducts = products.Where(x => x.Name.Contains(query));
+
+            return queryProducts.Take(5).ToList();
+        }
     }
 }

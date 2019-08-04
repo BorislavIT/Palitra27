@@ -121,7 +121,7 @@
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProductImages")));
 
-            services.Configure<AuthMessageSenderOptions>(configuration);
+            services.Configure<AuthMessageSenderOptions>(this.configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

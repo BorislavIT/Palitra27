@@ -8,6 +8,13 @@
 
     public class HomeController : BaseController
     {
+        private readonly IProductsService productsService;
+
+        public HomeController(IProductsService productsService)
+        {
+            this.productsService = productsService;
+        }
+
         public IActionResult Index()
         {
             return this.View();
@@ -20,5 +27,10 @@
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() => this.View();
+
+        public IActionResult GetAllProducts()
+        {
+            return this.View(this.productsService.GetAllProducts());
+        }
     }
 }

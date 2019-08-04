@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Microsoft.AspNetCore.Http;
     using Palitra27.Data.Models;
     using Palitra27.Web.ViewModels.Products;
-    using Microsoft.AspNetCore.Http;
 
     public interface IProductsService
     {
@@ -28,6 +28,10 @@
         Product EditSpecifications(EditSpecificationsBindingModel model);
 
         Product GetProductById(string id);
+
+        IEnumerable<Product> GetAllProducts();
+
+        List<Product> FindAllProductsByQuery(string query);
 
         //void AddImageUrls(string id, IEnumerable<string> imageUrls);
     }

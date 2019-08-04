@@ -104,11 +104,7 @@
             </div>
             <div class="search_input" id="search_input_box">
                 <div class="container">
-                    <form class="d-flex justify-content-between">
-                        <input type="text" class="form-control" id="search_input" placeholder="Search Here">
-                        <button type="submit" class="btn"></button>
-                        <span class="lnr lnr-cross" id="close_search" title="Close Search"></span>
-                    </form>
+                    @await Component.InvokeAsync("SearchBarComponent", "")
                 </div>
             </div>
         </header>
@@ -207,7 +203,7 @@
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
                                     <li class="nav-item"><a href="/ShoppingCart/Index" class="cart"><span class="ti-bag"></span></a></li>
-                                    <li class="nav-item"><a href="/Favorite/Index" class="cart"><span class="ti-heart icon"></span></a></li>
+                                    <li class="nav-item"><a href="/Favourite/Index" class="cart"><span class="ti-heart icon"></span></a></li>
                                     <li class="nav-item">
                                         <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                                     </li>
@@ -309,7 +305,7 @@
                                 </ul>
                                 <ul class="nav navbar-nav navbar-right">
                                     <li class="nav-item"><a href="/ShoppingCart/Index" class="cart"><span class="ti-bag"></span></a></li>
-                                    <li class="nav-item"><a href="/Favorite/Index" class="cart"><span class="ti-heart"></span></a></li>
+                                    <li class="nav-item"><a href="/Favourite/Index" class="cart"><span class="ti-heart"></span></a></li>
                                     <li class="nav-item">
                                         <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
                                     </li>
@@ -383,6 +379,7 @@
     <script src="~/js/nouislider.min.js" asp-append-version="true"></script>
     <script src="~/js/btnUncheck.js" asp-append-version="true"></script>
     <script src="~/js/hideShowProducts.js" asp-append-version="true"></script>
+    <script src="~/js/ShowAndHideSearchProducts.js" asp-append-version="true"></script>
     <script src="~/js/jquery.magnific-popup.min.js" asp-append-version="true"></script>
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
     <!--gmaps Js-->
@@ -401,6 +398,7 @@
     <script src="~/js/nouislider.min.js" asp-append-version="true"></script>
     <script src="~/js/btnUncheck.js" asp-append-version="true"></script>
     <script src="~/js/hideShowProducts.js" asp-append-version="true"></script>
+    <script src="~/js/ShowAndHideSearchProducts.js" asp-append-version="true"></script>
     <script src="~/js/jquery.magnific-popup.min.js" asp-append-version="true"></script>
     <script src="~/js/owl.carousel.min.js" asp-append-version="true"></script>
     <!--gmaps Js-->

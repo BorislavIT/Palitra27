@@ -263,6 +263,19 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("FavouriteLists");
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.FavouriteProduct", b =>
+                {
+                    b.Property<string>("ProductId");
+
+                    b.Property<string>("FavouriteListId");
+
+                    b.HasKey("ProductId", "FavouriteListId");
+
+                    b.HasIndex("FavouriteListId");
+
+                    b.ToTable("FavouriteProducts");
+                });
+
             modelBuilder.Entity("Palitra27.Data.Models.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -347,8 +360,6 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("FavouriteListId");
-
                     b.Property<decimal>("Height");
 
                     b.Property<string>("Image");
@@ -372,8 +383,6 @@ namespace Palitra27.Data.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("FavouriteListId");
 
                     b.HasIndex("IsDeleted");
 
@@ -529,6 +538,19 @@ namespace Palitra27.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.FavouriteProduct", b =>
+                {
+                    b.HasOne("Palitra27.Data.Models.FavouriteList", "FavouriteList")
+                        .WithMany("FavouriteProducts")
+                        .HasForeignKey("FavouriteListId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Palitra27.Data.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Palitra27.Data.Models.Order", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.Country", "Country")
@@ -562,10 +584,6 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("Palitra27.Data.Models.FavouriteList")
-                        .WithMany("Products")
-                        .HasForeignKey("FavouriteListId");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
