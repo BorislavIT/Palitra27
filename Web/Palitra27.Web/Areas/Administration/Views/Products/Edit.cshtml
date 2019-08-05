@@ -1,0 +1,301 @@
+﻿@using Palitra27.Web.ViewModels.Products;
+
+@model ProductEditViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    double totalReviews = Model.Product.Reviews.Count;
+    double totalStars = Model.Product.Reviews.Sum(r => r.Stars);
+    var actualResult = Math.Round(totalStars / totalReviews, 2);
+
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Admin Edit Product</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Admin<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Edit</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<form method="post">
+    <!-- End Banner Area -->
+    <!--================Single Product Area =================-->
+    @Html.AntiForgeryToken()
+    <div class="product_image_area">
+        <div class="container">
+            <div class="row s_product_inner">
+                <div class="col-lg-6">
+                    <div class="s_Product_carousel">
+                        <div class="single-prd-item">
+                            <img class="img-fluid" src="@Model.Product.Image" alt="">
+                        </div>
+                        <div class="single-prd-item">
+                            <img class="img-fluid" src="@Model.Product.Image" alt="">
+                        </div>
+                        <div class="single-prd-item">
+                            <img class="img-fluid" src="@Model.Product.Image" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="s_product_text">
+                        <div class="col-md-12 form-group ">
+                            <input type="text" name="Name" placeholder="@Model.Product.Name" value="@Model.Product.Name" class="inputCustom" />
+                        </div>
+                        <div class="col-md-12 form-group ">
+                            <input type="number" step="0.01" name="Price" placeholder="$@Model.Product.Price" value="@Model.Product.Price" class="inputCustom" />
+                        </div>
+                        <ul class="list">
+                            <li class="editPL">
+                                <div class="form-select">
+                                    <select style="display: none;" name="Category">
+                                        @foreach (var category in Model.BrandCategoryViewModel.Categories)
+                                        {
+                                            if (@Model.Product.Category == category.Name)
+                                            {
+                                                <option value="@category.Name" selected>@category.Name</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option value="@category.Name">@category.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="editPL">
+                                <div class="form-select">
+                                    <select style="display: none;" name="Brand">
+                                        @foreach (var brand in Model.BrandCategoryViewModel.Brands)
+                                        {
+                                            if (@Model.Product.Brand == brand.Name)
+                                            {
+                                                <option value="@brand.Name" selected>@brand.Name</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option value="@brand.Name">@brand.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="col-md-12 form-group section_gap_top_custom">
+                            <textarea class="form-control1" name="miniDescription">@Model.Product.MiniDescription</textarea>
+                        </div>
+                        <div class="card_area d-flex justify-content-center ">
+                            <button type="submit" value="submit" class="primary-btn custmobtN">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--================End Single Product Area =================-->
+<!--================Product Description Area =================-->
+<section class="product_description_area">
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile"
+                   aria-selected="false">Specification</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
+                   aria-selected="false">Reviews</a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <form method="post" action="/Administration/Products/EditDescription/@Model.Product.Id">
+                    @Html.AntiForgeryToken()
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <textarea class="form-control" name="Description">@Model.Product.Description</textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center section_gap">
+                        <button type="submit" value="submit" class="genric-btn primary">Edit Description</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <form method="post" action="/Administration/Products/EditSpecifications/@Model.Product.Id">
+                    @Html.AntiForgeryToken()
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <h5>Width</h5>
+                                    </td>
+                                    <td>
+                                        <h5><input type="number" name="Width" value="@Model.Product.Width" /></h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5>Height</h5>
+                                    </td>
+                                    <td>
+                                        <h5><input type="number" name="Height" value="@Model.Product.Height" /></h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5>Depth</h5>
+                                    </td>
+                                    <td>
+                                        <h5><input type="number" name="Depth" value="@Model.Product.Depth" /></h5>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5>Weight</h5>
+                                    </td>
+                                    <td>
+                                        <h5><input type="number" name="Weight" value="@Model.Product.Weight" /></h5>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-center section_gap">
+                        <button type="submit" value="submit" class="genric-btn primary">Edit Specifications</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
+                <form method="post" action="/Administration/Products/AddReview/@Model.Product.Id">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="row total_rate">
+                                <div class="col-6">
+                                    <div class="box_total">
+                                        <h5>Overall</h5>
+                                        <h4>@actualResult</h4>
+                                        <h6>(@Model.Product.Reviews.Count Reviews)</h6>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="rating_list">
+                                        <h3>Based on @Model.Product.Reviews.Count Reviews</h3>
+                                        <ul class="list">
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-star"></i> @Model.Product.Reviews.Where(p => p.Stars == 1).Count();
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-star"></i><i class="fa fa-star"></i> @Model.Product.Reviews.Where(p => p.Stars == 2).Count();
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> @Model.Product.Reviews.Where(p => p.Stars == 3).Count();
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>@Model.Product.Reviews.Where(p => p.Stars == 4).Count();
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#">
+                                                    <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> @Model.Product.Reviews.Where(p => p.Stars == 5).Count();
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            @foreach (var item in Model.Product.Reviews)
+                            {
+                                <div class="review_list">
+                                    <div class="review_item sectionGapForReviewMessages">
+                                        <div class="media">
+                                            <div class="d-flex">
+                                                <img src="~/img/product/review-1.png" alt="">
+                                            </div>
+                                            <div class="media-body">
+                                                <h4>@item.User.UserName</h4>
+                                                <h5>@item.DateOfCreation</h5>
+                                                @for (int i = 0; i < item.Stars; i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                        <p class="reviewComment">
+                                            @item.Message
+                                        </p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="review_box">
+                                <h4>Add a Review</h4>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <p>
+                                            <a href="#" onclick="return false;"><i class="fa fa-star fa-lg" id="firstStar"></i></a>
+                                            <a href="#" onclick="return false;"><i class="fa fa-star fa-lg" id="secondStar"></i></a>
+                                            <a href="#" onclick="return false;"><i class="fa fa-star fa-lg" id="thirdStar"></i></a>
+                                            <a href="#" onclick="return false;"><i class="fa fa-star fa-lg" id="fourthStar"></i></a>
+                                            <a href="#" onclick="return false;"><i class="fa fa-star fa-lg" id="fifthStar"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group" hidden>
+                                        <input type="number" class="form-control" id="stars" name="Stars" placeholder="stars" onfocus="this.placeholder = ''" onblur="this.placeholder = 'stars'" value="5">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder="Message" name="Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" value="submit" class="primary-btn">Add Review</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Product Description Area =================-->

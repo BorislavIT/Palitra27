@@ -23,7 +23,7 @@
             IQueryable<Product> products;
             products = this.context.Products;
 
-            var brand = this.context.ProductsBrands.FirstOrDefault(b => b.Name == model.Brand);
+            var brand = this.context.Brands.FirstOrDefault(b => b.Name == model.Brand);
 
             var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
 

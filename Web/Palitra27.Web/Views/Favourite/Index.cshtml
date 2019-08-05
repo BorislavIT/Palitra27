@@ -1,0 +1,71 @@
+﻿@using Palitra27.Web.ViewModels.FavouriteList;
+@model List<FavouriteProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Wish List</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="category.html">Wish List</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product</th>
+                                <th scope="col">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            <a href="/Product/Info/@item.Id"><img src="@item.Image" alt=""></a>
+                                        </div>
+                                        <div class="media-body">
+                                            <p>@item.Name</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5>$@item.Price</h5>
+                                </td>
+                                <td>
+                                    <h5>
+                                        <a asp-controller="ShoppingCart" asp-action="Add" asp-route-id="@item.Id"><span class="iconBlue btn btn-primary btn-sm">Add To Cart</span></a>
+                                    </h5>
+                                </td>
+                                <td>
+                                    <h5>
+                                        <a asp-controller="Favourite" asp-action="Delete" asp-route-productId="@item.Id"><span class="iconRed btn btn-outline-danger btn-sm">Remove</span></a>
+                                    </h5>
+                                </td>
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+<!--================End Cart Area =================-->

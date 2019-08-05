@@ -389,7 +389,7 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Palitra27.Data.Models.ProductBrand", b =>
+            modelBuilder.Entity("Palitra27.Data.Models.Brand", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -398,7 +398,7 @@ namespace Palitra27.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductsBrands");
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
@@ -577,7 +577,7 @@ namespace Palitra27.Data.Migrations
 
             modelBuilder.Entity("Palitra27.Data.Models.Product", b =>
                 {
-                    b.HasOne("Palitra27.Data.Models.ProductBrand", "Brand")
+                    b.HasOne("Palitra27.Data.Models.Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId");
 

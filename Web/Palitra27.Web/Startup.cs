@@ -107,15 +107,14 @@
 
             // Application services
             services.AddTransient<ISmsSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<IShopService, ShopService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<IImageService, ImageService>();
-            services.AddTransient<IBrandService, BrandService>();
+            services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
 
             services.AddSingleton<IEmailSender, EmailSender>();

@@ -1,0 +1,131 @@
+﻿@using Palitra27.Web.ViewModels.Orders;
+
+@model OrderShoppingCartViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal costOfVAT = (Model.ShoppingCartProductsViewModels.Sum(x => x.TotalPrice)) * 0.2M;
+    string value = $"${costOfVAT:f2}";
+    var totalCost = costOfVAT + (Model.ShoppingCartProductsViewModels.Sum(x => x.TotalPrice));
+    var totalCostvalue = $"${totalCost:f2}";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Checkout</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/Order/Create">Checkout</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!--================Checkout Area =================-->
+<form class="contact_form" action="/Order/Create" method="post" novalidate="novalidate">
+    @Html.AntiForgeryToken()
+    <section class="checkout_area section_gap">
+        <div class="container">
+            <div class="cupon_area">
+                <div class="check_title">
+                    <h2>Have a coupon code?</h2>
+                </div>
+                <input type="text" placeholder="Enter coupon code">
+                <a class="tp_btn">Apply Coupon</a>
+            </div>
+            <div class="billing_details">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3>Shipping address</h3>
+                        <div class="row">
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" value="@Model.OrderCreateViewModel.FirstName">
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <input type="text" class="form-control" id="firstName" name="lastName" placeholder="Last Name" value="@Model.OrderCreateViewModel.LastName">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="tel" class="form-control" id="number" name="phoneNumber" placeholder="Phone Number" value="@Model.OrderCreateViewModel.PhoneNumber">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add1" name="addressLine1" placeholder="Address line 1">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add2" name="addressLine2" placeholder="Address line 2" ">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="city" name="city" placeholder="Town/City" ">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add2" name="region" placeholder="State/Province/Region">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <input type="text" class="form-control" id="add2" name="zip" placeholder="ZIP">
+                            </div>
+                            <div class="col-md-12 form-group p_star">
+                                <select size="5" name="country" id="gas">
+                                    <option selected="selected" disabled="disabled">Choose a Country</option>A
+                                    @foreach (var country in Model.Countries.OrderBy(x => x))
+                                    {
+                                        <option value="@country">@country</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2>Your Order</h2>
+                            <ul class="list">
+                                <li><a href="#">Product <span>Total</span></a></li>
+                                @foreach (var item in Model.ShoppingCartProductsViewModels)
+                                {
+                                    <li><a href="#">@item.Name <span class="middle">x @item.Quantity</span> <span class="last">@item.TotalPrice</span></a></li>
+
+                                }
+                                <li><a href="#">VAT<span class="middle">x 1</span> <span class="last">@value</span></a></li>
+                            </ul>
+                            <ul class="list list_2">
+                                <li><a href="#">Total <span>@totalCostvalue</span></a></li>
+                            </ul>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option5" name="paymentType" value="cash">
+                                    <label for="f-option5">Pay in Cash </label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>
+                                    Pay in cash to the delivery man.
+                                </p>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option6" name="paymentType" value="paypal">
+                                    <label for="f-option6">Paypal </label>
+                                    <img src="img/product/card.jpg" alt="">
+                                    <div class="check"></div>
+                                </div>
+                                <p>
+                                    Pay via PayPal.
+                                </p>
+                            </div>
+                            <div class="creat_account">
+                                <input type="checkbox" id="f-option4" name="Agree" value="true">
+                                <label for="f-option4">I’ve read and accept the </label>
+                                <a href="#">terms & conditions*</a>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" value="submit" class="primary-btn">Proceed to Paypal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+<!--================End Checkout Area =================-->

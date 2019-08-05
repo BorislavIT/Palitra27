@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20190718213641_eajds.Designer.cs" />
     <Compile Remove="Migrations\20190731131922_gjda.cs" />
     <Compile Remove="Migrations\20190731131922_gjda.Designer.cs" />
+    <Compile Remove="Migrations\20190804171541_jaja.cs" />
+    <Compile Remove="Migrations\20190804171541_jaja.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

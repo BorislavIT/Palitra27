@@ -18,12 +18,21 @@
         private readonly IDeletableEntityRepository<Product> repository;
         private readonly IShopService shopService;
         private readonly IProductsService productsService;
+        private readonly ICategoriesService categoriesService;
+        private readonly IBrandsService brandsService;
 
-        public ShopController(IDeletableEntityRepository<Product> repository, IShopService shopService, IProductsService productsService)
+        public ShopController(
+            IDeletableEntityRepository<Product> repository,
+            IShopService shopService,
+            IProductsService productsService,
+            ICategoriesService categoriesService,
+            IBrandsService brandsService)
         {
             this.repository = repository;
             this.shopService = shopService;
             this.productsService = productsService;
+            this.categoriesService = categoriesService;
+            this.brandsService = brandsService;
         }
 
         public IActionResult Index()
@@ -38,11 +47,11 @@
             var products = this.repository.All().To<ProductViewModel>().ToList();
             var productsListViewModel = new ProductListViewModel { Products = products };
 
-            var categories = this.productsService.FindAllCategories().ToList();
-            var brands = this.productsService.FindAllBrands().ToList();
-            var productCategoriesBrandsViewModel = new ProductBrandCategoryViewModel { Brands = brands, Categories = categories };
+            var categories = this.categoriesService.FindAllCategories();
+            var brands = this.brandsService.FindAllBrands();
+            var productCategoriesBrandsViewModel = new BrandCategoryViewModel { Brands = brands, Categories = categories };
 
-            var model = new ShopFiltersViewModel { ProductBrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
+            var model = new ShopFiltersViewModel { BrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
 
             return this.View(model);
         }
@@ -60,11 +69,11 @@
 
             var productsListViewModel = new ProductListViewModel { Products = products };
 
-            var categories = this.productsService.FindAllCategories().ToList();
-            var brands = this.productsService.FindAllBrands().ToList();
-            var productCategoriesBrandsViewModel = new ProductBrandCategoryViewModel { Brands = brands, Categories = categories };
+            var categories = this.categoriesService.FindAllCategories();
+            var brands = this.brandsService.FindAllBrands();
+            var productCategoriesBrandsViewModel = new BrandCategoryViewModel { Brands = brands, Categories = categories };
 
-            var shopFiltersViewModel = new ShopFiltersViewModel { ProductBrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
+            var shopFiltersViewModel = new ShopFiltersViewModel { BrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
 
             return this.View(shopFiltersViewModel);
         }

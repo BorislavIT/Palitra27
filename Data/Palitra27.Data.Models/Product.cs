@@ -10,7 +10,7 @@
 
         public string BrandId { get; set; }
 
-        public virtual ProductBrand Brand { get; set; }
+        public virtual Brand Brand { get; set; }
 
         public string Name { get; set; }
 

@@ -18,8 +18,8 @@
             <div class="col-first">
                 <h1>Shop</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="#">Shop</a>
+                    <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/Shop/Index">Shop</a>
                 </nav>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 <div class="sidebar-categories">
                     <div class="head">Filter By Categorie(s)</div>
                     <ul class="main-categories">
-                        @foreach (var item in Model.ProductBrandCategoryViewModel.Categories.OrderBy(x => x.Name))
+                        @foreach (var item in Model.BrandCategoryViewModel.Categories.OrderBy(x => x.Name))
                         {
                             <li class="filter-list"><input class="pixel-radio" type="radio" id="@item.Name" name="Category" value="@item.Name"><label for="@item.Name">@item.Name</label></li>
                         }
@@ -44,7 +44,7 @@
                     <div class="top-filter-head">Filter By Brand(s)</div>
                     <div class="common-filter">
                         <div class="head">Brands</div>
-                        @foreach (var item in Model.ProductBrandCategoryViewModel.Brands.OrderBy(x => x.Name))
+                        @foreach (var item in Model.BrandCategoryViewModel.Brands.OrderBy(x => x.Name))
                         {
                             <ul>
                                 <li class="filter-list"><input class="pixel-radio" type="radio" id="@item.Name" name="Brand" value="@item.Name"><label for="@item.Name">@item.Name</label></li>
@@ -196,7 +196,7 @@
                                             </a>
                                             <a asp-controller="Favourite" asp-action="Add" asp-route-productId="@product.Id" class="social-info">
                                                 <span class="lnr lnr-heart"></span>
-                                                <p class="hover-text">add to favourites</p>
+                                                <p class="hover-text">Favourite!</p>
                                             </a>
                                             <a href="/Product/Info/@product.Id" class="social-info">
                                                 <span class="lnr lnr-move"></span>

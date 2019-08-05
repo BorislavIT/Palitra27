@@ -18,6 +18,11 @@
     padding-bottom:20px;
 }
 
+.bigHeart {
+  font-size:40px;
+  color:orange;
+}
+
 .hiddenProduct{
     display:none;
 }
@@ -4748,7 +4753,7 @@ label {
   color: #222222;
   padding-left: 18px; }
 .order_d_inner .details_item .list {
-  padding-left: 18px; }
+  padding-left: 100px; }
   @media (min-width: 767px) {
     .order_d_inner .details_item .list {
       margin-bottom: 30px; } }

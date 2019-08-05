@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Data\Palitra27.Data.Models\Palitra27.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Palitra27.Common\Palitra27.Common.csproj" />
     <ProjectReference Include="..\..\Services\Palitra27.Services.Mapping\Palitra27.Services.Mapping.csproj" />
   </ItemGroup>
 

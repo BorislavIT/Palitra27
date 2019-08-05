@@ -29,7 +29,7 @@
                               new SettingsSeeder(),
                               new AdminsSeeder(),
                               new CategoriesSeeder(),
-                              new ProductBrandsSeeder(),
+                              new BrandsSeeder(),
                               new ProductsSeeder(),
                               new ReviewsSeeder(),
                               new CountriesSeeder(),

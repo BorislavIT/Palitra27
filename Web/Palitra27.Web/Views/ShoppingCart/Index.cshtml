@@ -1,0 +1,137 @@
+﻿@using Palitra27.Web.ViewModels.ShoppingCart;
+@model IList<ShoppingCartProductsViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal costOfVAT = (Model.Sum(x => x.TotalPrice)) * 0.2M;
+    string value = $"${costOfVAT:f2}";
+    var totalCost = costOfVAT + (Model.Sum(x => x.TotalPrice));
+    var totalCostvalue = $"${totalCost:f2}";
+}
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Shopping Cart</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="category.html">Cart</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+<!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">SubTotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="media">
+                                            <div class="d-flex">
+                                                <a href="/Product/Info/@item.Id"><img height="320px" width="300px" src="@item.Image" alt=""></a>
+                                            </div>
+                                            <div class="media-body">
+                                                <p>@item.Name</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h5>$@item.Price</h5>
+                                    </td>
+                                    <td>
+                                        <div class="product_count">
+                                            <input type="text" name="qty" id="sst" maxlength="12" value="@item.Quantity" title="Quantity:"
+                                                   class="input-text qty noB" disabled>
+                                            @{
+                                                var itemqtup = item.Quantity + 1;
+                                                var itemqtdown = item.Quantity - 1;
+
+                                            }
+
+                                            <a class="text-danger pr-2" href="/ShoppingCart/Edit/@item.Id?quantity=@itemqtup"><i class="lnr lnr-chevron-up arrows"></i></a>
+                                            @if (itemqtdown == 0)
+                                            {
+                                                <a class="text-danger pr-2"><i class="lnr lnr-chevron-down"></i></a>
+                                            }
+                                            else
+                                            {
+                                                <a class="text-danger pr-2" href="/ShoppingCart/Edit/@item.Id?quantity=@itemqtdown"><i class="lnr lnr-chevron-down"></i></a>
+                                            }
+                                        </div>
+                                        <a class="text-danger pr-2" href="/ShoppingCart/Delete/@item.Id"><i class="fa fa-times fa-2x text-danger"></i></a>
+                                    </td>
+                                    <td>
+                                        <h5>$@item.TotalPrice</h5>
+                                    </td>
+                                </tr>
+                            }
+                        <tr class="shipping_area">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div class="shipping_box">
+                                    <ul class="normalUL section_gap_bottom_custom">
+                                        <li>VAT: @value</li>
+                                        <li>Free Shipping</li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                            <tr class="bottom_button">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="cupon_text d-flex justify-content-end">
+                                        <input type="text" placeholder="Coupon Code">
+                                        <a class="primary-btn" href="#">Apply</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <h5>Total</h5>
+                                </td>
+                                <td>
+                                    <h5>@totalCostvalue</h5>
+                                </td>
+                            </tr>
+                            <tr class="out_button_area">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <div class="checkout_btn_inner d-flex align-items-center">
+                                        <a class="gray_btn" href="/Shop/Index">Continue Shopping</a>
+                                        <a asp-controller="Order" asp-action="Create" class="primary-btn">Proceed to checkout</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+<!--================End Cart Area =================-->

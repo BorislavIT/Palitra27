@@ -8,23 +8,23 @@
 
     using Palitra27.Data.Models;
 
-    public class ProductBrandsSeeder : ISeeder
+    public class BrandsSeeder : ISeeder
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            if (dbContext.ProductsBrands.Any())
+            if (dbContext.Brands.Any())
             {
                 return;
             }
 
-            var productBrandDebeer = new ProductBrand() { Name = "Debeer" };
-            var productBrandHBBody = new ProductBrand() { Name = "HBBody" };
-            var productBrandNationalPaints = new ProductBrand() { Name = "NationalPaints" };
-            var productBrandPalitra = new ProductBrand() { Name = "Palitra" };
+            var BrandDebeer = new Brand() { Name = "Debeer" };
+            var BrandHBBody = new Brand() { Name = "HBBody" };
+            var BrandNationalPaints = new Brand() { Name = "NationalPaints" };
+            var BrandPalitra = new Brand() { Name = "Palitra" };
 
-            var allProductBrands = new List<ProductBrand>() { productBrandDebeer, productBrandHBBody, productBrandNationalPaints, productBrandPalitra };
+            var allBrands = new List<Brand>() { BrandDebeer, BrandHBBody, BrandNationalPaints, BrandPalitra };
 
-            await dbContext.AddRangeAsync(allProductBrands);
+            await dbContext.AddRangeAsync(allBrands);
         }
     }
 }
