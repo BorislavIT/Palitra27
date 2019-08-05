@@ -27,12 +27,13 @@
                 cfg.AddProfile(new ApplicationProfile());
             });
             var mapper = mockMapper.CreateMapper();
-            var productService = new ProductsService(dbContext, mapper);
 
+            var productService = new ProductsService(dbContext, mapper);
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { BrandName = "Brand"});
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { CategoryName = "Category" });
+
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
 
             var productBindingModel = new CreateProductBindingModel
             {
@@ -43,7 +44,6 @@
             };
 
             var productDTO = productService.Create(productBindingModel);
-
             var products = dbContext.Products.ToList();
 
             Assert.Single(products);
@@ -63,12 +63,13 @@
                 cfg.AddProfile(new ApplicationProfile());
             });
             var mapper = mockMapper.CreateMapper();
-            var productService = new ProductsService(dbContext, mapper);
 
+            var productService = new ProductsService(dbContext, mapper);
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
+
             var brand = new Brand { Id = "d", Name = "" };
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { CategoryName = "Category" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
 
             var productBindingModel = new CreateProductBindingModel
             {
@@ -79,7 +80,6 @@
             };
 
             var productDTO = productService.Create(productBindingModel);
-
             var products = dbContext.Products.ToList();
 
             Assert.Null(productDTO);
@@ -99,12 +99,13 @@
                 cfg.AddProfile(new ApplicationProfile());
             });
             var mapper = mockMapper.CreateMapper();
-            var productService = new ProductsService(dbContext, mapper);
 
+            var productService = new ProductsService(dbContext, mapper);
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { BrandName = "Brand" });
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { CategoryName = "Category" });
+
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
 
             var productBindingModel = new CreateProductBindingModel
             {
@@ -115,7 +116,6 @@
             };
 
             var productDTO = productService.Create(productBindingModel);
-
             var products = dbContext.Products.ToList();
 
             var product1 = products[0];
@@ -139,6 +139,7 @@
                 cfg.AddProfile(new ApplicationProfile());
             });
             var mapper = mockMapper.CreateMapper();
+
             var productService = new ProductsService(dbContext, mapper);
 
             var productFromService = productService.GetOnlyProductById(id);
@@ -159,12 +160,13 @@
                 cfg.AddProfile(new ApplicationProfile());
             });
             var mapper = mockMapper.CreateMapper();
-            var productService = new ProductsService(dbContext, mapper);
 
+            var productService = new ProductsService(dbContext, mapper);
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { BrandName = "Brand" });
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { CategoryName = "Category" });
+
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
 
             var productBindingModel = new CreateProductBindingModel
             {
@@ -175,7 +177,6 @@
             };
 
             var productDTO = productService.Create(productBindingModel);
-
             var products = dbContext.Products.ToList();
 
             var product1 = products[0];

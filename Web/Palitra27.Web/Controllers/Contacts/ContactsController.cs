@@ -17,12 +17,17 @@
 
         public IActionResult Info()
         {
-            return this.View();
+            return this.View(new ContactBindingModel { });
         }
 
         [HttpPost]
         public IActionResult Info(ContactBindingModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
             this.emailSender.SendEmailAsync(ReceivingEmail, $"{model.Email}", $"<p>Subject:{model.Subject} <br />Message:{model.Message}</p>");
 
             return this.Redirect("/Home/Index");

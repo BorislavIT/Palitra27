@@ -2,7 +2,7 @@
 
 @model ProductInfoViewModel
 @{
-    ViewData["Title"] = "Single";
+    ViewData["Title"] = "Info";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     double totalReviews = Model.Reviews.Count;
@@ -30,9 +30,9 @@
     </div>
 </section>
 <!-- End Banner Area -->
+<!--================Single Product Area =================-->
 <form method="post" id="my_form">
     @Html.AntiForgeryToken()
-    <!--================Single Product Area =================-->
     <div class="product_image_area">
         <div class="container">
             <div class="row s_product_inner">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="card_area d-flex align-items-center">
                             <button type="submit" value="submit" class="primary-btn">Add To Cart</button>
-                            <a asp-controller="Favourite" asp-action="Add" asp-route-productId="@Model.Id"><i class="lnr lnr lnr-heart bigHeart"></i></a>
+                            <a asp-controller="Favourites" asp-action="Add" asp-route-productId="@Model.Id"><i class="lnr lnr lnr-heart bigHeart"></i></a>
                         </div>
                     </div>
                 </div>
@@ -81,6 +81,8 @@
     </div>
 </form>
 <!--================End Single Product Area =================-->
+
+<!--================Start Product Description Area =================-->
 <section class="product_description_area">
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -99,50 +101,50 @@
 
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="col-md-12">
-                            <p class="bigDescription">@Model.Description</p>
-                    </div>
+                <div class="col-md-12">
+                    <p class="bigDescription">@Model.Description</p>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <h5>Width</h5>
-                                    </td>
-                                    <td>
-                                        <h5>@Model.Width</h5>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h5>Height</h5>
-                                    </td>
-                                    <td>
-                                        <h5>@Model.Height</h5>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h5>Depth</h5>
-                                    </td>
-                                    <td>
-                                        <h5>@Model.Depth</h5>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <h5>Weight</h5>
-                                    </td>
-                                    <td>
-                                        <h5>@Model.Weight</h5>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <h5>Width</h5>
+                                </td>
+                                <td>
+                                    <h5>@Model.Width</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>Height</h5>
+                                </td>
+                                <td>
+                                    <h5>@Model.Height</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>Depth</h5>
+                                </td>
+                                <td>
+                                    <h5>@Model.Depth</h5>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>Weight</h5>
+                                </td>
+                                <td>
+                                    <h5>@Model.Weight</h5>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
@@ -191,7 +193,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @foreach (var item in Model.Reviews)
+                            @foreach (var item in Model.Reviews.OrderByDescending(x => x.DateOfCreation))
                             {
                                 <div class="review_list">
                                     <div class="review_item sectionGapForReviewMessages">
@@ -200,7 +202,7 @@
                                                 <img src="~/img/product/review-1.png" alt="">
                                             </div>
                                             <div class="media-body">
-                                                <h4>@item.User.UserName</h4>
+                                                <h4>@item.UserName</h4>
                                                 <h5>@item.DateOfCreation</h5>
                                                 @for (int i = 0; i < item.Stars; i++)
                                                 {
@@ -220,7 +222,7 @@
                                 <h4>Add a Review</h4>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'" required>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

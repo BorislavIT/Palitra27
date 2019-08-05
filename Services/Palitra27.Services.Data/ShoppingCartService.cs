@@ -11,7 +11,7 @@
 
     public class ShoppingCartService : IShoppingCartService
     {
-        private const int DEFAULT_PRODUCT_QUANTITY = 1;
+        private const int DefaultProductQuantity = 1;
 
         private readonly ApplicationDbContext db;
         private readonly IProductsService productService;
@@ -34,7 +34,8 @@
         {
             var product = this.productService.FindDomainProduct(productId);
             var user = this.userService.GetUserByUsername(username);
-            var userCart = this.db.ShoppingCarts.FirstOrDefault(x => x.User.Id == user.Id);
+            var userCart = this.db.ShoppingCarts
+                .FirstOrDefault(x => x.User.Id == user.Id);
 
             if (product == null || user == null)
             {
@@ -61,7 +62,7 @@
             shoppingCartProduct = new ShoppingCartProduct
             {
                 Product = product,
-                Quantity = quntity == null ? DEFAULT_PRODUCT_QUANTITY : quntity.Value,
+                Quantity = quntity == null ? DefaultProductQuantity : quntity.Value,
                 ShoppingCartId = userCart.Id,
                 ProductId = product.Id,
             };
@@ -116,7 +117,8 @@
                 return;
             }
 
-            var shoppingCartProduct = this.db.ShoppingCartProducts.FirstOrDefault(x => x.ProductId == productId);
+            var shoppingCartProduct = this.db.ShoppingCartProducts
+                .FirstOrDefault(x => x.ProductId == productId);
             if (shoppingCartProduct == null)
             {
                 return;
@@ -160,7 +162,8 @@
 
         private ShoppingCartProduct GetShoppingCartProduct(string productId, string shoppingCartId)
         {
-            return this.db.ShoppingCartProducts.FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId);
+            return this.db.ShoppingCartProducts
+                .FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId);
         }
     }
 }

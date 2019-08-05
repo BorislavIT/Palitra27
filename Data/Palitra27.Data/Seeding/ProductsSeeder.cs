@@ -42,7 +42,7 @@
             {
                 for (int z = 0; z < 10; z++)
                 {
-                    var review = new Review() { Message = "Very good", Stars = 4, User = admin, UserId = admin.Id, DateOfCreation = DateTime.UtcNow };
+                    var review = new Review() { Message = "Very good", Stars = 4, UserName = admin.UserName, DateOfCreation = DateTime.UtcNow };
                     var list = new List<Review>() { review };
 
                     var product = new Product { Name = $"product-{z}", Brand = allBrands[i], Category = allCategories[i], Image = "https://www.hbbody.com.gr/images/products/SPRAY-FILL.png", Price = random.Next(0, 20), Reviews = list };

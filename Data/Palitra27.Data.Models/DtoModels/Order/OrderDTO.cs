@@ -41,7 +41,7 @@
 
         public string Notes { get; set; }
 
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         public PaymentType PaymentType { get; set; }
 

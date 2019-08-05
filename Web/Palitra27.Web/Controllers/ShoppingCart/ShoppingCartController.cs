@@ -124,7 +124,7 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            List<ShoppingCartProductsViewModel> shoppingCartSession = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(HttpContext.Session, GlobalConstants.SessionShoppingCartKey);
+            List<ShoppingCartProductsViewModel> shoppingCartSession = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(this.HttpContext.Session, GlobalConstants.SessionShoppingCartKey);
             if (shoppingCartSession == null)
             {
                 return this.RedirectToAction(nameof(this.Index));

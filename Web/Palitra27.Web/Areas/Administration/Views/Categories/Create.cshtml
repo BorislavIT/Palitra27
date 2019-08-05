@@ -35,7 +35,8 @@
                     <form method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <div class="col-md-12 form-group">
-                            <input type="text" name="CategoryName" placeholder="Category Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Category Name'" required="" class="single-input">
+                            <input type="text" asp-for="Name" placeholder="Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'" required="" class="single-input" value="@Model.Name">
+                            <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" value="submit" class="genric-btn info">Create Category</button>

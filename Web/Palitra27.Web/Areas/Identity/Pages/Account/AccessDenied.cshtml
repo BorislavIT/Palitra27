@@ -4,7 +4,31 @@
     ViewData["Title"] = "Access denied";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">You do not have access to this resource.</p>
-</header>
+<div class="container">
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Access Denied</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a>Access Denied</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <section class="section_gap">
+        <div class="container">
+            <header>
+                <h1 class="text-danger">@ViewData["Title"]</h1>
+                <p class="text-danger">You do not have access to this resource.</p>
+            </header>
+        </div>
+    </section>
+</div>
+
+

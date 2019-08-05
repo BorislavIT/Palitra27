@@ -43,7 +43,7 @@
                 .ForMember(x => x.OrderStatus, y => y.MapFrom(src => src.Status));
 
             this.CreateMap<OrderCreateBindingModel, Order>()
-                .ForMember(x => x.PhoneNumber, y => y.MapFrom(src => int.Parse(src.PhoneNumber)))
+                .ForMember(x => x.PhoneNumber, y => y.MapFrom(src => src.PhoneNumber))
                 .ForMember(x => x.Country, y => y.Ignore())
                 .ForMember(x => x.PaymentStatus, y => y.MapFrom(src => PaymentStatus.Unpaid))
                 .ForMember(x => x.OrderDate, y => y.MapFrom(src => DateTime.UtcNow))
@@ -53,6 +53,9 @@
 
             this.CreateMap<Brand, BrandDTO>();
             this.CreateMap<BrandDTO, Brand>();
+
+            this.CreateMap<AddReviewBindingModel, Review>()
+                .ForMember(x => x.DateOfCreation, y => y.MapFrom(src => DateTime.Now));
 
             this.CreateMap<Order, OrderDTO>();
             this.CreateMap<OrderDTO, Order>();

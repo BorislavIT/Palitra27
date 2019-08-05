@@ -35,7 +35,7 @@ namespace Palitra27.Data.Models
         public string ShoppingCartId { get; set; }
         public virtual ShoppingCart ShoppingCart { get; set; }
 
-        public  string FavouriteListId { get; set; }
+        public string FavouriteListId { get; set; }
         public virtual FavouriteList FavouriteList { get; set; }
 
         public virtual ICollection<DiscountCoupon> DiscountCoupons { get; set; }

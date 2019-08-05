@@ -47,4 +47,6 @@
     <ProjectReference Include="..\Palitra27.Web.Infrastructure\Palitra27.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\Palitra27.Web.ViewModels\Palitra27.Web.ViewModels.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4css_4main_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
 </Project>

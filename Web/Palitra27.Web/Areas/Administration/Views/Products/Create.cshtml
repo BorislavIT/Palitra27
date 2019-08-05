@@ -1,7 +1,6 @@
 ﻿@using Palitra27.Web.ViewModels.Products;
 
-@model  BrandCategoryViewModel;
-
+@model  CreateProductBrandAndCategoryAndDataViewModel;
 @{
     ViewData["Title"] = "Create";
  Layout = "~/Views/Shared/_Layout.cshtml";
@@ -35,13 +34,21 @@
                     <form method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
                         <div class="col-md-12 form-group">
-                            <input type="text" name="ProductName" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" required="" class="single-input">
+                            <input type="text" asp-for="CreateProductBindingModel.ProductName" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" required="" class="single-input" value="@Model.CreateProductBindingModel.ProductName">
+                            <span asp-validation-for="CreateProductBindingModel.ProductName" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="form-select">
-                                <select style="display: none;" name="Category">
-                                    <option selected="selected" disabled="disabled">Choose Product Category</option>
-                                    @foreach (var category in Model.Categories)
+                                <select style="display: none;" asp-for="CreateProductBindingModel.Category">
+                                    @if (Model.CreateProductBindingModel.Category != null)
+                                    {
+                                        <option selected="selected">@Model.BrandCategoryViewModel.Categories.FirstOrDefault(x => x.Name == Model.CreateProductBindingModel.Category)</option>
+                                    }
+                                    else
+                                    {
+                                        <option selected="selected" disabled="disabled">Choose Product Category</option>
+                                    }
+                                    @foreach (var category in Model.BrandCategoryViewModel.Categories)
                                     {
                                         <option value="@category.Name">@category.Name</option>
                                     }
@@ -50,9 +57,17 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="form-select">
-                                <select style="display: none;" name="Brand">
-                                    <option selected="selected" disabled="disabled">Choose Product Brand</option>
-                                    @foreach (var brand in Model.Brands)
+                                <select style="display: none;" asp-for="CreateProductBindingModel.Brand">
+                                    @if (Model.CreateProductBindingModel.Brand != null)
+                                    {
+                                        <option selected="selected">@Model.BrandCategoryViewModel.Brands.FirstOrDefault(x => x.Name == Model.CreateProductBindingModel.Brand)</option>
+                                    }
+                                    else
+                                    {
+                                        <option selected="selected" disabled="disabled">Choose Product Brand</option>
+
+                                    }
+                                    @foreach (var brand in Model.BrandCategoryViewModel.Brands)
                                     {
                                         <option value="@brand.Name">@brand.Name</option>
                                     }
@@ -60,10 +75,12 @@
                             </div>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="number" name="Price" placeholder="Price" min="1" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required="" class="single-input">
+                            <input type="number" asp-for="CreateProductBindingModel.Price" placeholder="Price" min="1" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required="" class="single-input">
+                            <span asp-validation-for="CreateProductBindingModel.Price" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
-                            <input type="file" data-val="true" name="Image" placeholder="Image URL" min="1" multiple onfocus="this.placeholder = ''" onblur="this.placeholder = 'URL'" required="" class="single-input" accept="image/x-png,image/gif,image/jpeg">
+                            <input type="file" data-val="true" asp-for="CreateProductBindingModel.Image" placeholder="Image URL" min="1" multiple onfocus="this.placeholder = ''" onblur="this.placeholder = 'URL'" required="" class="single-input" accept="image/x-png,image/gif,image/jpeg">
+                            <span asp-validation-for="CreateProductBindingModel.Image" class="text-danger"></span>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" value="submit" class="genric-btn info">Create Product</button>

@@ -33,12 +33,17 @@
         {
             List<OrderProduct> orderProducts = new List<OrderProduct>();
             var shoppingCartProducts = this.shoppingCartService.GetAllDomainShoppingCartProducts(user.UserName).ToList();
+            if (shoppingCartProducts.Count == 0)
+            {
+                return string.Empty;
+            }
+
             var country = this.FindCountryByName(model.Country);
             var order = new Order
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                PhoneNumber = int.Parse(model.PhoneNumber),
+                PhoneNumber = model.PhoneNumber,
                 PaymentStatus = PaymentStatus.Unpaid,
                 PaymentType = model.PaymentType,
                 OrderDate = DateTime.UtcNow,

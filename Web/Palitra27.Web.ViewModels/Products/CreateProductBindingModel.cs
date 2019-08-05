@@ -1,24 +1,28 @@
 ﻿namespace Palitra27.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
     using Microsoft.AspNetCore.Http;
-    using Palitra27.Data.Models;
-    using Palitra27.Services.Mapping;
 
     public class CreateProductBindingModel
     {
+        [Required]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string Brand { get; set; }
 
+        [Required]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string ProductName { get; set; }
 
+        [Required]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string Category { get; set; }
 
+        [Required]
+        [Range(1, double.MaxValue, ErrorMessage = "The \"{0}\" must be between {1} and {2}.")]
         public decimal Price { get; set; }
 
+        [Required]
         public IFormFile Image { get; set; }
     }
 }

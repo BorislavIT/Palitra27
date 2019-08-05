@@ -51,11 +51,24 @@ namespace Palitra27.Data.Migrations
                     ModifiedOn = table.Column<DateTime>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     DeletedOn = table.Column<DateTime>(nullable: true),
-                    ShoppingCartId = table.Column<string>(nullable: true)
+                    ShoppingCartId = table.Column<string>(nullable: true),
+                    FavouriteListId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,7 +84,7 @@ namespace Palitra27.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Brands",
+                name: "Countries",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -79,7 +92,7 @@ namespace Palitra27.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Brands", x => x.Id);
+                    table.PrimaryKey("PK_Countries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -207,6 +220,24 @@ namespace Palitra27.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FavouriteLists",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteLists", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavouriteLists_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ShoppingCarts",
                 columns: table => new
                 {
@@ -262,14 +293,79 @@ namespace Palitra27.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    PaymentStatus = table.Column<int>(nullable: false),
+                    OrderDate = table.Column<DateTime>(nullable: true),
+                    DeliveryDate = table.Column<DateTime>(nullable: true),
+                    TotalPrice = table.Column<decimal>(nullable: false),
+                    DeliveryPrice = table.Column<decimal>(nullable: false),
+                    ZIP = table.Column<int>(nullable: false),
+                    CountryId = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    AddressLine1 = table.Column<string>(nullable: true),
+                    AddressLine2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    Region = table.Column<string>(nullable: true),
+                    Notes = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<int>(nullable: false),
+                    PaymentType = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavouriteProducts",
+                columns: table => new
+                {
+                    FavouriteListId = table.Column<string>(nullable: false),
+                    ProductId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavouriteProducts", x => new { x.ProductId, x.FavouriteListId });
+                    table.ForeignKey(
+                        name: "FK_FavouriteProducts_FavouriteLists_FavouriteListId",
+                        column: x => x.FavouriteListId,
+                        principalTable: "FavouriteLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_FavouriteProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
+                    ProductId = table.Column<string>(nullable: true),
                     Stars = table.Column<int>(nullable: false),
                     Message = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true),
-                    ProductId = table.Column<string>(nullable: true),
+                    UserName = table.Column<string>(nullable: true),
                     DateOfCreation = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -279,12 +375,6 @@ namespace Palitra27.Data.Migrations
                         name: "FK_Reviews_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reviews_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -310,6 +400,58 @@ namespace Palitra27.Data.Migrations
                         name: "FK_ShoppingCartProducts_ShoppingCarts_ShoppingCartId",
                         column: x => x.ShoppingCartId,
                         principalTable: "ShoppingCarts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiscountCoupons",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    amountInPercent = table.Column<int>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    OrderId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiscountCoupons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DiscountCoupons_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DiscountCoupons_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderProducts",
+                columns: table => new
+                {
+                    OrderId = table.Column<string>(nullable: false),
+                    ProductId = table.Column<string>(nullable: false),
+                    Quantity = table.Column<int>(nullable: false),
+                    Price = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderProducts", x => new { x.OrderId, x.ProductId });
+                    table.ForeignKey(
+                        name: "FK_OrderProducts_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -364,6 +506,36 @@ namespace Palitra27.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DiscountCoupons_ApplicationUserId",
+                table: "DiscountCoupons",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiscountCoupons_OrderId",
+                table: "DiscountCoupons",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavouriteProducts_FavouriteListId",
+                table: "FavouriteProducts",
+                column: "FavouriteListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderProducts_ProductId",
+                table: "OrderProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CountryId",
+                table: "Orders",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -382,11 +554,6 @@ namespace Palitra27.Data.Migrations
                 name: "IX_Reviews_ProductId",
                 table: "Reviews",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reviews_UserId",
-                table: "Reviews",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Settings_IsDeleted",
@@ -417,6 +584,15 @@ namespace Palitra27.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "DiscountCoupons");
+
+            migrationBuilder.DropTable(
+                name: "FavouriteProducts");
+
+            migrationBuilder.DropTable(
+                name: "OrderProducts");
+
+            migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
@@ -429,10 +605,19 @@ namespace Palitra27.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "FavouriteLists");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "ShoppingCarts");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "Brands");

@@ -4,6 +4,7 @@
 
     using Microsoft.AspNetCore.Http;
     using Palitra27.Data.Models;
+    using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Data.Models.DtoModels.Product;
     using Palitra27.Data.Models.DtoModels.Review;
     using Palitra27.Web.ViewModels.Products;
@@ -18,7 +19,7 @@
 
         ProductDTO EditProduct(ProductEditBindingModel model);
 
-        ReviewDTO AddReview(AddReviewBindingModel model, string userId);
+        ReviewDTO AddReview(AddReviewBindingModel model, ApplicationUserDTO user);
 
         ProductDTO EditDescription(EditDescriptionBindingModel model);
 

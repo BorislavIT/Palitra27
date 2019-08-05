@@ -1,9 +1,5 @@
 ﻿namespace Palitra27.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     public class AddReviewBindingModel
     {
         public string Id { get; set; }

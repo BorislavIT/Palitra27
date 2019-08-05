@@ -1,8 +1,6 @@
 ﻿namespace Palitra27.Data.Models
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
 
     public class Review
     {
@@ -12,13 +10,10 @@
 
         public string Message { get; set; }
 
-        public string UserId { get; set; }
-
-        public virtual ApplicationUser User { get; set; }
+        public string UserName { get; set; }
 
         public string ProductId { get; set; }
-
-        public virtual Product Product { get; set; }
+        public Product Product { get; set; }
 
         public DateTime DateOfCreation { get; set; }
     }

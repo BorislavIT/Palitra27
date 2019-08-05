@@ -10,6 +10,7 @@
     using Microsoft.EntityFrameworkCore;
     using Palitra27.Data;
     using Palitra27.Data.Models;
+    using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Data.Models.DtoModels.Product;
     using Palitra27.Data.Models.DtoModels.Review;
     using Palitra27.Web.ViewModels.Products;
@@ -19,7 +20,9 @@
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public ProductsService(ApplicationDbContext context, IMapper mapper)
+        public ProductsService(
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -36,14 +39,30 @@
 
         public ProductDTO Create(CreateProductBindingModel model)
         {
-            var brand = this.context.Brands.FirstOrDefault(c => c.Name == model.Brand);
-            var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
+            var checkProduct = this.context.Products
+              .FirstOrDefault(x => x.Name == model.ProductName);
+            if (checkProduct != null)
+            {
+                return null;
+            }
+
+            var brand = this.context.Brands
+                .FirstOrDefault(c => c.Name == model.Brand);
+            var category = this.context.Categories
+                .FirstOrDefault(c => c.Name == model.Category);
+
             if (brand == null || category == null)
             {
                 return null;
             }
 
-            Product product = new Product() { Category = category, Price = model.Price, Name = model.ProductName, Brand = brand };
+            Product product = new Product()
+            {
+                Category = category,
+                Price = model.Price,
+                Name = model.ProductName,
+                Brand = brand,
+            };
             this.context.Products.Add(product);
             this.context.SaveChanges();
 
@@ -52,12 +71,30 @@
 
         public ProductDTO Create(CreateProductBindingModel model, IFormFile image)
         {
-            byte[] asd = this.GetByteArrayFromImage(model.Image);
-            string imreBase64Data = Convert.ToBase64String(asd);
+            var checkProduct = this.context.Products
+              .FirstOrDefault(x => x.Name == model.ProductName);
+            if (checkProduct != null)
+            {
+                return null;
+            }
+
+            byte[] arrOfImage = this.GetByteArrayFromImage(model.Image);
+            string imreBase64Data = Convert.ToBase64String(arrOfImage);
             string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
-            var brand = this.context.Brands.FirstOrDefault(c => c.Name == model.Brand);
-            var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
-            Product product = new Product() { Category = category, Price = model.Price, Name = model.ProductName, Brand = brand, Image = imgDataURL };
+
+            var brand = this.context.Brands
+                .FirstOrDefault(c => c.Name == model.Brand);
+            var category = this.context.Categories
+                .FirstOrDefault(c => c.Name == model.Category);
+
+            Product product = new Product()
+            {
+                Category = category,
+                Price = model.Price,
+                Name = model.ProductName,
+                Brand = brand,
+                Image = imgDataURL,
+            };
             this.context.Products.Add(product);
             this.context.SaveChanges();
 
@@ -67,6 +104,7 @@
         public ProductDTO FindProductById(string productId)
         {
             var product = this.context.Products
+             .Include(p => p.Reviews)
              .Include(p => p.Category)
              .Include(p => p.Brand)
              .FirstOrDefault(p => p.Id == productId);
@@ -76,36 +114,32 @@
                 return null;
             }
 
-            var reviews = this.context.Reviews.Where(r => r.ProductId == productId).ToList();
-            foreach (var item in reviews)
-            {
-                var user = this.context.Users.FirstOrDefault(u => u.Id == item.UserId);
-                item.User = user;
-            }
+            var reviews = this.context.Reviews
+                .Where(r => r.ProductId == product.Id).ToList();
 
             product.Reviews = reviews;
 
-            //return this.mapProductToProductDTO(product);
             return this.mapper.Map<ProductDTO>(product);
         }
 
         public ProductDTO EditProduct(ProductEditBindingModel model)
         {
-            var reviews = this.context.Reviews.Where(r => r.ProductId == model.Id).ToList();
-            foreach (var item in reviews)
-            {
-                var user = this.context.Users.FirstOrDefault(u => u.Id == item.UserId);
-                item.User = user;
-            }
-
             var product = this.context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
                 .FirstOrDefault(p => p.Id == model.Id);
+
+            var reviews = this.context.Reviews
+              .Where(r => r.ProductId == product.Id)
+              .ToList();
+
             product.Reviews = reviews;
 
-            var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
-            var brand = this.context.Brands.FirstOrDefault(b => b.Name == model.Brand);
+            var category = this.context.Categories
+                .FirstOrDefault(c => c.Name == model.Category);
+
+            var brand = this.context.Brands
+                .FirstOrDefault(b => b.Name == model.Brand);
 
             product.Name = model.Name;
             product.MiniDescription = model.MiniDescription;
@@ -118,9 +152,10 @@
             return this.mapper.Map<ProductDTO>(product);
         }
 
-        public ReviewDTO AddReview(AddReviewBindingModel model, string userId)
+        public ReviewDTO AddReview(AddReviewBindingModel model, ApplicationUserDTO user)
         {
-            var review = new Review { Message = model.Message, ProductId = model.Id, Stars = model.Stars, DateOfCreation = DateTime.Now, UserId = userId };
+            var product = this.FindDomainProduct(model.Id);
+            var review = new Review { UserName = user.UserName, ProductId = model.Id, Product = product, Message = model.Message, Stars = model.Stars, DateOfCreation = DateTime.UtcNow };
 
             this.context.Reviews.Add(review);
             this.context.SaveChanges();
@@ -140,17 +175,15 @@
 
         public Product FindDomainProduct(string id)
         {
-            var reviews = this.context.Reviews.Where(r => r.ProductId == id).ToList();
-            foreach (var item in reviews)
-            {
-                var user = this.context.Users.FirstOrDefault(u => u.Id == item.UserId);
-                item.User = user;
-            }
-
             var product = this.context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .FirstOrDefault(p => p.Id == id);
+                .Include(p => p.Reviews)
+               .Include(p => p.Category)
+               .Include(p => p.Brand)
+               .FirstOrDefault(p => p.Id == id);
+
+            var reviews = this.context.Reviews
+                .Where(r => r.ProductId == product.Id).ToList();
+
             product.Reviews = reviews;
 
             return product;

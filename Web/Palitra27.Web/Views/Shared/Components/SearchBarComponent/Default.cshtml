@@ -1,4 +1,5 @@
 ﻿@using Palitra27.Web.ViewModels.Products;
+@using Palitra27.Common;
 @model List<ProductViewModel>
 
 <form class="d-flex justify-content-between">
@@ -12,8 +13,16 @@
 }
 else
 {
-    @foreach (var item in Model.OrderBy(x=> x.Name).ThenBy(x => x.Price))
+    @foreach (var item in Model.OrderBy(x => x.Name).ThenBy(x => x.Price))
     {
-    <a href="/Products/Info/@item.Id"><p class="form-control hiddenProduct">@item.Name - $@item.Price</p></a>
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+            <a href="/Administration/Products/ChooseOne/@item.Id"><p class="form-control hiddenProduct">@item.Name - $@item.Price</p></a>
+        }
+        else
+        {
+            <a href="/Products/Info/@item.Id"><p class="form-control hiddenProduct">@item.Name - $@item.Price</p></a>
+
+        }
     }
 }

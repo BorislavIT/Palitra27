@@ -14,7 +14,9 @@
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public CategoriesService(ApplicationDbContext context, IMapper mapper)
+        public CategoriesService(
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -22,9 +24,18 @@
 
         public CategoryDTO CreateCategory(CreateCategoryBindingModel model)
         {
-            var category = new Category { Name = model.CategoryName };
+            var checkCategory = this.context.Categories
+               .FirstOrDefault(x => x.Name == model.Name);
+            if (checkCategory != null)
+            {
+                return null;
+            }
+
+            var category = new Category { Name = model.Name };
+
             this.context.Categories.Add(category);
             this.context.SaveChanges();
+
             return this.mapper.Map<CategoryDTO>(category);
         }
 

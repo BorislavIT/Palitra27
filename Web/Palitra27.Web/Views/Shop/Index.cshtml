@@ -201,14 +201,24 @@
                                                 <span class="ti-bag"></span>
                                                 <p class="hover-text">add to bag</p>
                                             </a>
-                                            <a asp-controller="Favourite" asp-action="Add" asp-route-productId="@product.Id" class="social-info">
+                                            <a asp-controller="Favourites" asp-action="Add" asp-route-productId="@product.Id" class="social-info">
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Favourite!</p>
                                             </a>
-                                            <a href="/Products/Info/@product.Id" class="social-info">
-                                                <span class="lnr lnr-move"></span>
-                                                <p class="hover-text">view more</p>
-                                            </a>
+                                            @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                                            {
+                                                <a href="/Administration/Products/ChooseOne/@product.Id" class="social-info">
+                                                    <span class="lnr lnr-move"></span>
+                                                    <p class="hover-text">view more</p>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="/Products/Info/@product.Id" class="social-info">
+                                                    <span class="lnr lnr-move"></span>
+                                                    <p class="hover-text">view more</p>
+                                                </a>
+                                            }
                                         </div>
                                     </div>
                                 </div>

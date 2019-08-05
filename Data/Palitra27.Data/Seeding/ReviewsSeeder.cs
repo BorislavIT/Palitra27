@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Identity;
@@ -28,7 +27,7 @@
 
             for (int i = 0; i < 20; i++)
             {
-                var review = new Review() { Message = "Very good", Stars = random.Next(1, 5), User = admin, UserId = admin.Id, DateOfCreation = DateTime.UtcNow };
+                var review = new Review() { Message = "Very good", Stars = random.Next(1, 5), UserName = admin.UserName, DateOfCreation = DateTime.UtcNow };
                 reviewList.Add(review);
             }
 

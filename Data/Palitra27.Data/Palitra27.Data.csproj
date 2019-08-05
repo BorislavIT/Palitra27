@@ -21,6 +21,18 @@
     <Compile Remove="Migrations\20190731131922_gjda.Designer.cs" />
     <Compile Remove="Migrations\20190804171541_jaja.cs" />
     <Compile Remove="Migrations\20190804171541_jaja.Designer.cs" />
+    <Compile Remove="Migrations\20190805161858_whattheheck.cs" />
+    <Compile Remove="Migrations\20190805161858_whattheheck.Designer.cs" />
+    <Compile Remove="Migrations\20190805164108_removedProductsfromreviews.cs" />
+    <Compile Remove="Migrations\20190805164108_removedProductsfromreviews.Designer.cs" />
+    <Compile Remove="Migrations\20190805164537_qweyutytrb.cs" />
+    <Compile Remove="Migrations\20190805164537_qweyutytrb.Designer.cs" />
+    <Compile Remove="Migrations\20190805165338_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190805165338_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190805165743_InitialCreate.cs" />
+    <Compile Remove="Migrations\20190805165743_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20190805165944_yeppp.cs" />
+    <Compile Remove="Migrations\20190805165944_yeppp.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

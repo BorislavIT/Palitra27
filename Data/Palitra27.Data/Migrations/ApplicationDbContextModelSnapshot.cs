@@ -208,6 +208,18 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Palitra27.Data.Models.Brand", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
             modelBuilder.Entity("Palitra27.Data.Models.Category", b =>
                 {
                     b.Property<string>("Id")
@@ -305,7 +317,7 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<int>("PaymentType");
 
-                    b.Property<int>("PhoneNumber");
+                    b.Property<string>("PhoneNumber");
 
                     b.Property<string>("Region");
 
@@ -389,18 +401,6 @@ namespace Palitra27.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Palitra27.Data.Models.Brand", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Brands");
-                });
-
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
                 {
                     b.Property<string>("Id")
@@ -414,13 +414,11 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<int>("Stars");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
                 });
@@ -591,10 +589,6 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId");
-
-                    b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>

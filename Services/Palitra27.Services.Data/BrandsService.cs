@@ -24,7 +24,14 @@
 
         public BrandDTO CreateBrand(CreateBrandBindingModel model)
         {
-            var brand = new Brand { Name = model.BrandName };
+            var checkBrand = this.context.Brands
+                .FirstOrDefault(x => x.Name == model.Name);
+            if (checkBrand != null)
+            {
+                return null;
+            }
+
+            var brand = new Brand { Name = model.Name };
 
             this.context.Brands.Add(brand);
             this.context.SaveChanges();

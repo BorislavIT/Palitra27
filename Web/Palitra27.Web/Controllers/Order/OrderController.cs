@@ -32,8 +32,6 @@
 
         public IActionResult Create()
         {
-            if (this.User.Identity.IsAuthenticated)
-            {
                 var user = this.usersService.GetUserByUsername(this.User.Identity.Name);
 
                 var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
@@ -47,21 +45,40 @@
                 var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = fillFormViewModel };
 
                 return this.View(actualModel);
-            }
-            else
-            {
-                 return this.Redirect("af/agfdga");
-            }
         }
 
         [HttpPost]
         public IActionResult Create(OrderCreateBindingModel model)
         {
             var user = this.usersService.GetUserByUsername(this.User.Identity.Name);
-            var orderId = this.orderService.CreateOrder(model, user);
-            this.shoppingCartService.DeleteAllProductFromShoppingCart(this.User.Identity.Name);
+            var countries = this.orderService.GetAllCountries();
 
-            return this.Redirect($"/Order/Details/{orderId}");
+            if (this.ModelState.IsValid)
+            {
+                var orderId = this.orderService.CreateOrder(model, user);
+                if (orderId == string.Empty)
+                {
+                    var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
+
+                    var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
+
+                    var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
+
+                    return this.View(actualModel);
+                }
+
+                this.shoppingCartService.DeleteAllProductFromShoppingCart(this.User.Identity.Name);
+
+                return this.Redirect($"/Order/Details/{orderId}");
+            }
+            else
+            {
+                var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
+                var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
+                var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
+
+                return this.View(actualModel);
+            }
         }
 
         public IActionResult Details(string id)
