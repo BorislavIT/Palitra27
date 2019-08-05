@@ -4,13 +4,13 @@
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Web.ViewModels.Contacts;
 
-    public class ContactController : BaseController
+    public class ContactsController : BaseController
     {
         private const string ReceivingEmail = "mutenroshiyo69@gmail.com";
 
         private readonly IEmailSender emailSender;
 
-        public ContactController(IEmailSender emailSender)
+        public ContactsController(IEmailSender emailSender)
         {
             this.emailSender = emailSender;
         }

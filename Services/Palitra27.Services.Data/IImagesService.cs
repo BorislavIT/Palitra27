@@ -7,7 +7,7 @@
 
     using Microsoft.AspNetCore.Http;
 
-    public interface IImageService
+    public interface IImagesService
     {
         void UploadImage(IFormFile formImage, string path);
     }

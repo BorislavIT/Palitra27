@@ -1,4 +1,5 @@
 ﻿@using Palitra27.Web.ViewModels.Shop;
+@using Palitra27.Common;
 
 @model ShopFiltersViewModel
 @{
@@ -180,7 +181,13 @@
                             <!-- single product -->
                             <div class="col-lg-4 col-md-6">
                                 <div class="single-product">
-                                    <a href="/Product/Info/@product.Id"><img class="img-fluidd" src="@product.Image" alt=""></a>
+                                    @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                                    {
+                                    <a href="/Administration/Products/ChooseOne/@product.Id"><img class="img-fluidd" src="@product.Image" alt=""></a>
+                                    }
+                                    else{
+                                    <a href="/Products/Info/@product.Id"><img class="img-fluidd" src="@product.Image" alt=""></a>
+                                    }
                                     <div class="product-details">
                                         <h6>
                                             @product.Name
@@ -198,7 +205,7 @@
                                                 <span class="lnr lnr-heart"></span>
                                                 <p class="hover-text">Favourite!</p>
                                             </a>
-                                            <a href="/Product/Info/@product.Id" class="social-info">
+                                            <a href="/Products/Info/@product.Id" class="social-info">
                                                 <span class="lnr lnr-move"></span>
                                                 <p class="hover-text">view more</p>
                                             </a>

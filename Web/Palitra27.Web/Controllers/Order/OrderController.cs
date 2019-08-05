@@ -1,24 +1,26 @@
 ﻿namespace Palitra27.Web.Controllers.Order
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     using AutoMapper;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Palitra27.Common;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Orders;
     using Palitra27.Web.ViewModels.ShoppingCart;
 
+    [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
     public class OrderController : BaseController
     {
         private readonly IUserService usersService;
-        private readonly IOrderService orderService;
+        private readonly IOrdersService orderService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IMapper mapper;
 
         public OrderController(
             IUserService usersService,
-            IOrderService orderService,
+            IOrdersService orderService,
             IShoppingCartService shoppingCartService,
             IMapper mapper)
         {
@@ -36,17 +38,9 @@
 
                 var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
 
-                var shoppingCartProductsViewModel = shoppingCartProducts.Select(x => new ShoppingCartProductsViewModel
-                {
-                    Id = x.ProductId,
-                    Image = x.Product.Image,
-                    Name = x.Product.Name,
-                    Price = x.Product.Price,
-                    Quantity = x.Quantity,
-                    TotalPrice = x.Quantity * x.Product.Price,
-                }).ToList();
+                var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
-                var fillFormViewModel = new OrderCreateViewModel() { FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber };
+                var fillFormViewModel = new OrderCreateBindingModel() { FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber };
 
                 var countries = this.orderService.GetAllCountries();
 
@@ -61,7 +55,7 @@
         }
 
         [HttpPost]
-        public IActionResult Create(OrderCreateViewModel model)
+        public IActionResult Create(OrderCreateBindingModel model)
         {
             var user = this.usersService.GetUserByUsername(this.User.Identity.Name);
             var orderId = this.orderService.CreateOrder(model, user);
@@ -72,23 +66,13 @@
 
         public IActionResult Details(string id)
         {
-            var user = this.usersService.GetDomainUserByUsername(this.User.Identity.Name);
-
             var order = this.orderService.GetUserOrderById(id, this.User.Identity.Name);
 
             var shoppingCartProducts = this.orderService.OrderProductsByOrderId(order.Id);
 
-            var shoppingCartProductsViewModel = shoppingCartProducts.Select(x => new ShoppingCartProductsViewModel
-            {
-                Id = x.ProductId,
-                Image = x.Product.Image,
-                Name = x.Product.Name,
-                Price = x.Product.Price,
-                Quantity = x.Quantity,
-                TotalPrice = x.Quantity * x.Product.Price,
-            }).ToList();
+            var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
-            var fillFormViewModel = this.mapper.Map<OrderCreateViewModel>(order);
+            var fillFormViewModel = this.mapper.Map<OrderCreateBindingModel>(order);
 
             var actualModel = new OrderShoppingCartViewModel { Id = order.Id, ShoppingCartProductsViewModels = shoppingCartProductsViewModel, OrderCreateViewModel = fillFormViewModel };
 

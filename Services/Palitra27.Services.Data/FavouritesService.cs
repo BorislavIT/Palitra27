@@ -17,7 +17,11 @@
         private readonly IUserService userService;
         private readonly IMapper mapper;
 
-        public FavouritesService(ApplicationDbContext dbContext, IProductsService productsService, IUserService userService, IMapper mapper)
+        public FavouritesService(
+            ApplicationDbContext dbContext,
+            IProductsService productsService,
+            IUserService userService,
+            IMapper mapper)
         {
             this.dbContext = dbContext;
             this.productsService = productsService;
@@ -25,13 +29,13 @@
             this.mapper = mapper;
         }
 
-        public void AddProduct(string productId, string username)
+        public void AddProduct(string id, string username)
         {
             var user = this.userService
                 .GetUserByUsername(username);
 
             var product = this.productsService
-                .FindDomainProduct(productId);
+                .FindDomainProduct(id);
 
             var favouriteList = this.dbContext.FavouriteLists
                  .FirstOrDefault(x => x.UserId == user.Id);
@@ -61,7 +65,7 @@
             }
         }
 
-        public async Task<List<FavouriteProductViewModel>> AllFavouriteProducts(string username)
+        public List<FavouriteProductViewModel> AllFavouriteProducts(string username)
         {
             var user = this.userService
                 .GetUserByUsername(username);
@@ -72,15 +76,11 @@
             var favouriteProducts = this.dbContext.FavouriteProducts
                 .Include(x => x.Product)
                 .Include(x => x.FavouriteList)
-                .Where(x => x.FavouriteList.Id == favouriteList.Id);
+                .Where(x => x.FavouriteList.Id == favouriteList.Id)
+                .ToList();
 
-            return await favouriteProducts.Select(x => new FavouriteProductViewModel
-            {
-                Id = x.ProductId,
-                Image = x.Product.Image,
-                Name = x.Product.Name,
-                Price = x.Product.Price,
-            }).ToListAsync();
+            var dsa = this.mapper.Map<List<FavouriteProductViewModel>>(favouriteProducts);
+            return dsa;
         }
 
         public void RemoveProduct(string productId, string username)

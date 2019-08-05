@@ -1,9 +1,5 @@
 ﻿namespace Palitra27.Web.ViewModels.ShoppingCart
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     public class ShoppingCartProductsViewModel
     {
         public string Id { get; set; }

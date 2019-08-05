@@ -7,13 +7,13 @@
     using Palitra27.Data.Models.DtoModels.Order;
     using Palitra27.Web.ViewModels.Orders;
 
-    public interface IOrderService
+    public interface IOrdersService
     {
         List<string> GetAllCountries();
 
-        string CreateOrder(OrderCreateViewModel model, ApplicationUserDTO user);
+        string CreateOrder(OrderCreateBindingModel model, ApplicationUserDTO user);
 
-        OrderDTO GetUserOrderById(string orderId, string username);
+        OrderDTO GetUserOrderById(string id, string username);
 
         IEnumerable<OrderProduct> OrderProductsByOrderId(string id);
     }

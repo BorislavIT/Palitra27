@@ -1,0 +1,40 @@
+﻿@model AdminChooseViewModel;
+
+@using Palitra27.Web.Areas.Administration.ViewModels;
+
+@{
+    ViewData["Title"] = "ChooseOne";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Admin Select</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="/Administration/Products/ChooseOne/@Model.Id">Admin Select</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <section class="section_gap">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 moveRight">
+                    <a href="/Products/Info/@Model.Id" class="genric-btn info e-large justify-content-center">Information Only</a>
+                </div>
+
+                <div class="col-md-6">
+                    <a href="/Administration/Products/Edit/@Model.Id" class="genric-btn info e-large justify-content-center">Edit Product</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

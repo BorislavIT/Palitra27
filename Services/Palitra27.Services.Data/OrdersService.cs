@@ -13,26 +13,23 @@
     using Palitra27.Data.Models.Enums;
     using Palitra27.Web.ViewModels.Orders;
 
-    public class OrderService : IOrderService
+    public class OrdersService : IOrdersService
     {
-        private readonly IUserService userService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly ApplicationDbContext db;
         private readonly IMapper mapper;
 
-        public OrderService(
-            IUserService userService,
+        public OrdersService(
             IShoppingCartService shoppingCartService,
             ApplicationDbContext db,
             IMapper mapper)
         {
-            this.userService = userService;
             this.shoppingCartService = shoppingCartService;
             this.db = db;
             this.mapper = mapper;
         }
 
-        public string CreateOrder(OrderCreateViewModel model, ApplicationUserDTO user)
+        public string CreateOrder(OrderCreateBindingModel model, ApplicationUserDTO user)
         {
             List<OrderProduct> orderProducts = new List<OrderProduct>();
             var shoppingCartProducts = this.shoppingCartService.GetAllDomainShoppingCartProducts(user.UserName).ToList();
@@ -57,11 +54,16 @@
                 DeliveryPrice = 0,
                 DeliveryDate = DateTime.UtcNow.AddDays(7),
             };
+
+            var mappedOrder = this.mapper.Map<Order>(model);
+            mappedOrder.UserId = user.Id;
+            mappedOrder.CountryId = country.Id;
+            mappedOrder.Country = country;
             foreach (var shoppingCartProduct in shoppingCartProducts)
             {
                 var orderProduct = new OrderProduct
                 {
-                    Order = order,
+                    Order = mappedOrder,
                     Product = shoppingCartProduct.Product,
                     Quantity = shoppingCartProduct.Quantity,
                     Price = shoppingCartProduct.Product.Price,
@@ -70,22 +72,22 @@
                 orderProducts.Add(orderProduct);
             }
 
-            order.OrderProducts = orderProducts;
+            mappedOrder.OrderProducts = orderProducts;
 
-            order.TotalPrice = order.OrderProducts.Sum(x => x.Quantity * x.Price) + (order.OrderProducts.Sum(x => x.Quantity * x.Price) * 0.2M);
+            mappedOrder.TotalPrice = mappedOrder.OrderProducts.Sum(x => x.Quantity * x.Price) + (mappedOrder.OrderProducts.Sum(x => x.Quantity * x.Price) * 0.2M);
             this.db.OrderProducts.AddRange(orderProducts);
-            this.db.Orders.Add(order);
+            this.db.Orders.Add(mappedOrder);
             this.db.SaveChanges();
 
-            return order.Id;
+            return mappedOrder.Id;
         }
 
-        public OrderDTO GetUserOrderById(string orderId, string username)
+        public OrderDTO GetUserOrderById(string id, string username)
         {
             var order = this.db.Orders
                               .Include(x => x.User)
                               .Include(x => x.Country)
-                              .FirstOrDefault(x => x.Id == orderId && x.User.UserName == username);
+                              .FirstOrDefault(x => x.Id == id && x.User.UserName == username);
             return this.mapper.Map<OrderDTO>(order);
         }
 
@@ -95,40 +97,14 @@
                                         .Where(x => x.OrderId == id).ToList();
         }
 
+        public List<string> GetAllCountries()
+        {
+            return this.db.Countries.Select(x => x.Name).ToList();
+        }
+
         private Country FindCountryByName(string name)
         {
             return this.db.Countries.FirstOrDefault(x => x.Name == name);
-        }
-
-        private OrderDTO MapOrderToOrderDTO(Order order)
-        {
-            var orderDTO = new OrderDTO
-            {
-                Country = order.Country,
-                AddressLine1 = order.AddressLine1,
-                AddressLine2 = order.AddressLine2,
-                City = order.City,
-                CountryId = order.CountryId,
-                DeliveryDate = order.DeliveryDate,
-                DeliveryPrice = order.DeliveryPrice,
-                FirstName = order.FirstName,
-                DiscountCoupons = order.DiscountCoupons,
-                Id = order.Id,
-                LastName = order.LastName,
-                Notes = order.Notes,
-                Status = order.Status,
-                PaymentStatus = order.PaymentStatus,
-                OrderDate = order.OrderDate,
-                OrderProducts = order.OrderProducts,
-                PaymentType = order.PaymentType,
-                PhoneNumber = order.PhoneNumber,
-                Region = order.Region,
-                TotalPrice = order.TotalPrice,
-                User = order.User,
-                UserId = order.UserId,
-                ZIP = order.ZIP,
-            };
-            return orderDTO;
         }
 
         //public void CompleteProcessingOrder(string username)
@@ -296,10 +272,5 @@
         //    this.db.SaveChanges();
         //    return true;
         //}
-
-        public List<string> GetAllCountries()
-        {
-            return this.db.Countries.Select(x => x.Name).ToList();
-        }
     }
 }

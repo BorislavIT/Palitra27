@@ -1,9 +1,7 @@
 ﻿namespace Palitra27.Web.Controllers.Shops
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Data.Common.Repositories;
@@ -15,6 +13,9 @@
 
     public class ShopController : BaseController
     {
+        private const int DefaultProductsShow = 12;
+        private const int DefaultPage = 1;
+
         private readonly IDeletableEntityRepository<Product> repository;
         private readonly IShopService shopService;
         private readonly IProductsService productsService;
@@ -37,12 +38,10 @@
 
         public IActionResult Index()
         {
-            int show = 12;
-            int page = 1;
-            this.ViewBag.CurrentPage = page;
+            this.ViewBag.CurrentPage = DefaultPage;
             var paginatedProducts = this.repository.All().ToList();
-            this.ViewBag.ProductsToShow = show;
-            this.Pagination(paginatedProducts, show);
+            this.ViewBag.ProductsToShow = DefaultProductsShow;
+            this.Pagination(paginatedProducts, DefaultProductsShow);
 
             var products = this.repository.All().To<ProductViewModel>().ToList();
             var productsListViewModel = new ProductListViewModel { Products = products };

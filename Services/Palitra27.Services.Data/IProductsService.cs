@@ -29,7 +29,5 @@
         List<ProductDTO> GetAllProducts();
 
         Product FindDomainProduct(string id);
-
-        //void AddImageUrls(string id, IEnumerable<string> imageUrls);
     }
 }

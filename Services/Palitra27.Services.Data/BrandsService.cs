@@ -14,7 +14,9 @@
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
 
-        public BrandsService(ApplicationDbContext context, IMapper mapper)
+        public BrandsService(
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
@@ -23,17 +25,17 @@
         public BrandDTO CreateBrand(CreateBrandBindingModel model)
         {
             var brand = new Brand { Name = model.BrandName };
+
             this.context.Brands.Add(brand);
             this.context.SaveChanges();
-            var dTO = this.mapper.Map<BrandDTO>(brand);
-            return dTO;
+
+            return this.mapper.Map<BrandDTO>(brand);
         }
 
         public List<BrandDTO> FindAllBrands()
         {
             var brands = this.context.Brands.ToList();
-            var brandsDto = this.mapper.Map<List<BrandDTO>>(brands);
-            return brandsDto;
+            return this.mapper.Map<List<BrandDTO>>(brands);
         }
     }
 }

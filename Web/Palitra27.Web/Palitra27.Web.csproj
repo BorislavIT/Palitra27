@@ -47,8 +47,4 @@
     <ProjectReference Include="..\Palitra27.Web.Infrastructure\Palitra27.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\Palitra27.Web.ViewModels\Palitra27.Web.ViewModels.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Administration\ViewModels\" />
-  </ItemGroup>
 </Project>

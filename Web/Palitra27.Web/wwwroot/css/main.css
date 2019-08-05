@@ -23,6 +23,10 @@
   color:orange;
 }
 
+.moveRight{
+    padding-left:300px;
+}
+
 .hiddenProduct{
     display:none;
 }

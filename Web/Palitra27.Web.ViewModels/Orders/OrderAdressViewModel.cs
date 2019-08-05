@@ -1,9 +1,5 @@
 ﻿namespace Palitra27.Web.ViewModels.Orders
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
     public class OrderAdressViewModel
     {
         public string Id { get; set; }

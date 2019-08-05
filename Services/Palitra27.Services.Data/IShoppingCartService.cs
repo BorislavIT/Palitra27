@@ -7,9 +7,9 @@
 
     public interface IShoppingCartService
     {
-        void AddProductInShoppingCart(string productId, string username, int? quntity = null);
+        void AddProductInShoppingCart(string id, string username, int? quntity = null);
 
-        void EditProductQuantityInShoppingCart(string productId, string username, int quantity);
+        void EditProductQuantityInShoppingCart(string id, string username, int quantity);
 
         IEnumerable<ShoppingCartProductDTO> GetAllShoppingCartProducts(string username);
 

@@ -4,6 +4,7 @@
 
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Services.Data;
+    using Palitra27.Web.Areas.Administration.ViewModels;
     using Palitra27.Web.ViewModels.Products;
 
     public class ProductsController : AdministrationController
@@ -132,6 +133,12 @@
             var model = new ProductEditViewModel { Product = productModel, BrandCategoryViewModel = productCategoryBrandViewModel };
 
             return this.Redirect($"/Administration/Products/Edit/{product.Id}");
+        }
+
+        public IActionResult ChooseOne(string id)
+        {
+            var model = new AdminChooseViewModel { Id = id };
+            return this.View(model);
         }
     }
 }

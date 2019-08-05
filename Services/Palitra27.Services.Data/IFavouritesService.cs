@@ -1,7 +1,6 @@
 ﻿namespace Palitra27.Services.Data
 {
     using System.Collections.Generic;
-    using System.Threading.Tasks;
 
     using Palitra27.Web.ViewModels.FavouriteList;
 
@@ -11,6 +10,6 @@
 
         void RemoveProduct(string productId, string username);
 
-        Task<List<FavouriteProductViewModel>> AllFavouriteProducts(string username);
+        List<FavouriteProductViewModel> AllFavouriteProducts(string username);
     }
 }

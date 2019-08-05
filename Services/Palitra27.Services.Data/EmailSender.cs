@@ -13,7 +13,8 @@
         private const string EmailFrom = "palitra27bg@gmail.com";
         private const string EmailName = "Palitra 27";
 
-        public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor)
+        public EmailSender(
+            IOptions<AuthMessageSenderOptions> optionsAccessor)
         {
             this.Options = optionsAccessor.Value;
         }

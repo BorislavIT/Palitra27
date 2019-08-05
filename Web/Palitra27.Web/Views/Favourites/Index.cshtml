@@ -10,10 +10,10 @@
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
-                <h1>Wish List</h1>
+                <h1>Favourite Products</h1>
                 <nav class="d-flex align-items-center">
-                    <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="category.html">Wish List</a>
+                    <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/Favourites/Index">Favourite Products</a>
                 </nav>
             </div>
         </div>
@@ -33,30 +33,30 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var favouriteItem in Model)
                             {
                             <tr>
                                 <td>
                                     <div class="media">
                                         <div class="d-flex">
-                                            <a href="/Product/Info/@item.Id"><img src="@item.Image" alt=""></a>
+                                            <a href="/Products/Info/@favouriteItem.Id"><img src="@favouriteItem.Image" alt=""></a>
                                         </div>
                                         <div class="media-body">
-                                            <p>@item.Name</p>
+                                            <p>@favouriteItem.Name</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <h5>$@item.Price</h5>
+                                    <h5>$@favouriteItem.Price</h5>
                                 </td>
                                 <td>
                                     <h5>
-                                        <a asp-controller="ShoppingCart" asp-action="Add" asp-route-id="@item.Id"><span class="iconBlue btn btn-primary btn-sm">Add To Cart</span></a>
+                                        <a asp-controller="ShoppingCart" asp-action="Add" asp-route-id="@favouriteItem.Id"><span class="iconBlue btn btn-primary btn-sm">Add To Cart</span></a>
                                     </h5>
                                 </td>
                                 <td>
                                     <h5>
-                                        <a asp-controller="Favourite" asp-action="Delete" asp-route-productId="@item.Id"><span class="iconRed btn btn-outline-danger btn-sm">Remove</span></a>
+                                        <a asp-controller="Favourites" asp-action="Delete" asp-route-productId="@favouriteItem.Id"><span class="iconRed btn btn-outline-danger btn-sm">Remove</span></a>
                                     </h5>
                                 </td>
 

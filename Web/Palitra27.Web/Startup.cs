@@ -112,13 +112,12 @@
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IShoppingCartService, ShoppingCartService>();
-            services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient<IImageService, ImageService>();
+            services.AddTransient<IOrdersService, OrdersService>();
+            services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProductImages")));
 
             services.Configure<AuthMessageSenderOptions>(this.configuration);
 

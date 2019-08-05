@@ -1,4 +1,5 @@
 ﻿@using Palitra27.Web.ViewModels.ShoppingCart;
+@using Palitra27.Common;
 @model IList<ShoppingCartProductsViewModel>
 
 @{
@@ -39,46 +40,53 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var product in Model)
                             {
                                 <tr>
                                     <td>
                                         <div class="media">
                                             <div class="d-flex">
-                                                <a href="/Product/Info/@item.Id"><img height="320px" width="300px" src="@item.Image" alt=""></a>
+                                                @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                                                {
+                                                    <a href="/Administration/Products/ChooseOne/@product.Id"><img height="320px" width="300px" src="@product.Image" alt=""></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="/Products/Info/@product.Id"><img height="320px" width="300px" src="@product.Image" alt=""></a>
+                                                }
                                             </div>
                                             <div class="media-body">
-                                                <p>@item.Name</p>
+                                                <p>@product.Name</p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <h5>$@item.Price</h5>
+                                        <h5>$@product.Price</h5>
                                     </td>
                                     <td>
                                         <div class="product_count">
-                                            <input type="text" name="qty" id="sst" maxlength="12" value="@item.Quantity" title="Quantity:"
+                                            <input type="text" name="qty" id="sst" maxlength="12" value="@product.Quantity" title="Quantity:"
                                                    class="input-text qty noB" disabled>
                                             @{
-                                                var itemqtup = item.Quantity + 1;
-                                                var itemqtdown = item.Quantity - 1;
+                                                var productQtUp = product.Quantity + 1;
+                                                var productQtDown = product.Quantity - 1;
 
                                             }
 
-                                            <a class="text-danger pr-2" href="/ShoppingCart/Edit/@item.Id?quantity=@itemqtup"><i class="lnr lnr-chevron-up arrows"></i></a>
-                                            @if (itemqtdown == 0)
+                                            <a class="text-danger pr-2" href="/ShoppingCart/Edit/@product.Id?quantity=@productQtUp"><i class="lnr lnr-chevron-up arrows"></i></a>
+                                            @if (productQtDown == 0)
                                             {
                                                 <a class="text-danger pr-2"><i class="lnr lnr-chevron-down"></i></a>
                                             }
                                             else
                                             {
-                                                <a class="text-danger pr-2" href="/ShoppingCart/Edit/@item.Id?quantity=@itemqtdown"><i class="lnr lnr-chevron-down"></i></a>
+                                                <a class="text-danger pr-2" href="/ShoppingCart/Edit/@product.Id?quantity=@productQtDown"><i class="lnr lnr-chevron-down"></i></a>
                                             }
                                         </div>
-                                        <a class="text-danger pr-2" href="/ShoppingCart/Delete/@item.Id"><i class="fa fa-times fa-2x text-danger"></i></a>
+                                        <a class="text-danger pr-2" href="/ShoppingCart/Delete/@product.Id"><i class="fa fa-times fa-2x text-danger"></i></a>
                                     </td>
                                     <td>
-                                        <h5>$@item.TotalPrice</h5>
+                                        <h5>$@product.TotalPrice</h5>
                                     </td>
                                 </tr>
                             }

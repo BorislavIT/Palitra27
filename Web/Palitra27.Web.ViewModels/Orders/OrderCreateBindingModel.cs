@@ -1,13 +1,9 @@
 ﻿namespace Palitra27.Web.ViewModels.Orders
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text;
-
-    using Palitra27.Data.Models;
     using Palitra27.Data.Models.Enums;
 
-    public class OrderCreateViewModel
+    public class OrderCreateBindingModel
     {
         public string FirstName { get; set; }
 

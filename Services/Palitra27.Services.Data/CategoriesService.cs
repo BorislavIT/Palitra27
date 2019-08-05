@@ -25,15 +25,13 @@
             var category = new Category { Name = model.CategoryName };
             this.context.Categories.Add(category);
             this.context.SaveChanges();
-            var dTO = this.mapper.Map<CategoryDTO>(category);
-            return dTO;
+            return this.mapper.Map<CategoryDTO>(category);
         }
 
         public List<CategoryDTO> FindAllCategories()
         {
             var categories = this.context.Categories.ToList();
-            var categoriesDto = this.mapper.Map<List<CategoryDTO>>(categories);
-            return categoriesDto;
+            return this.mapper.Map<List<CategoryDTO>>(categories);
         }
     }
 }

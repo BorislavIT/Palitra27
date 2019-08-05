@@ -91,7 +91,7 @@
 
                     await signInManager.SignInAsync(user, isPersistent: false);
 
-                    var cart = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(HttpContext.Session, GlobalConstants.SESSION_SHOPPING_CART_KEY);
+                    var cart = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(HttpContext.Session, GlobalConstants.SessionShoppingCartKey);
                     if (cart != null)
                     {
                         foreach (var product in cart)
@@ -99,7 +99,7 @@
                             shoppingCartService.AddProductInShoppingCart(product.Id, Input.Username, product.Quantity);
                         }
 
-                        HttpContext.Session.Remove(GlobalConstants.SESSION_SHOPPING_CART_KEY);
+                        HttpContext.Session.Remove(GlobalConstants.SessionShoppingCartKey);
                     }
 
                     return this.LocalRedirect(returnUrl);

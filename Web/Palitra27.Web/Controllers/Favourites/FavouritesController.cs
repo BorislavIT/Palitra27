@@ -6,11 +6,12 @@
     using Palitra27.Services.Data;
 
     [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
-    public class FavouriteController : Controller
+    public class FavouritesController : Controller
     {
         private readonly IFavouritesService favouritesService;
 
-        public FavouriteController(IFavouritesService favouritesService)
+        public FavouritesController(
+            IFavouritesService favouritesService)
         {
             this.favouritesService = favouritesService;
         }
@@ -18,8 +19,7 @@
         public IActionResult Index()
         {
             var username = this.User.Identity.Name;
-            var taskModel = this.favouritesService.AllFavouriteProducts(username);
-            var model = taskModel.Result;
+            var model = this.favouritesService.AllFavouriteProducts(username);
             if (model.Count == 0)
             {
                 return this.Redirect("/Home/Index");
