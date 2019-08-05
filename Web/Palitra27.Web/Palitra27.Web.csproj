@@ -50,6 +50,5 @@
 
   <ItemGroup>
     <Folder Include="Areas\Administration\ViewModels\" />
-    <Folder Include="wwwroot\ProductImages\" />
   </ItemGroup>
 </Project>
