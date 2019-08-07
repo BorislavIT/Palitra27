@@ -23,7 +23,7 @@
 
         ProductDTO EditSpecifications(EditSpecificationsBindingModel model);
 
-        List<ProductDTO> GetAllProducts();
+        List<ProductDTO> FindAllProducts();
 
         Product FindDomainProduct(string id);
     }

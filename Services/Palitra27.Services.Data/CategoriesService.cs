@@ -25,6 +25,16 @@
         public CategoryDTO CreateCategory(CreateCategoryBindingModel model)
         {
             var checkCategory = this.FindCategoryByName(model);
+
+            if (checkCategory.IsDeleted == true)
+            {
+                checkCategory.IsDeleted = false;
+                this.context.Categories.Update(checkCategory);
+                this.context.SaveChanges();
+
+                return this.mapper.Map<CategoryDTO>(checkCategory);
+            }
+
             if (checkCategory != null)
             {
                 return null;
@@ -40,8 +50,27 @@
 
         public List<CategoryDTO> FindAllCategories()
         {
-            var categories = this.context.Categories.ToList();
+            var categories = this.context.Categories
+                .Where(x => x.IsDeleted == false)
+                .ToList();
+
             return this.mapper.Map<List<CategoryDTO>>(categories);
+        }
+
+        public CategoryDTO RemoveCategory(CreateCategoryBindingModel model)
+        {
+            var category = this.FindCategoryByNameAndCheckIsDeleted(model);
+            if (category == null)
+            {
+                return null;
+            }
+
+            category.IsDeleted = true;
+
+            this.context.Update(category);
+            this.context.SaveChanges();
+
+            return this.mapper.Map<CategoryDTO>(category);
         }
 
         private Category CreateCategoryByName(CreateCategoryBindingModel model)
@@ -55,6 +84,20 @@
         {
             var category = this.context.Categories
                .FirstOrDefault(c => c.Name == model.Name);
+
+            return category;
+        }
+
+        private Category FindCategoryByNameAndCheckIsDeleted(CreateCategoryBindingModel model)
+        {
+            var category = this.context.Categories
+                .Where(x => x.IsDeleted == false)
+             .FirstOrDefault(c => c.Name == model.Name);
+
+            if (this.context.Categories.Where(x => x.IsDeleted == false).Count() == 1)
+            {
+                return null;
+            }
 
             return category;
         }

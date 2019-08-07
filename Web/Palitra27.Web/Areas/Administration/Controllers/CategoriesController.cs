@@ -10,14 +10,17 @@
         private const string CreationAlreadyExistsErrorMessage = "A category with such name already exists, ";
         private const string HyperLinkForCreationError = "/Administration/Categories/Create";
 
+        private const string DeletionDoesntExistErrorMessage = "A category with such name doesn't exist, ";
+        private const string HyperLinkForDoesntExistError = "/Administration/Categories/Create";
+
         private readonly ICategoriesService categoryService;
         private readonly IErrorService errorService;
 
         public CategoriesController(
-            ICategoriesService categoryService,
+            ICategoriesService categoriesService,
             IErrorService errorService)
         {
-            this.categoryService = categoryService;
+            this.categoryService = categoriesService;
             this.errorService = errorService;
         }
 
@@ -39,6 +42,25 @@
             if (category == null)
             {
                 var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(CreationAlreadyExistsErrorMessage, HyperLinkForCreationError);
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
+
+            return this.Redirect("/Home/Index");
+        }
+
+        public IActionResult Delete()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult Delete(CreateCategoryBindingModel model)
+        {
+            var brand = this.categoryService.RemoveCategory(model);
+
+            if (brand == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(DeletionDoesntExistErrorMessage, HyperLinkForDoesntExistError);
                 return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
             }
 

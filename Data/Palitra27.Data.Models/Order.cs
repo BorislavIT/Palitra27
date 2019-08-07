@@ -73,6 +73,8 @@
 
         [Required]
         public string UserId { get; set; }
+        
+        [Required]
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }

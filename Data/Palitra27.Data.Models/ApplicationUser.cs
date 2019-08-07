@@ -1,9 +1,9 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace Palitra27.Data.Models
+﻿namespace Palitra27.Data.Models
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+
     using Microsoft.AspNetCore.Identity;
     using Palitra27.Data.Common.Models;
 
@@ -33,10 +33,16 @@ namespace Palitra27.Data.Models
 
         public virtual ICollection<Order> Orders { get; set; }
 
+        [Required]
         public string ShoppingCartId { get; set; }
+
+        [Required]
         public virtual ShoppingCart ShoppingCart { get; set; }
 
+        [Required]
         public string FavouriteListId { get; set; }
+
+        [Required]
         public virtual FavouriteList FavouriteList { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }

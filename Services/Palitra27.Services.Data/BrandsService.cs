@@ -27,17 +27,29 @@
         public BrandDTO CreateBrand(CreateBrandBindingModel model)
         {
             var checkBrand = this.FindBrandByName(model);
+
+            if (checkBrand.IsDeleted == true)
+            {
+                checkBrand.IsDeleted = false;
+                this.context.Brands.Update(checkBrand);
+                this.context.SaveChanges();
+
+                return this.mapper.Map<BrandDTO>(checkBrand);
+            }
+
             if (checkBrand != null)
             {
                 return null;
             }
+            else
+            {
+                var brand = this.CreateBrandByName(model);
 
-            var brand = this.CreateBrandByName(model);
+                this.context.Brands.Add(brand);
+                this.context.SaveChanges();
 
-            this.context.Brands.Add(brand);
-            this.context.SaveChanges();
-
-            return this.mapper.Map<BrandDTO>(brand);
+                return this.mapper.Map<BrandDTO>(brand);
+            }
         }
 
         public CategoryBrandViewModel CreateBrandCategoryViewModelByCategoriesAndBrands(List<CategoryDTO> categories, List<BrandDTO> brands)
@@ -49,13 +61,46 @@
 
         public List<BrandDTO> FindAllBrands()
         {
-            var brands = this.context.Brands.ToList();
+            var brands = this.context.Brands
+                .Where(x => x.IsDeleted == false)
+                .ToList();
+
             return this.mapper.Map<List<BrandDTO>>(brands);
+        }
+
+        public BrandDTO RemoveBrand(CreateBrandBindingModel model)
+        {
+            var brand = this.FindBrandByNameAndCheckIsDeleted(model);
+            if (brand == null)
+            {
+                return null;
+            }
+
+            brand.IsDeleted = true;
+
+            this.context.Update(brand);
+            this.context.SaveChanges();
+
+            return this.mapper.Map<BrandDTO>(brand);
         }
 
         private Brand CreateBrandByName(CreateBrandBindingModel model)
         {
             var brand = new Brand { Name = model.Name };
+
+            return brand;
+        }
+
+        private Brand FindBrandByNameAndCheckIsDeleted(CreateBrandBindingModel model)
+        {
+            var brand = this.context.Brands
+                .Where(x => x.IsDeleted == false)
+               .FirstOrDefault(b => b.Name == model.Name);
+
+            if (this.context.Brands.Where(x => x.IsDeleted == false).Count() == 1)
+            {
+                return null;
+            }
 
             return brand;
         }

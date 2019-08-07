@@ -39,11 +39,16 @@
         public IActionResult Index()
         {
             this.ViewBag.CurrentPage = DefaultPage;
-            var paginatedProducts = this.repository.All().ToList();
+            var paginatedProducts = this.repository.All()
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
+                .ToList();
             this.ViewBag.ProductsToShow = DefaultProductsShow;
             this.Pagination(paginatedProducts, DefaultProductsShow);
 
-            var products = this.repository.All().To<ProductViewModel>().ToList();
+            var products = this.repository.All()
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
+                .To<ProductViewModel>()
+                .ToList();
             var productsListViewModel = new ProductListViewModel { Products = products };
 
             var categories = this.categoriesService.FindAllCategories();
@@ -58,7 +63,10 @@
         [HttpPost]
         public IActionResult Index(ShopViewModel model)
         {
-            var products = this.shopService.Find(model).To<ProductViewModel>().ToList();
+            var products = this.shopService.Find(model)
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
+                .To<ProductViewModel>()
+                .ToList();
             var paginatedProducts = this.shopService.Find(model).ToList();
             this.ViewBag.skipProducts = model.Page * model.Show;
             this.Pagination(paginatedProducts, model.Show);

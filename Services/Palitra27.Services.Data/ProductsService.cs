@@ -150,7 +150,7 @@
             return this.mapper.Map<ProductDTO>(product);
         }
 
-        public List<ProductDTO> GetAllProducts()
+        public List<ProductDTO> FindAllProducts()
         {
             var products = this.FindAllDomainProducts();
 
@@ -194,6 +194,7 @@
         private bool CheckIfProductExists(CreateProductBindingModel model)
         {
             var product = this.context.Products
+             .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
              .FirstOrDefault(x => x.Name == model.Name);
 
             if (product != null)
@@ -245,6 +246,7 @@
         private Brand FindBrandByName(string name)
         {
             var brand = this.context.Brands
+                .Where(x => x.IsDeleted == false)
                .FirstOrDefault(b => b.Name == name);
 
             return brand;
@@ -253,6 +255,7 @@
         private Category FindCategoryByName(string name)
         {
             var category = this.context.Categories
+                .Where(x => x.IsDeleted == false)
                .FirstOrDefault(c => c.Name == name);
 
             return category;
@@ -264,6 +267,7 @@
              .Include(p => p.Reviews)
              .Include(p => p.Category)
              .Include(p => p.Brand)
+             .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
              .FirstOrDefault(p => p.Id == id);
 
             return product;
@@ -314,6 +318,7 @@
                 .Include(x => x.Category)
                 .Include(x => x.Brand)
                 .Include(x => x.Reviews)
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
                 .ToList();
 
             return products;

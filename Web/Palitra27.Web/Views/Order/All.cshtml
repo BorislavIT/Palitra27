@@ -1,0 +1,137 @@
+﻿@using Palitra27.Web.ViewModels.Orders;
+@using System.Globalization;
+@using System;
+
+@model List<OrderShoppingCartViewModel>
+
+@{
+    ViewData["Title"] = "Create";
+ Layout = "~/Views/Shared/_Layout.cshtml";
+ decimal costOfVAT = (Model.ShoppingCartProductsViewModels.Sum(x => x.TotalPrice)) * 0.2M;
+ string value = $"${costOfVAT:f2}";
+ var totalCost = costOfVAT + (Model.ShoppingCartProductsViewModels.Sum(x => x.TotalPrice * x.Quantity));
+ var totalCostvalue = $"${totalCost:f2}";
+}
+
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1>Order Details</h1>
+                <nav class="d-flex align-items-center">
+                    <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="/Orders/Details">Order Details</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<!--================Order Details Area =================-->
+<section class="order_details section_gap">">
+    <div class="container">
+        <div class="row order_d_inner">
+            <div class="col-lg-4">
+                <div class="details_item">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+                    <ul class="list">
+                        <li><a href="#"><span>Order id:</span> <br /> @Model.Id</a></li>
+                        <li><a href="#"><span>DeliveryPrice:</span> <br />  $@Model.OrderCreateViewModel.DeliveryPrice</a></li>
+                        @{
+                            DateTime UpdatedDeliveryDate = Model.OrderCreateViewModel.DeliveryDate ?? DateTime.Now;
+                            DateTime UpdatedOrderDate = Model.OrderCreateViewModel.OrderDate ?? DateTime.Now;
+                            var parsedDeliveryDate = UpdatedDeliveryDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            var parsedOrderDate = UpdatedOrderDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        }
+                        <li><a href="#"><span>DeliveryDate:</span> <br /> @parsedDeliveryDate</a></li>
+                        <li><a href="#"><span>Total:</span> <br />  @totalCostvalue</a></li>
+                        <li><a href="#"><span>Payment method:</span>  <br /> @Model.OrderCreateViewModel.PaymentType</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="details_item">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Order Information</h4>
+                    <ul class="list">
+                        <li><a href="#"><span>Address1:</span> <br /> @Model.OrderCreateViewModel.AddressLine1</a></li>
+                        <li><a href="#"><span>Address2:</span> <br /> @Model.OrderCreateViewModel.AddressLine2</a></li>
+                        <li><a href="#"><span>Country:</span> <br /> @Model.OrderCreateViewModel.Country</a></li>
+                        <li><a href="#"><span>OrderDate:</span> <br /> @parsedOrderDate</a></li>
+                        <li><a href="#"><span>Postcode:</span> <br /> @Model.OrderCreateViewModel.ZIP</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="details_item">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+                    <ul class="list">
+                        <li><a href="#"><span>FirstName:</span> <br /> @Model.OrderCreateViewModel.FirstName</a></li>
+                        <li><a href="#"><span>LastName:</span> <br /> @Model.OrderCreateViewModel.LastName</a></li>
+                        <li><a href="#"><span>PhoneNumber:</span> <br /> @Model.OrderCreateViewModel.PhoneNumber</a></li>
+                        <li><a href="#"><span>Region:</span> <br /> @Model.OrderCreateViewModel.Region</a></li>
+                        <li><a href="#"><span>Status:</span> <br /> @Model.OrderCreateViewModel.OrderStatus</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="order_details_table">
+            <h2>Order Details</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">SubTotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ShoppingCartProductsViewModels)
+                        {
+                            <tr>
+                                <td>
+                                    <p>@item.Name</p>
+                                </td>
+
+                                @{
+                                    var priceTimesQuantity = item.TotalPrice * item.Quantity;
+                                }
+                                <td>
+                                    <h5>x @item.Quantity</h5>
+                                </td>
+                                <td>
+                                    <p>$@priceTimesQuantity</p>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <p>VAT</p>
+                            </td>
+                            <td>
+                                <h5>&nbsp;&nbsp; &nbsp;</h5>
+                            </td>
+                            <td>
+                                <p>@value</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <h4>Total</h4>
+                            </td>
+                            <td>
+                                <h5></h5>
+                            </td>
+                            <td>
+                                <p>@totalCostvalue</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Order Details Area =================-->

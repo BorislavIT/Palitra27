@@ -2,6 +2,7 @@
 {
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
+    using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.Product;
     using Palitra27.Services.Data;
     using Palitra27.Web.Areas.Administration.ViewModels.AdminChooseViewModel;
@@ -148,9 +149,14 @@
         }
 
         [HttpPost]
-        public IActionResult EditSpecifications(EditSpecificationsBindingModel editDescriptionBindingModel)
+        public IActionResult EditSpecifications(EditSpecificationsBindingModel editSpecificationsBindingModel)
         {
-            var product = this.productsService.EditSpecifications(editDescriptionBindingModel);
+            if (!this.ModelState.IsValid)
+            {
+                return this.Redirect($"/Administration/Products/Edit/{editSpecificationsBindingModel.Id}");
+            }
+
+            var product = this.productsService.EditSpecifications(editSpecificationsBindingModel);
 
             if (product == null)
             {

@@ -33,6 +33,8 @@
     <Compile Remove="Migrations\20190805165743_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20190805165944_yeppp.cs" />
     <Compile Remove="Migrations\20190805165944_yeppp.Designer.cs" />
+    <Compile Remove="Migrations\20190807115421_AddedMoreDatabaseValidations.cs" />
+    <Compile Remove="Migrations\20190807115421_AddedMoreDatabaseValidations.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

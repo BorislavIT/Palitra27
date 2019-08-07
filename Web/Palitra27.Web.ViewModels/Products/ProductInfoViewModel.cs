@@ -27,13 +27,17 @@
 
         public List<ReviewDTO> Reviews { get; set; }
 
-        public decimal Weight { get; set; }
+        [Range(0, 1000, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
+        public decimal Width { get; set; }
 
+        [Range(0, 1000, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
         public decimal Height { get; set; }
 
+        [Range(0, 1000, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
         public decimal Depth { get; set; }
 
-        public decimal Width { get; set; }
+        [Range(0, 1000, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
+        public decimal Weight { get; set; }
 
         public string Description { get; set; }
 

@@ -11,6 +11,8 @@
     {
         BrandDTO CreateBrand(CreateBrandBindingModel model);
 
+        BrandDTO RemoveBrand(CreateBrandBindingModel model);
+
         List<BrandDTO> FindAllBrands();
 
         CategoryBrandViewModel CreateBrandCategoryViewModelByCategoriesAndBrands(List<CategoryDTO> categories, List<BrandDTO> brands);

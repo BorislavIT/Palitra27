@@ -212,6 +212,7 @@
             var shoppingCartProducts = this.db.ShoppingCartProducts.Include(x => x.Product)
                                                .Include(x => x.ShoppingCart)
                                                .Where(x => x.ShoppingCart.User.UserName == user.Username)
+                                               .Where(x => x.Product.Brand.IsDeleted == false && x.Product.Category.IsDeleted == false)
                                                .ToList();
 
             return shoppingCartProducts;
@@ -221,14 +222,6 @@
         {
             return this.db.ShoppingCartProducts
                 .Any(x => x.ShoppingCart.User.UserName == username);
-        }
-
-        private ShoppingCartProduct FindShoppingCartProductByProductIdAndShoppingCartId(string productId, string shoppingCartId)
-        {
-            var shoppingCartProduct = this.db.ShoppingCartProducts
-                .FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId);
-
-            return shoppingCartProduct;
         }
     }
 }

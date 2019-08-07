@@ -4,6 +4,7 @@
 
     public class Country
     {
+        [Key]
         public string Id { get; set; }
 
         [Required]

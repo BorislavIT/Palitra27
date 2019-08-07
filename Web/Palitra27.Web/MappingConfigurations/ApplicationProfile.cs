@@ -115,8 +115,14 @@
                 .ForMember(x => x.Reviews, y => y.MapFrom(c => c.Reviews));
             this.CreateMap<ProductDTO, ProductInfoViewModel>()
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category.Name))
-                .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand.Name));
+                .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand.Name))
+                .ForMember(x => x.Width, y => y.MapFrom(c => c.Width == 0 ? 0 : Math.Round(c.Width)))
+                .ForMember(x => x.Depth, y => y.MapFrom(c => c.Depth == 0 ? 0 : Math.Round(c.Depth)))
+                .ForMember(x => x.Weight, y => y.MapFrom(c => c.Weight == 0 ? 0 : Math.Round(c.Weight)))
+                .ForMember(x => x.Height, y => y.MapFrom(c => c.Height == 0 ? 0 : Math.Round(c.Height)));
+
             this.CreateMap<Product, ShoppingCartProductsViewModel>();
+            this.CreateMap<ProductEditBindingModel, ProductDTO>();
             this.CreateMap<Product, ProductInfoViewModel>()
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category.Name))
                 .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand.Name));

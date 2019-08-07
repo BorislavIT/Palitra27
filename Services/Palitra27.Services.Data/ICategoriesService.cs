@@ -9,6 +9,8 @@
     {
         CategoryDTO CreateCategory(CreateCategoryBindingModel model);
 
+        CategoryDTO RemoveCategory(CreateCategoryBindingModel model);
+
         List<CategoryDTO> FindAllCategories();
     }
 }

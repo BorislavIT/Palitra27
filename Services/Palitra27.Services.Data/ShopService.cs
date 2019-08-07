@@ -1,9 +1,6 @@
 ﻿namespace Palitra27.Services.Data
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
 
     using Palitra27.Data;
     using Palitra27.Data.Models;
@@ -13,7 +10,8 @@
     {
         private readonly ApplicationDbContext context;
 
-        public ShopService(ApplicationDbContext context)
+        public ShopService(
+            ApplicationDbContext context)
         {
             this.context = context;
         }
@@ -21,11 +19,16 @@
         public IQueryable<Product> Find(ShopViewModel model)
         {
             IQueryable<Product> products;
-            products = this.context.Products;
+            products = this.context.Products
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false);
 
-            var brand = this.context.Brands.FirstOrDefault(b => b.Name == model.Brand);
+            var brand = this.context.Brands
+                .Where(x => x.IsDeleted == false)
+                .FirstOrDefault(b => b.Name == model.Brand);
 
-            var category = this.context.Categories.FirstOrDefault(c => c.Name == model.Category);
+            var category = this.context.Categories
+                .Where(x => x.IsDeleted == false)
+                .FirstOrDefault(c => c.Name == model.Category);
 
             if (brand == null && category == null)
             {
