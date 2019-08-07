@@ -9,12 +9,12 @@
 
     public interface IOrdersService
     {
-        List<string> GetAllCountries();
+        List<string> FindAllCountries();
 
         string CreateOrder(OrderCreateBindingModel model, ApplicationUserDTO user);
 
-        OrderDTO GetUserOrderById(string id, string username);
+        OrderDTO FindUserOrderById(string id, string username);
 
-        IEnumerable<OrderProduct> OrderProductsByOrderId(string id);
+        List<OrderProduct> OrderProductsByOrderId(string id);
     }
 }

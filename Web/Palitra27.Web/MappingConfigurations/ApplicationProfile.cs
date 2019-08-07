@@ -42,14 +42,26 @@
                 .ForMember(x => x.Country, y => y.MapFrom(src => src.Country.Name))
                 .ForMember(x => x.OrderStatus, y => y.MapFrom(src => src.Status));
 
+            this.CreateMap<ApplicationUserDTO, Order>()
+              .ForMember(x => x.UserId, y => y.MapFrom(src => src.Id))
+              .ForMember(x => x.FirstName, y => y.Ignore())
+              .ForMember(x => x.LastName, y => y.Ignore())
+              .ForMember(x => x.PhoneNumber, y => y.Ignore());
+
+            this.CreateMap<Country, Order>()
+             .ForMember(x => x.CountryId, y => y.MapFrom(src => src.Id))
+             .ForMember(x => x.Country, y => y.MapFrom(src => src));
+
             this.CreateMap<OrderCreateBindingModel, Order>()
                 .ForMember(x => x.PhoneNumber, y => y.MapFrom(src => src.PhoneNumber))
                 .ForMember(x => x.Country, y => y.Ignore())
+                .ForMember(x => x.CountryId, y => y.Ignore())
                 .ForMember(x => x.PaymentStatus, y => y.MapFrom(src => PaymentStatus.Unpaid))
                 .ForMember(x => x.OrderDate, y => y.MapFrom(src => DateTime.UtcNow))
                 .ForMember(x => x.Status, y => y.MapFrom(src => OrderStatus.Processed))
                 .ForMember(x => x.DeliveryPrice, y => y.MapFrom(src => src.DeliveryPrice))
-                .ForMember(x => x.DeliveryDate, y => y.MapFrom(src => DateTime.UtcNow.AddDays(7)));
+                .ForMember(x => x.DeliveryDate, y => y.MapFrom(src => DateTime.UtcNow.AddDays(7)))
+                .ForMember(x => x.Id, y => y.Ignore());
 
             this.CreateMap<Brand, BrandDTO>();
             this.CreateMap<BrandDTO, Brand>();

@@ -59,7 +59,7 @@
                                 <input type="text" class="form-control" id="add2" name="region" placeholder="State/Province/Region" value="@Model.OrderCreateViewModel.Region" required>
                             </div>
                             <div class="col-md-12 form-group p_star">
-                                @if (@Model.OrderCreateViewModel.ZIP == 0)
+                                @if (@Model.OrderCreateViewModel.ZIP == string.Empty)
                                 {
                                     <input type="text" class="form-control" id="add2" name="zip" placeholder="ZIP" value="" required>
                                 }

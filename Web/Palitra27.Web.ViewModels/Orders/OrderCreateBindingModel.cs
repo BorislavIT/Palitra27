@@ -36,8 +36,8 @@
         public string Region { get; set; }
 
         [Required]
-        [Range(1000, 9999, ErrorMessage = "Enter a valid ZIP.")]
-        public int ZIP { get; set; }
+        [StringLength(4, MinimumLength = 4, ErrorMessage = "The field \"{0}\" must have at least {2} letters and at most {1}.")]
+        public string ZIP { get; set; }
 
         [Required]
         public string Country { get; set; }

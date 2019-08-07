@@ -10,7 +10,6 @@
     using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Data.Models.DtoModels.Order;
-    using Palitra27.Data.Models.Enums;
     using Palitra27.Web.ViewModels.Orders;
 
     public class OrdersService : IOrdersService
@@ -32,6 +31,7 @@
         public string CreateOrder(OrderCreateBindingModel model, ApplicationUserDTO user)
         {
             List<OrderProduct> orderProducts = new List<OrderProduct>();
+
             var shoppingCartProducts = this.shoppingCartService.FindAllDomainShoppingCartProducts(user.UserName).ToList();
             if (shoppingCartProducts.Count == 0)
             {
@@ -39,77 +39,109 @@
             }
 
             var country = this.FindCountryByName(model.Country);
-            var order = new Order
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                PhoneNumber = model.PhoneNumber,
-                PaymentStatus = PaymentStatus.Unpaid,
-                PaymentType = model.PaymentType,
-                OrderDate = DateTime.UtcNow,
-                Status = OrderStatus.Processed,
-                City = model.City,
-                Country = country,
-                CountryId = country.Id,
-                AddressLine1 = model.AddressLine1,
-                AddressLine2 = model.AddressLine2,
-                Region = model.Region,
-                ZIP = model.ZIP,
-                UserId = user.Id,
-                DeliveryPrice = 0,
-                DeliveryDate = DateTime.UtcNow.AddDays(7),
-            };
+            var order = this.MapOrderAndSetNewId(model, user, country);
 
-            var mappedOrder = this.mapper.Map<Order>(model);
-            mappedOrder.UserId = user.Id;
-            mappedOrder.CountryId = country.Id;
-            mappedOrder.Country = country;
-            foreach (var shoppingCartProduct in shoppingCartProducts)
-            {
-                var orderProduct = new OrderProduct
-                {
-                    Order = mappedOrder,
-                    Product = shoppingCartProduct.Product,
-                    Quantity = shoppingCartProduct.Quantity,
-                    Price = shoppingCartProduct.Product.Price,
-                };
+            orderProducts = this.CreateOrderProductsFromShoppingCartProducts(orderProducts, shoppingCartProducts, order);
 
-                orderProducts.Add(orderProduct);
-            }
+            order.OrderProducts = orderProducts;
+            order.TotalPrice = this.CalculateTotalPrice(order);
 
-            mappedOrder.OrderProducts = orderProducts;
-
-            mappedOrder.TotalPrice = mappedOrder.OrderProducts.Sum(x => x.Quantity * x.Price) + (mappedOrder.OrderProducts.Sum(x => x.Quantity * x.Price) * 0.2M);
             this.db.OrderProducts.AddRange(orderProducts);
-            this.db.Orders.Add(mappedOrder);
+            this.db.Orders.Add(order);
             this.db.SaveChanges();
 
-            return mappedOrder.Id;
+            return order.Id;
         }
 
-        public OrderDTO GetUserOrderById(string id, string username)
+        public OrderDTO FindUserOrderById(string id, string username)
         {
-            var order = this.db.Orders
-                              .Include(x => x.User)
-                              .Include(x => x.Country)
-                              .FirstOrDefault(x => x.Id == id && x.User.UserName == username);
+            var order = this.FindUserOrderByIdAndUsername(id, username);
+
+            if (order == null)
+            {
+                return null;
+            }
+
             return this.mapper.Map<OrderDTO>(order);
         }
 
-        public IEnumerable<OrderProduct> OrderProductsByOrderId(string id)
+        public List<OrderProduct> OrderProductsByOrderId(string id)
+        {
+            return this.FindOrderProductsByOrderId(id);
+        }
+
+        public List<string> FindAllCountries()
+        {
+            return this.db.Countries.Select(x => x.Name)
+                .ToList();
+        }
+
+        private List<OrderProduct> FindOrderProductsByOrderId(string id)
         {
             return this.db.OrderProducts.Include(x => x.Product)
                                         .Where(x => x.OrderId == id).ToList();
         }
 
-        public List<string> GetAllCountries()
-        {
-            return this.db.Countries.Select(x => x.Name).ToList();
-        }
-
         private Country FindCountryByName(string name)
         {
             return this.db.Countries.FirstOrDefault(x => x.Name == name);
+        }
+
+        private decimal CalculateTotalPrice(Order order)
+        {
+            var totalPrice = order.OrderProducts.Sum(x => x.Quantity * x.Price) + (order.OrderProducts.Sum(x => x.Quantity * x.Price) * 0.2M);
+
+            return totalPrice;
+        }
+
+        private OrderProduct CreateOrderProduct(Order order, ShoppingCartProduct shoppingCartProduct)
+        {
+            var orderProduct = new OrderProduct
+            {
+                Order = order,
+                Product = shoppingCartProduct.Product,
+                Quantity = shoppingCartProduct.Quantity,
+                Price = shoppingCartProduct.Product.Price,
+            };
+
+            return orderProduct;
+        }
+
+        private Order FindUserOrderByIdAndUsername(string id, string username)
+        {
+            var order = this.db.Orders
+                              .Include(x => x.User)
+                              .Include(x => x.Country)
+                              .FirstOrDefault(x => x.Id == id && x.User.UserName == username);
+
+            if (order == null)
+            {
+                return null;
+            }
+
+            return order;
+        }
+
+        private List<OrderProduct> CreateOrderProductsFromShoppingCartProducts(List<OrderProduct> orderProducts, List<ShoppingCartProduct> shoppingCartProducts, Order order)
+        {
+            foreach (var shoppingCartProduct in shoppingCartProducts)
+            {
+                var orderProduct = this.CreateOrderProduct(order, shoppingCartProduct);
+
+                orderProducts.Add(orderProduct);
+            }
+
+            return orderProducts;
+        }
+
+        private Order MapOrderAndSetNewId(OrderCreateBindingModel model, ApplicationUserDTO user, Country country)
+        {
+            var order = this.mapper.Map<Order>(model);
+            this.mapper.Map<ApplicationUserDTO, Order>(user, order);
+            this.mapper.Map<Country, Order>(country, order);
+
+            order.Id = Guid.NewGuid().ToString();
+            return order;
         }
 
         //public void CompleteProcessingOrder(string username)

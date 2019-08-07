@@ -27,11 +27,7 @@
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<Setting> Settings { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
-        public DbSet<DiscountCoupon> DiscountCoupons { get; set; }
 
         public DbSet<Review> Reviews { get; set; }
 

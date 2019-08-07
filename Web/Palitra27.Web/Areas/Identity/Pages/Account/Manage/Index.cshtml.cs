@@ -105,14 +105,14 @@
                 }
             }
 
-            if (Input.FirstName != user.FirstName)
+            if (this.Input.FirstName != user.FirstName)
             {
-                userService.EditFirstName(user, Input.FirstName);
+                this.userService.EditFirstName(user, this.Input.FirstName);
             }
 
-            if (Input.LastName != user.LastName)
+            if (this.Input.LastName != user.LastName)
             {
-                userService.EditLastName(user, Input.LastName);
+                this.userService.EditLastName(user, this.Input.LastName);
             }
 
             await this.signInManager.RefreshSignInAsync(user);
@@ -158,10 +158,13 @@
 
             [Phone]
             [Display(Name = "Phone number")]
+            [StringLength(12, MinimumLength = 7, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
             public string PhoneNumber { get; set; }
 
+            [StringLength(15, MinimumLength = 3, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
             public string FirstName { get; set; }
 
+            [StringLength(15, MinimumLength = 3, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
             public string LastName { get; set; }
         }
     }

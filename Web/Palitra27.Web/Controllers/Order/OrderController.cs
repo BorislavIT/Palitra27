@@ -1,11 +1,13 @@
 ﻿namespace Palitra27.Web.Controllers.Order
 {
+    using System;
     using System.Collections.Generic;
 
     using AutoMapper;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Common;
+    using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Orders;
     using Palitra27.Web.ViewModels.ShoppingCart;
@@ -13,56 +15,75 @@
     [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
     public class OrderController : BaseController
     {
+        private const string NoProductsInShoppingCartErrorMessage = "Unfortunately your shopping cart is empty, fill it up and,  ";
+        private const string HyperLinkForDoesntExistError = "/Shop/Index";
+
         private readonly IUserService usersService;
         private readonly IOrdersService orderService;
         private readonly IShoppingCartService shoppingCartService;
         private readonly IMapper mapper;
+        private readonly IErrorService errorService;
 
         public OrderController(
             IUserService usersService,
             IOrdersService orderService,
             IShoppingCartService shoppingCartService,
-            IMapper mapper)
+            IMapper mapper,
+            IErrorService errorService)
         {
             this.usersService = usersService;
             this.orderService = orderService;
             this.shoppingCartService = shoppingCartService;
             this.mapper = mapper;
+            this.errorService = errorService;
         }
 
         public IActionResult Create()
         {
-                var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
+            var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
 
-                var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
+            var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
 
-                var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
+            if (shoppingCartProducts.Count == 0)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(NoProductsInShoppingCartErrorMessage, HyperLinkForDoesntExistError);
 
-                var fillFormViewModel = new OrderCreateBindingModel() { FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber };
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
 
-                var countries = this.orderService.GetAllCountries();
+            var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
-                var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = fillFormViewModel };
+            var fillFormViewModel = this.CreateOrderCreateBindingModel(user);
 
-                return this.View(actualModel);
+            var countries = this.orderService.FindAllCountries();
+
+            var actualModel = this.CreateOrderShoppingCartViewWithCountries(fillFormViewModel, countries, shoppingCartProductsViewModel);
+
+            return this.View(actualModel);
         }
 
         [HttpPost]
         public IActionResult Create(OrderCreateBindingModel model)
         {
             var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
-            var countries = this.orderService.GetAllCountries();
+            var countries = this.orderService.FindAllCountries();
+            var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
+
+            if (shoppingCartProducts == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(NoProductsInShoppingCartErrorMessage, HyperLinkForDoesntExistError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
+
+            var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
             if (this.ModelState.IsValid)
             {
                 var orderId = this.orderService.CreateOrder(model, user);
                 if (orderId == string.Empty)
                 {
-                    var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
-
-                    var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
-
-                    var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
+                    var actualModel = this.CreateOrderShoppingCartViewWithCountries(model, countries, shoppingCartProductsViewModel);
 
                     return this.View(actualModel);
                 }
@@ -73,9 +94,7 @@
             }
             else
             {
-                var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
-                var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
-                var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
+                var actualModel = this.CreateOrderShoppingCartViewWithCountries(model, countries, shoppingCartProductsViewModel);
 
                 return this.View(actualModel);
             }
@@ -83,7 +102,7 @@
 
         public IActionResult Details(string id)
         {
-            var order = this.orderService.GetUserOrderById(id, this.User.Identity.Name);
+            var order = this.orderService.FindUserOrderById(id, this.User.Identity.Name);
 
             var shoppingCartProducts = this.orderService.OrderProductsByOrderId(order.Id);
 
@@ -91,9 +110,25 @@
 
             var fillFormViewModel = this.mapper.Map<OrderCreateBindingModel>(order);
 
-            var actualModel = new OrderShoppingCartViewModel { Id = order.Id, ShoppingCartProductsViewModels = shoppingCartProductsViewModel, OrderCreateViewModel = fillFormViewModel };
+            var actualModel = this.CreateOrderShoppingCartViewWithoutCountries(fillFormViewModel, shoppingCartProductsViewModel);
 
             return this.View(actualModel);
         }
+
+        private object CreateOrderShoppingCartViewWithoutCountries(OrderCreateBindingModel fillFormViewModel, List<ShoppingCartProductsViewModel> shoppingCartProductsViewModel)
+        {
+            return new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, OrderCreateViewModel = fillFormViewModel };
+        }
+
+        private OrderShoppingCartViewModel CreateOrderShoppingCartViewWithCountries(OrderCreateBindingModel model, List<string> countries, List<ShoppingCartProductsViewModel> shoppingCartProductsViewModel)
+        {
+            return new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
+        }
+
+        private OrderCreateBindingModel CreateOrderCreateBindingModel(ApplicationUserDTO user)
+        {
+            return new OrderCreateBindingModel() { FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber };
+        }
+
     }
 }

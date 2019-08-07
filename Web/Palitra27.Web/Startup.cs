@@ -1,11 +1,10 @@
 ﻿namespace Palitra27.Web
 {
     using System;
-    using System.IO;
     using System.Reflection;
 
     using AutoMapper;
-    using Microsoft.ApplicationInsights;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -16,7 +15,6 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.FileProviders;
     using Microsoft.Extensions.Logging;
     using Palitra27.Data;
     using Palitra27.Data.Common;
@@ -90,6 +88,18 @@
             });
 
             services.AddSingleton(this.configuration);
+
+            services.AddAuthentication().AddFacebook(facebookOptions =>
+            {
+                facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
+                facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
+            });
+
+            services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = this.configuration["Authentication:Google:ClientId"];
+                googleOptions.ClientSecret = this.configuration["Authentication:Google:ClientSecret"];
+            });
 
             // Identity stores
             services.AddTransient<IUserStore<ApplicationUser>, ApplicationUserStore>();

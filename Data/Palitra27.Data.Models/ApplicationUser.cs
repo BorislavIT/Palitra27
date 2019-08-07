@@ -3,7 +3,7 @@ namespace Palitra27.Data.Models
 {
     using System;
     using System.Collections.Generic;
-
+    using System.ComponentModel.DataAnnotations;
     using Microsoft.AspNetCore.Identity;
     using Palitra27.Data.Common.Models;
 
@@ -12,14 +12,15 @@ namespace Palitra27.Data.Models
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.DiscountCoupons = new HashSet<DiscountCoupon>();
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
         }
 
+        [StringLength(15, MinimumLength = 3, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string FirstName { get; set; }
 
+        [StringLength(15, MinimumLength = 3, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string LastName { get; set; }
 
         public DateTime CreatedOn { get; set; }
@@ -37,8 +38,6 @@ namespace Palitra27.Data.Models
 
         public string FavouriteListId { get; set; }
         public virtual FavouriteList FavouriteList { get; set; }
-
-        public virtual ICollection<DiscountCoupon> DiscountCoupons { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 

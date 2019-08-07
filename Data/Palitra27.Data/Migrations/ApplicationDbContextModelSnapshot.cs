@@ -160,11 +160,13 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("FavouriteListId");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(15);
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .HasMaxLength(15);
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -213,7 +215,9 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
@@ -225,7 +229,9 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
@@ -237,38 +243,21 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
                     b.ToTable("Countries");
                 });
 
-            modelBuilder.Entity("Palitra27.Data.Models.DiscountCoupon", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ApplicationUserId");
-
-                    b.Property<string>("OrderId");
-
-                    b.Property<int>("amountInPercent");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("DiscountCoupons");
-                });
-
             modelBuilder.Entity("Palitra27.Data.Models.FavouriteList", b =>
                 {
                     b.Property<string>("Id");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -293,41 +282,59 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AddressLine1");
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.Property<string>("AddressLine2");
+                    b.Property<string>("AddressLine2")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.Property<string>("City");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.Property<string>("CountryId");
+                    b.Property<string>("CountryId")
+                        .IsRequired();
 
-                    b.Property<DateTime?>("DeliveryDate");
+                    b.Property<DateTime?>("DeliveryDate")
+                        .IsRequired();
 
                     b.Property<decimal>("DeliveryPrice");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
-                    b.Property<string>("Notes");
-
-                    b.Property<DateTime?>("OrderDate");
+                    b.Property<DateTime?>("OrderDate")
+                        .IsRequired();
 
                     b.Property<int>("PaymentStatus");
 
                     b.Property<int>("PaymentType");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(12);
 
-                    b.Property<string>("Region");
+                    b.Property<string>("Region")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<int>("Status");
 
                     b.Property<decimal>("TotalPrice");
 
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .IsRequired();
 
-                    b.Property<int>("ZIP");
+                    b.Property<string>("ZIP")
+                        .IsRequired()
+                        .HasMaxLength(4);
 
                     b.HasKey("Id");
 
@@ -360,9 +367,11 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("BrandId");
+                    b.Property<string>("BrandId")
+                        .IsRequired();
 
-                    b.Property<string>("CategoryId");
+                    b.Property<string>("CategoryId")
+                        .IsRequired();
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -382,7 +391,9 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<DateTime?>("ModifiedOn");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(15);
 
                     b.Property<decimal>("Price");
 
@@ -408,44 +419,22 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<DateTime>("DateOfCreation");
 
-                    b.Property<string>("Message");
+                    b.Property<string>("Message")
+                        .IsRequired();
 
-                    b.Property<string>("ProductId");
+                    b.Property<string>("ProductId")
+                        .IsRequired();
 
                     b.Property<int>("Stars");
 
-                    b.Property<string>("UserName");
+                    b.Property<string>("UserName")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("Palitra27.Data.Models.Setting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("ModifiedOn");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.ToTable("Settings");
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>
@@ -517,17 +506,6 @@ namespace Palitra27.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Palitra27.Data.Models.DiscountCoupon", b =>
-                {
-                    b.HasOne("Palitra27.Data.Models.ApplicationUser")
-                        .WithMany("DiscountCoupons")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("Palitra27.Data.Models.Order")
-                        .WithMany("DiscountCoupons")
-                        .HasForeignKey("OrderId");
-                });
-
             modelBuilder.Entity("Palitra27.Data.Models.FavouriteList", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
@@ -553,11 +531,13 @@ namespace Palitra27.Data.Migrations
                 {
                     b.HasOne("Palitra27.Data.Models.Country", "Country")
                         .WithMany()
-                        .HasForeignKey("CountryId");
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.OrderProduct", b =>
@@ -577,18 +557,21 @@ namespace Palitra27.Data.Migrations
                 {
                     b.HasOne("Palitra27.Data.Models.Brand", "Brand")
                         .WithMany()
-                        .HasForeignKey("BrandId");
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany("Reviews")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>

@@ -1,13 +1,9 @@
 ﻿namespace Palitra27.Web.Controllers.User
 {
-
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Palitra27.Common;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Products;
 
-    [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
     public class UserController : BaseController
     {
         private readonly IProductsService productsService;

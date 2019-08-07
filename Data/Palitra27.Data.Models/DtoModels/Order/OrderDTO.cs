@@ -22,7 +22,7 @@
 
         public decimal DeliveryPrice { get; set; }
 
-        public int ZIP { get; set; }
+        public string ZIP { get; set; }
 
         public string CountryId { get; set; }
         public virtual Country Country { get; set; }
@@ -49,7 +49,5 @@
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
-
-        public virtual ICollection<DiscountCoupon> DiscountCoupons { get; set; }
     }
 }

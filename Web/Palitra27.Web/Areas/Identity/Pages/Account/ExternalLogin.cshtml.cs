@@ -1,5 +1,6 @@
 ﻿namespace Palitra27.Web.Areas.Identity.Pages.Account
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -9,6 +10,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using Palitra27.Common;
+    using Palitra27.Data;
     using Palitra27.Data.Models;
 
     [AllowAnonymous]
@@ -19,15 +22,18 @@
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<ExternalLoginModel> logger;
+        private readonly ApplicationDbContext dbContext;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            ILogger<ExternalLoginModel> logger)
+            ILogger<ExternalLoginModel> logger,
+            ApplicationDbContext dbContext)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.logger = logger;
+            this.dbContext = dbContext;
         }
 
         [BindProperty]
@@ -73,6 +79,7 @@
             var result = await this.signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
+
                 this.logger.LogInformation(
                     "{Name} logged in with {LoginProvider} provider.",
                     info.Principal.Identity.Name,
@@ -115,13 +122,21 @@
 
             if (this.ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = this.Input.Email, Email = this.Input.Email };
+                string id = Guid.NewGuid().ToString();
+                var shoppingCart = new ShoppingCart() { Id = id };
+                var favouriteList = new FavouriteList() { Id = id };
+
+                favouriteList.UserId = id;
+                await this.dbContext.FavouriteLists.AddAsync(favouriteList);
+
+                var user = new ApplicationUser { Id = id, UserName = this.Input.Email, Email = this.Input.Email, ShoppingCart = shoppingCart, ShoppingCartId = shoppingCart.Id, FavouriteList = favouriteList, FavouriteListId = favouriteList.Id };
                 var result = await this.userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
                     result = await this.userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+                        await this.userManager.AddToRoleAsync(user, GlobalConstants.UserRoleName);
                         await this.signInManager.SignInAsync(user, isPersistent: false);
                         this.logger.LogInformation(
                             "User created an account using {Name} provider.",

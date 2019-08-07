@@ -1,14 +1,13 @@
 ﻿namespace Palitra27.Data.Models
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Text;
 
     public class Country
     {
         public string Id { get; set; }
 
+        [Required]
+        [StringLength(15, MinimumLength = 1, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string Name { get; set; }
     }
 }
