@@ -116,6 +116,7 @@
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
+            services.AddTransient<IErrorService, ErrorService>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
 

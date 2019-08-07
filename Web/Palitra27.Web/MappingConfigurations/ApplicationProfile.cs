@@ -1,5 +1,6 @@
 ﻿namespace Palitra27.Web.MappingConfigurations
 {
+    using System;
 
     using AutoMapper;
     using Palitra27.Data.Models;
@@ -16,7 +17,6 @@
     using Palitra27.Web.ViewModels.Orders;
     using Palitra27.Web.ViewModels.Products;
     using Palitra27.Web.ViewModels.ShoppingCart;
-    using System;
 
     public class ApplicationProfile : Profile
     {

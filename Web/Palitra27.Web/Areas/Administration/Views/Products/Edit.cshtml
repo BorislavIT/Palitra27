@@ -51,8 +51,8 @@
                     </div>
                 </div>
                 <div class="col-lg-5 offset-lg-1">
-                    <div asp-validation-summary="All" class="text-danger"></div>
                     <div class="s_product_text">
+                        <div asp-validation-summary="All" class="text-danger"></div>
                         <div class="col-md-12 form-group ">
                             <input type="text" name="Name" placeholder="@Model.ProductInfoViewModel.Name" value="@Model.ProductInfoViewModel.Name" class="inputCustom" />
                             <span asp-validation-for="ProductInfoViewModel.Name" class="text-danger"></span>

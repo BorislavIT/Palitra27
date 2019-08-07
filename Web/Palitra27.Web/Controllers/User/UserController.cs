@@ -24,7 +24,7 @@
         [HttpPost]
         public IActionResult AddReview(AddReviewBindingModel addReviewBindingModel)
         {
-            var user = this.userService.GetUserByUsername(this.User.Identity.Name);
+            var user = this.userService.FindUserByUsername(this.User.Identity.Name);
             this.productsService.AddReview(addReviewBindingModel, user);
 
             var product = this.productsService.FindProductById(addReviewBindingModel.Id);

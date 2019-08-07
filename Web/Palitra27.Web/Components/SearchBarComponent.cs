@@ -21,7 +21,6 @@
                 return this.View(model.Select(x => new ProductViewModel
                 {
                     Id = x.Id,
-                    Image = x.Image,
                     Name = x.Name,
                     Price = x.Price,
                 }).ToList());

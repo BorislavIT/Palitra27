@@ -11,8 +11,6 @@
 
     public interface IProductsService
     {
-        ProductDTO Create(CreateProductBindingModel model);
-
         ProductDTO Create(CreateProductBindingModel model, IFormFile image);
 
         ProductDTO FindProductById(string id);
@@ -24,8 +22,6 @@
         ProductDTO EditDescription(EditDescriptionBindingModel model);
 
         ProductDTO EditSpecifications(EditSpecificationsBindingModel model);
-
-        ProductDTO GetOnlyProductById(string id);
 
         List<ProductDTO> GetAllProducts();
 

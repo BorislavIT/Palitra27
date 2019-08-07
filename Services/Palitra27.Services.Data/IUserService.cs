@@ -5,9 +5,7 @@
 
     public interface IUserService
     {
-        ApplicationUserDTO GetUserByUsername(string username);
-
-        ApplicationUser GetDomainUserByUsername(string username);
+        ApplicationUserDTO FindUserByUsername(string username);
 
         void EditFirstName(ApplicationUser user, string firstName);
 

@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Mvc;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Categories;
-    using Palitra27.Web.ViewModels.Errors;
 
     public class CategoriesController : AdministrationController
     {
@@ -12,15 +11,19 @@
         private const string HyperLinkForCreationError = "/Administration/Categories/Create";
 
         private readonly ICategoriesService categoryService;
+        private readonly IErrorService errorService;
 
-        public CategoriesController(ICategoriesService categoryService)
+        public CategoriesController(
+            ICategoriesService categoryService,
+            IErrorService errorService)
         {
             this.categoryService = categoryService;
+            this.errorService = errorService;
         }
 
         public IActionResult Create()
         {
-            return this.View(new CreateCategoryBindingModel { });
+            return this.View();
         }
 
         [HttpPost]
@@ -35,7 +38,7 @@
 
             if (category == null)
             {
-                var creationErrorViewModel = new CreationErrorViewModel { ErrorMessage = CreationAlreadyExistsErrorMessage, HyperLink = HyperLinkForCreationError };
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(CreationAlreadyExistsErrorMessage, HyperLinkForCreationError);
                 return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
             }
 

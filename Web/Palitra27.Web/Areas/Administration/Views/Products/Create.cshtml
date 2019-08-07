@@ -32,10 +32,10 @@
                     </div>
                     <hr class="bg-panda" style="height: 2px" />
                     <form method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="All" class="text-danger"></div>
                         @Html.AntiForgeryToken()
                         <div class="col-md-12 form-group">
-                            <input type="text" asp-for="CreateProductBindingModel.ProductName" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" required="" class="single-input" value="@Model.CreateProductBindingModel.ProductName">
-                            <span asp-validation-for="CreateProductBindingModel.ProductName" class="text-danger"></span>
+                            <input type="text" asp-for="CreateProductBindingModel.Name" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" required="" class="single-input" value="@Model.CreateProductBindingModel.Name">
                         </div>
                         <div class="col-md-12 form-group">
                             <div class="form-select">
@@ -76,11 +76,9 @@
                         </div>
                         <div class="col-md-12 form-group">
                             <input type="number" asp-for="CreateProductBindingModel.Price" placeholder="Price" min="1" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required="" class="single-input">
-                            <span asp-validation-for="CreateProductBindingModel.Price" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 form-group">
                             <input type="file" data-val="true" asp-for="CreateProductBindingModel.Image" placeholder="Image URL" min="1" multiple onfocus="this.placeholder = ''" onblur="this.placeholder = 'URL'" required="" class="single-input" accept="image/x-png,image/gif,image/jpeg">
-                            <span asp-validation-for="CreateProductBindingModel.Image" class="text-danger"></span>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button type="submit" value="submit" class="genric-btn info">Create Product</button>

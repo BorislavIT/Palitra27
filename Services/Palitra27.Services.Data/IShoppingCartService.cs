@@ -11,9 +11,9 @@
 
         void EditProductQuantityInShoppingCart(string id, string username, int quantity);
 
-        IEnumerable<ShoppingCartProductDTO> GetAllShoppingCartProducts(string username);
+        List<ShoppingCartProductDTO> FindAllShoppingCartProducts(string username);
 
-        IEnumerable<ShoppingCartProduct> GetAllDomainShoppingCartProducts(string username);
+        List<ShoppingCartProduct> FindAllDomainShoppingCartProducts(string username);
 
         void DeleteProductFromShoppingCart(string id, string username);
 

@@ -3,6 +3,8 @@
     using System.Linq;
 
     using AutoMapper;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Internal;
     using Microsoft.EntityFrameworkCore;
     using Moq;
     using Palitra27.Data;
@@ -32,18 +34,20 @@
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
 
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brandyy" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Categoryyy" });
 
             var productBindingModel = new CreateProductBindingModel
             {
                 Category = category.Name,
                 Brand = brand.Name,
-                Price = 23,
-                ProductName = "product",
+                Price = "23",
+                Name = "product",
             };
 
-            var productDTO = productService.Create(productBindingModel);
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
             var products = dbContext.Products.ToList();
 
             Assert.Single(products);
@@ -69,17 +73,19 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
 
             var brand = new Brand { Id = "d", Name = "" };
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Categoryy" });
 
             var productBindingModel = new CreateProductBindingModel
             {
                 Category = category.Name,
                 Brand = brand.Name,
-                Price = 23,
-                ProductName = "product",
+                Price = "23",
+                Name = "product",
             };
 
-            var productDTO = productService.Create(productBindingModel);
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
             var products = dbContext.Products.ToList();
 
             Assert.Null(productDTO);
@@ -104,22 +110,24 @@
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
 
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brandd" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Categoryyyyy" });
 
             var productBindingModel = new CreateProductBindingModel
             {
                 Category = category.Name,
                 Brand = brand.Name,
-                Price = 23,
-                ProductName = "product",
+                Price = "23",
+                Name = "product",
             };
 
-            var productDTO = productService.Create(productBindingModel);
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
             var products = dbContext.Products.ToList();
 
             var product1 = products[0];
-            var productFromService = productService.GetOnlyProductById(product1.Id);
+            var productFromService = productService.FindProductById(product1.Id);
 
             Assert.Equal("product", productFromService.Name);
         }
@@ -142,7 +150,7 @@
 
             var productService = new ProductsService(dbContext, mapper);
 
-            var productFromService = productService.GetOnlyProductById(id);
+            var productFromService = productService.FindProductById(id);
 
             Assert.Null(productFromService);
         }
@@ -165,22 +173,24 @@
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
 
-            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Brand" });
-            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Category" });
+            var brand = brandService.CreateBrand(new ViewModels.Brands.CreateBrandBindingModel { Name = "Braasdnd" });
+            var category = categoriesService.CreateCategory(new ViewModels.Categories.CreateCategoryBindingModel { Name = "Categoryasd" });
 
             var productBindingModel = new CreateProductBindingModel
             {
                 Category = category.Name,
                 Brand = brand.Name,
-                Price = 23,
-                ProductName = "product",
+                Price = "23",
+                Name = "product",
             };
 
-            var productDTO = productService.Create(productBindingModel);
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
             var products = dbContext.Products.ToList();
 
             var product1 = products[0];
-            var productFromService = productService.GetOnlyProductById(product1.Id);
+            var productFromService = productService.FindProductById(product1.Id);
 
             Assert.Equal("product", productFromService.Name);
         }

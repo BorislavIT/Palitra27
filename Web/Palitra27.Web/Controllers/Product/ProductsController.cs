@@ -9,20 +9,33 @@
 
     public class ProductsController : BaseController
     {
+        private const string ProductDoesntExistErrorMessage = "That product doesn't exist, ";
+        private const string HyperLinkForDoesntExistError = "/Shop/Index";
+
         private readonly IProductsService productsService;
         private readonly IMapper mapper;
+        private readonly IErrorService errorService;
 
         public ProductsController(
             IProductsService productsService,
-            IMapper mapper)
+            IMapper mapper,
+            IErrorService errorService)
         {
             this.productsService = productsService;
             this.mapper = mapper;
+            this.errorService = errorService;
         }
 
         public IActionResult Info(string id)
         {
             var product = this.productsService.FindProductById(id);
+
+            if (product == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(ProductDoesntExistErrorMessage, HyperLinkForDoesntExistError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
 
             var productModel = this.mapper.Map<ProductInfoViewModel>(product);
 
@@ -30,10 +43,18 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
-        public IActionResult Info(string id, int qty)
+        public IActionResult Info(string id, int quantity)
         {
-            return this.Redirect($"/ShoppingCart/Add/{id}?qty={qty}");
+            var product = this.productsService.FindProductById(id);
+
+            if (product == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(ProductDoesntExistErrorMessage, HyperLinkForDoesntExistError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
+
+            return this.Redirect($"/ShoppingCart/Add/{id}?quantity={quantity}");
         }
     }
 }

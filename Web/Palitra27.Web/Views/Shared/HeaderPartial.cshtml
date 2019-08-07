@@ -1,0 +1,108 @@
+﻿@using Palitra27.Common;
+<!-- Start Header Area -->
+<header class="header_area sticky-header">
+    <div class="main_menu">
+        <nav class="navbar navbar-expand-lg navbar-light main_box">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="/Home/Index"><img src="~/img/logo.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link" href="/Home/Index">Home</a></li>
+                        @if (!this.User.Identity.IsAuthenticated)
+                            {
+                        <li class="nav-item submenu dropdown">
+                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Account</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Register">Register</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Login">Login</a></li>
+                            </ul>
+                        </li>
+                            }
+                            else
+                            {
+                                if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+                                {
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Admin Panel</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Administration/Products/Create">Create Product</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Administration/Brands/Create">Create Brand</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Administration/Categories/Create">Create Category</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Administration/Products/Find">Find Product</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Account</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Manage">Profile</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">Logout</a></li>
+                            </ul>
+                        </li>
+                                }
+                                else
+                                {
+                        <li class="nav-item submenu dropdown">
+                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Shop</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item submenu dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                               aria-expanded="false">Account</a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Manage">Profile</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">Logout</a></li>
+                            </ul>
+                        </li>
+                                }
+                            }
+                        <li class="nav-item"><a class="nav-link" href="/Contacts/Info">Contact Us</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="nav-item"><a href="/ShoppingCart/Index" class="cart"><span class="ti-bag"></span></a></li>
+                        <li class="nav-item"><a href="/Favourites/Index" class="cart"><span class="ti-heart icon"></span></a></li>
+                        <li class="nav-item">
+                            <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="search_input" id="search_input_box">
+        <div class="container" id="containerToAppend">
+            @await Component.InvokeAsync("SearchBarComponent", "")
+        </div>
+    </div>
+</header>
+<!-- End Header Area -->

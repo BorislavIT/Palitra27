@@ -48,7 +48,7 @@
 
             var categories = this.categoriesService.FindAllCategories();
             var brands = this.brandsService.FindAllBrands();
-            var productCategoriesBrandsViewModel = new BrandCategoryViewModel { Brands = brands, Categories = categories };
+            var productCategoriesBrandsViewModel = new CategoryBrandViewModel { Brands = brands, Categories = categories };
 
             var model = new ShopFiltersViewModel { BrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
 
@@ -70,7 +70,7 @@
 
             var categories = this.categoriesService.FindAllCategories();
             var brands = this.brandsService.FindAllBrands();
-            var productCategoriesBrandsViewModel = new BrandCategoryViewModel { Brands = brands, Categories = categories };
+            var productCategoriesBrandsViewModel = new CategoryBrandViewModel { Brands = brands, Categories = categories };
 
             var shopFiltersViewModel = new ShopFiltersViewModel { BrandCategoryViewModel = productCategoriesBrandsViewModel, Products = productsListViewModel };
 

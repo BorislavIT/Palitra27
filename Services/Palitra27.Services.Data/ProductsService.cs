@@ -28,124 +28,64 @@
             this.mapper = mapper;
         }
 
-        public ProductDTO GetOnlyProductById(string id)
-        {
-            var product = this.context.Products.Include(p => p.Category)
-                                   .Include(x => x.Brand)
-                                   .FirstOrDefault(x => x.Id == id);
-
-            return this.mapper.Map<ProductDTO>(product);
-        }
-
-        public ProductDTO Create(CreateProductBindingModel model)
-        {
-            var checkProduct = this.context.Products
-              .FirstOrDefault(x => x.Name == model.ProductName);
-            if (checkProduct != null)
-            {
-                return null;
-            }
-
-            var brand = this.context.Brands
-                .FirstOrDefault(c => c.Name == model.Brand);
-            var category = this.context.Categories
-                .FirstOrDefault(c => c.Name == model.Category);
-
-            if (brand == null || category == null)
-            {
-                return null;
-            }
-
-            Product product = new Product()
-            {
-                Category = category,
-                Price = model.Price,
-                Name = model.ProductName,
-                Brand = brand,
-            };
-            this.context.Products.Add(product);
-            this.context.SaveChanges();
-
-            return this.mapper.Map<ProductDTO>(product);
-        }
-
         public ProductDTO Create(CreateProductBindingModel model, IFormFile image)
         {
-            var checkProduct = this.context.Products
-              .FirstOrDefault(x => x.Name == model.ProductName);
-            if (checkProduct != null)
+            if (this.CheckIfProductExists(model))
             {
                 return null;
             }
 
-            byte[] arrOfImage = this.GetByteArrayFromImage(model.Image);
-            string imreBase64Data = Convert.ToBase64String(arrOfImage);
-            string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+            var brand = this.FindBrandByName(model.Brand);
+            var category = this.FindCategoryByName(model.Category);
 
-            var brand = this.context.Brands
-                .FirstOrDefault(c => c.Name == model.Brand);
-            var category = this.context.Categories
-                .FirstOrDefault(c => c.Name == model.Category);
-
-            Product product = new Product()
+            if (this.CheckIfCategoryOrBrandIsNull(category, brand))
             {
-                Category = category,
-                Price = model.Price,
-                Name = model.ProductName,
-                Brand = brand,
-                Image = imgDataURL,
-            };
+                return null;
+            }
+
+            var product = this.CreateProductByModelBrandAndCategory(model, brand, category);
+
             this.context.Products.Add(product);
             this.context.SaveChanges();
 
             return this.mapper.Map<ProductDTO>(product);
         }
 
-        public ProductDTO FindProductById(string productId)
+        public ProductDTO FindProductById(string id)
         {
-            var product = this.context.Products
-             .Include(p => p.Reviews)
-             .Include(p => p.Category)
-             .Include(p => p.Brand)
-             .FirstOrDefault(p => p.Id == productId);
+            var product = this.FindDomainProductById(id);
 
-            if (product == null)
+            if (this.CheckIfProductIsNull(product))
             {
                 return null;
             }
 
-            var reviews = this.context.Reviews
-                .Where(r => r.ProductId == product.Id).ToList();
-
-            product.Reviews = reviews;
+            this.FindAndSetProductReviews(product);
 
             return this.mapper.Map<ProductDTO>(product);
         }
 
         public ProductDTO EditProduct(ProductEditBindingModel model)
         {
-            var product = this.context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Brand)
-                .FirstOrDefault(p => p.Id == model.Id);
+            var product = this.FindDomainProductById(model.Id);
 
-            var reviews = this.context.Reviews
-              .Where(r => r.ProductId == product.Id)
-              .ToList();
+            if (this.CheckIfProductIsNull(product))
+            {
+                return null;
+            }
 
-            product.Reviews = reviews;
+            product = this.FindAndSetProductReviews(product);
 
-            var category = this.context.Categories
-                .FirstOrDefault(c => c.Name == model.Category);
+            var category = this.FindCategoryByName(model.Category);
 
-            var brand = this.context.Brands
-                .FirstOrDefault(b => b.Name == model.Brand);
+            var brand = this.FindBrandByName(model.Brand);
 
-            product.Name = model.Name;
-            product.MiniDescription = model.MiniDescription;
-            product.Price = model.Price;
-            product.Category = category;
-            product.Brand = brand;
+            if (this.CheckIfCategoryOrBrandIsNull(category, brand))
+            {
+                return null;
+            }
+
+            product = this.EditProductMain(model, product, category, brand);
 
             this.context.SaveChanges();
 
@@ -155,7 +95,7 @@
         public ReviewDTO AddReview(AddReviewBindingModel model, ApplicationUserDTO user)
         {
             var product = this.FindDomainProduct(model.Id);
-            var review = new Review { UserName = user.UserName, ProductId = model.Id, Product = product, Message = model.Message, Stars = model.Stars, DateOfCreation = DateTime.UtcNow };
+            var review = this.CreateReviewByModelProductAndUser(model, user, product);
 
             this.context.Reviews.Add(review);
             this.context.SaveChanges();
@@ -165,7 +105,13 @@
 
         public ProductDTO EditDescription(EditDescriptionBindingModel model)
         {
-            var product = this.FindDomainProduct(model.Id);
+            var product = this.FindDomainProductById(model.Id);
+
+            if (this.CheckIfProductIsNull(product))
+            {
+                return null;
+            }
+
             product.Description = model.Description;
             this.context.Products.Update(product);
             this.context.SaveChanges();
@@ -175,16 +121,14 @@
 
         public Product FindDomainProduct(string id)
         {
-            var product = this.context.Products
-                .Include(p => p.Reviews)
-               .Include(p => p.Category)
-               .Include(p => p.Brand)
-               .FirstOrDefault(p => p.Id == id);
+            var product = this.FindDomainProductById(id);
 
-            var reviews = this.context.Reviews
-                .Where(r => r.ProductId == product.Id).ToList();
+            if (this.CheckIfProductIsNull(product))
+            {
+                return null;
+            }
 
-            product.Reviews = reviews;
+            product = this.FindAndSetProductReviews(product);
 
             return product;
         }
@@ -193,10 +137,12 @@
         {
             var product = this.FindDomainProduct(model.Id);
 
-            product.Height = model.Height;
-            product.Weight = model.Weight;
-            product.Width = model.Width;
-            product.Depth = model.Depth;
+            if (this.CheckIfProductIsNull(product))
+            {
+                return null;
+            }
+
+            product = this.EditProductSpecifications(model, product);
 
             this.context.Products.Update(product);
             this.context.SaveChanges();
@@ -206,11 +152,12 @@
 
         public List<ProductDTO> GetAllProducts()
         {
-            var products = this.context.Products
-                .Include(x => x.Category)
-                .Include(x => x.Brand)
-                .Include(x => x.Reviews)
-                .ToList();
+            var products = this.FindAllDomainProducts();
+
+            if (this.CheckIfProductsDoesntHaveProducts(products))
+            {
+                return null;
+            }
 
             return this.mapper.Map<List<ProductDTO>>(products);
         }
@@ -222,6 +169,154 @@
                 file.CopyTo(target);
                 return target.ToArray();
             }
+        }
+
+        private bool CheckIfCategoryOrBrandIsNull(Category category, Brand brand)
+        {
+            if (category == null || brand == null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckIfProductIsNull(Product product)
+        {
+            if (product == null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckIfProductExists(CreateProductBindingModel model)
+        {
+            var product = this.context.Products
+             .FirstOrDefault(x => x.Name == model.Name);
+
+            if (product != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CheckIfProductsDoesntHaveProducts(List<Product> products)
+        {
+            if (products.Count == 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private Product CreateProductByModelBrandAndCategory(CreateProductBindingModel model, Brand brand, Category category)
+        {
+            Product product = new Product()
+            {
+                Category = category,
+                Price = decimal.Parse(model.Price),
+                Name = model.Name,
+                Brand = brand,
+                Image = this.ParseToImgDataURL(model.Image) ?? null,
+            };
+
+            return product;
+        }
+
+        private string ParseToImgDataURL(IFormFile image)
+        {
+            if (image == null)
+            {
+                return null;
+            }
+
+            byte[] arrOfImage = this.GetByteArrayFromImage(image);
+            string imreBase64Data = Convert.ToBase64String(arrOfImage);
+            string imgDataURL = string.Format("data:image/png;base64,{0}", imreBase64Data);
+
+            return imgDataURL;
+        }
+
+        private Brand FindBrandByName(string name)
+        {
+            var brand = this.context.Brands
+               .FirstOrDefault(b => b.Name == name);
+
+            return brand;
+        }
+
+        private Category FindCategoryByName(string name)
+        {
+            var category = this.context.Categories
+               .FirstOrDefault(c => c.Name == name);
+
+            return category;
+        }
+
+        private Product FindDomainProductById (string id)
+        {
+            var product = this.context.Products
+             .Include(p => p.Reviews)
+             .Include(p => p.Category)
+             .Include(p => p.Brand)
+             .FirstOrDefault(p => p.Id == id);
+
+            return product;
+        }
+
+        private Product FindAndSetProductReviews(Product product)
+        {
+            var reviews = this.context.Reviews
+                 .Where(r => r.ProductId == product.Id)
+                 .ToList();
+
+            product.Reviews = reviews;
+
+            return product;
+        }
+
+        private Product EditProductSpecifications(EditSpecificationsBindingModel model, Product product)
+        {
+            product.Height = model.Height;
+            product.Weight = model.Weight;
+            product.Width = model.Width;
+            product.Depth = model.Depth;
+
+            return product;
+        }
+
+        private Product EditProductMain(ProductEditBindingModel model, Product product, Category category, Brand brand)
+        {
+            product.Name = model.Name;
+            product.MiniDescription = model.MiniDescription;
+            product.Price = decimal.Parse(model.Price);
+            product.Category = category;
+            product.Brand = brand;
+
+            return product;
+        }
+
+        private Review CreateReviewByModelProductAndUser(AddReviewBindingModel model, ApplicationUserDTO user, Product product)
+        {
+            var review = new Review { UserName = user.UserName, ProductId = model.Id, Product = product, Message = model.Message, Stars = model.Stars, DateOfCreation = DateTime.UtcNow };
+
+            return review;
+        }
+
+        private List<Product> FindAllDomainProducts()
+        {
+            var products = this.context.Products
+                .Include(x => x.Category)
+                .Include(x => x.Brand)
+                .Include(x => x.Reviews)
+                .ToList();
+
+            return products;
         }
     }
 }

@@ -20,8 +20,8 @@
         public string Category { get; set; }
 
         [Required]
-        [Range(1, double.MaxValue, ErrorMessage = "The \"{0}\" must be between {1} and {2}.")]
-        public decimal Price { get; set; }
+        [StringLength(15, MinimumLength = 1, ErrorMessage = "The \"{0}\" is too big, no one would buy it....")]
+        public string Price { get; set; }
 
         public string Image { get; set; }
 

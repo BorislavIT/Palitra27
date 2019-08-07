@@ -32,7 +32,7 @@
         public string CreateOrder(OrderCreateBindingModel model, ApplicationUserDTO user)
         {
             List<OrderProduct> orderProducts = new List<OrderProduct>();
-            var shoppingCartProducts = this.shoppingCartService.GetAllDomainShoppingCartProducts(user.UserName).ToList();
+            var shoppingCartProducts = this.shoppingCartService.FindAllDomainShoppingCartProducts(user.UserName).ToList();
             if (shoppingCartProducts.Count == 0)
             {
                 return string.Empty;

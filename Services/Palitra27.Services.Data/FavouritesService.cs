@@ -2,12 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using AutoMapper;
     using Microsoft.EntityFrameworkCore;
     using Palitra27.Data;
     using Palitra27.Data.Models;
+    using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Web.ViewModels.FavouriteList;
 
     public class FavouritesService : IFavouritesService
@@ -31,32 +31,21 @@
 
         public void AddProduct(string id, string username)
         {
-            var user = this.userService
-                .GetUserByUsername(username);
+            var user = this.userService.FindUserByUsername(username);
 
-            var product = this.productsService
-                .FindDomainProduct(id);
+            var product = this.productsService.FindDomainProduct(id);
 
-            var favouriteList = this.dbContext.FavouriteLists
-                 .FirstOrDefault(x => x.UserId == user.Id);
+            var favouriteList = this.FindFavouriteListByUserId(user);
 
-            var favouriteProduct = this.dbContext
-                .FavouriteProducts
-                .FirstOrDefault(x => x.ProductId == product.Id);
+            var favouriteProduct = this.FindFavouriteProductByProductId(product);
 
-            if (product == null || user == null || favouriteProduct != null)
+            if (this.ProductOrUserIsNullOrFavouriteProductIsntNull(user, product, favouriteProduct))
             {
                 return;
             }
             else
             {
-                var favouriteProductToAdd = new FavouriteProduct
-                {
-                    Product = product,
-                    ProductId = product.Id,
-                    FavouriteList = favouriteList,
-                    FavouriteListId = favouriteList.Id,
-                };
+                var favouriteProductToAdd = this.CreateFavouriteProduct(product, favouriteList);
 
                 this.dbContext.FavouriteProducts.Add(favouriteProductToAdd);
                 favouriteList.FavouriteProducts.Add(favouriteProductToAdd);
@@ -67,49 +56,104 @@
 
         public List<FavouriteProductViewModel> AllFavouriteProducts(string username)
         {
-            var user = this.userService
-                .GetUserByUsername(username);
+            var user = this.userService.FindUserByUsername(username);
 
-            var favouriteList = this.dbContext.FavouriteLists
-             .FirstOrDefault(x => x.User.Id == user.Id);
+            var favouriteList = this.FindFavouriteListByUserId(user);
+            var favouriteProducts = this.FindFavouriteListProducts(favouriteList);
 
-            var favouriteProducts = this.dbContext.FavouriteProducts
-                .Include(x => x.Product)
-                .Include(x => x.FavouriteList)
-                .Where(x => x.FavouriteList.Id == favouriteList.Id)
-                .ToList();
-
-            var dsa = this.mapper.Map<List<FavouriteProductViewModel>>(favouriteProducts);
-            return dsa;
+            return this.mapper.Map<List<FavouriteProductViewModel>>(favouriteProducts);
         }
 
-        public void RemoveProduct(string productId, string username)
+        public void RemoveProduct(string id, string username)
         {
-            var user = this.userService
-               .GetUserByUsername(username);
+            var user = this.userService.FindUserByUsername(username);
 
-            var product = this.productsService
-               .FindDomainProduct(productId);
+            var product = this.productsService.FindDomainProduct(id);
 
-            var favouriteProduct = this.dbContext
-                .FavouriteProducts
-                .FirstOrDefault(x => x.ProductId == product.Id);
+            var favouriteProduct = this.FindFavouriteProductByProductId(product);
 
-            if (product == null || user == null || favouriteProduct == null)
+            if (this.ProductOrUserOrFavouriteProductIsNull(user, product, favouriteProduct))
             {
                 return;
             }
             else
             {
-                var favouriteList = this.dbContext.FavouriteLists
-                    .Include(x => x.FavouriteProducts)
-                    .FirstOrDefault(x => x.Id == favouriteProduct.FavouriteListId);
+                var favouriteList = this.FindFavouriteListByProductId(favouriteProduct);
                 favouriteList.FavouriteProducts.Remove(favouriteProduct);
                 this.dbContext.FavouriteLists.Update(favouriteList);
 
                 this.dbContext.FavouriteProducts.Remove(favouriteProduct);
                 this.dbContext.SaveChanges();
             }
+        }
+
+        private bool ProductOrUserIsNullOrFavouriteProductIsntNull(ApplicationUserDTO user, Product product, FavouriteProduct favouriteProduct)
+        {
+            if (product == null || user == null || favouriteProduct != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool ProductOrUserOrFavouriteProductIsNull(ApplicationUserDTO user, Product product, FavouriteProduct favouriteProduct)
+        {
+            if (product == null || user == null || favouriteProduct == null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private FavouriteProduct CreateFavouriteProduct(Product product, FavouriteList favouriteList)
+        {
+            var favouriteProduct = new FavouriteProduct
+            {
+                Product = product,
+                ProductId = product.Id,
+                FavouriteList = favouriteList,
+                FavouriteListId = favouriteList.Id,
+            };
+
+            return favouriteProduct;
+        }
+
+        private FavouriteList FindFavouriteListByUserId(ApplicationUserDTO user)
+        {
+            var favouriteList = this.dbContext.FavouriteLists
+                .FirstOrDefault(x => x.UserId == user.Id);
+
+            return favouriteList;
+        }
+
+        private FavouriteProduct FindFavouriteProductByProductId(Product product)
+        {
+            var favouriteProduct = this.dbContext.FavouriteProducts
+                .FirstOrDefault(x => x.ProductId == product.Id);
+
+            return favouriteProduct;
+        }
+
+        private List<FavouriteProduct> FindFavouriteListProducts(FavouriteList favouriteList)
+        {
+            var favouriteProducts = this.dbContext.FavouriteProducts
+                .Include(x => x.Product)
+                .Include(x => x.FavouriteList)
+                .Where(x => x.FavouriteList.Id == favouriteList.Id)
+                .ToList();
+
+            return favouriteProducts;
+        }
+
+        private FavouriteList FindFavouriteListByProductId(FavouriteProduct favouriteProduct)
+        {
+            var favouriteList = this.dbContext.FavouriteLists
+                    .Include(x => x.FavouriteProducts)
+                    .FirstOrDefault(x => x.Id == favouriteProduct.FavouriteListId);
+
+            return favouriteList;
         }
     }
 }

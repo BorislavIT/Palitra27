@@ -8,6 +8,6 @@
     {
         public ProductInfoViewModel ProductInfoViewModel { get; set; }
 
-        public BrandCategoryViewModel BrandCategoryViewModel { get; set; }
+        public CategoryBrandViewModel BrandCategoryViewModel { get; set; }
     }
 }

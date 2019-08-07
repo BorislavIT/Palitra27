@@ -24,14 +24,13 @@
 
         public CategoryDTO CreateCategory(CreateCategoryBindingModel model)
         {
-            var checkCategory = this.context.Categories
-               .FirstOrDefault(x => x.Name == model.Name);
+            var checkCategory = this.FindCategoryByName(model);
             if (checkCategory != null)
             {
                 return null;
             }
 
-            var category = new Category { Name = model.Name };
+            var category = this.CreateCategoryByName(model);
 
             this.context.Categories.Add(category);
             this.context.SaveChanges();
@@ -43,6 +42,21 @@
         {
             var categories = this.context.Categories.ToList();
             return this.mapper.Map<List<CategoryDTO>>(categories);
+        }
+
+        private Category CreateCategoryByName(CreateCategoryBindingModel model)
+        {
+            var category = new Category { Name = model.Name };
+
+            return category;
+        }
+
+        private Category FindCategoryByName(CreateCategoryBindingModel model)
+        {
+            var category = this.context.Categories
+               .FirstOrDefault(c => c.Name == model.Name);
+
+            return category;
         }
     }
 }

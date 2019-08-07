@@ -32,9 +32,9 @@
 
         public IActionResult Create()
         {
-                var user = this.usersService.GetUserByUsername(this.User.Identity.Name);
+                var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
 
-                var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
+                var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
 
                 var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
@@ -50,7 +50,7 @@
         [HttpPost]
         public IActionResult Create(OrderCreateBindingModel model)
         {
-            var user = this.usersService.GetUserByUsername(this.User.Identity.Name);
+            var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
             var countries = this.orderService.GetAllCountries();
 
             if (this.ModelState.IsValid)
@@ -58,7 +58,7 @@
                 var orderId = this.orderService.CreateOrder(model, user);
                 if (orderId == string.Empty)
                 {
-                    var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
+                    var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
 
                     var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
 
@@ -73,7 +73,7 @@
             }
             else
             {
-                var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(user.Username);
+                var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(user.Username);
                 var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
                 var actualModel = new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, Countries = countries, OrderCreateViewModel = model };
 

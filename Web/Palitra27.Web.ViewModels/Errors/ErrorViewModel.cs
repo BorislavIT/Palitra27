@@ -1,6 +1,6 @@
 ﻿namespace Palitra27.Web.ViewModels.Errors
 {
-    public class CreationErrorViewModel
+    public class ErrorViewModel
     {
         public string ErrorMessage { get; set; }
 

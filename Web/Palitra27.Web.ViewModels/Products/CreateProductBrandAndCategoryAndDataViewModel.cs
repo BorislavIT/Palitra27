@@ -4,6 +4,6 @@
     {
         public CreateProductBindingModel CreateProductBindingModel { get; set; }
 
-        public BrandCategoryViewModel BrandCategoryViewModel { get; set; }
+        public CategoryBrandViewModel BrandCategoryViewModel { get; set; }
     }
 }

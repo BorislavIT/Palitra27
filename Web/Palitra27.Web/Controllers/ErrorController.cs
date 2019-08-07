@@ -11,7 +11,7 @@
             return this.View();
         }
 
-        public IActionResult CreationError(CreationErrorViewModel model)
+        public IActionResult CreationError(ErrorViewModel model)
         {
             return this.View(model);
         }

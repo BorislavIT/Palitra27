@@ -12,16 +12,19 @@
         private readonly IMapper mapper;
         private readonly ApplicationDbContext db;
 
-        public UserService(ApplicationDbContext db, IMapper mapper)
+        public UserService(
+            ApplicationDbContext db,
+            IMapper mapper)
         {
             this.mapper = mapper;
             this.db = db;
         }
 
-        public ApplicationUserDTO GetUserByUsername(string username)
+        public ApplicationUserDTO FindUserByUsername(string username)
         {
-            return this.mapper.Map<ApplicationUserDTO>(this.db.Users
-                .FirstOrDefault(x => x.UserName == username));
+            var user = this.FindDomainUserByUsername(username);
+
+            return this.mapper.Map<ApplicationUserDTO>(user);
         }
 
         public void EditFirstName(ApplicationUser user, string firstName)
@@ -46,10 +49,17 @@
             this.db.SaveChanges();
         }
 
-        public ApplicationUser GetDomainUserByUsername(string username)
+        private ApplicationUser FindDomainUserByUsername(string username)
         {
-            return this.db.Users
-                 .FirstOrDefault(x => x.UserName == username);
+            var user = this.db.Users
+                .FirstOrDefault(x => x.UserName == username);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            return user;
         }
     }
 }

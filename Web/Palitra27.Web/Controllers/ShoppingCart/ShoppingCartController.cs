@@ -31,7 +31,7 @@
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                var shoppingCartProducts = this.shoppingCartService.GetAllShoppingCartProducts(this.User.Identity.Name).ToList();
+                var shoppingCartProducts = this.shoppingCartService.FindAllShoppingCartProducts(this.User.Identity.Name).ToList();
                 if (shoppingCartProducts.Count() == 0)
                 {
                     return this.RedirectToAction("Index", "Home");
@@ -51,17 +51,17 @@
             return this.View(shoppingCartSession);
         }
 
-        public IActionResult Add(string id, int qty)
+        public IActionResult Add(string id, int quantity)
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                if (qty <= 0)
+                if (quantity <= 0)
                 {
                     this.shoppingCartService.AddProductInShoppingCart(id, this.User.Identity.Name, 1);
                 }
                 else
                 {
-                    this.shoppingCartService.AddProductInShoppingCart(id, this.User.Identity.Name, qty);
+                    this.shoppingCartService.AddProductInShoppingCart(id, this.User.Identity.Name, quantity);
                 }
             }
             else
@@ -77,7 +77,16 @@
                     var product = this.productSevice.FindProductById(id);
 
                     var shoppingCart = this.mapper.Map<ShoppingCartProductsViewModel>(product);
-                    shoppingCart.Quantity = DefaultQuantity;
+                    if (quantity <= 0)
+                    {
+                        shoppingCart.Quantity = DefaultQuantity;
+                    }
+                    else
+                    {
+                        shoppingCart.Quantity = quantity;
+
+                    }
+
                     shoppingCart.TotalPrice = shoppingCart.Quantity * shoppingCart.Price;
 
                     shoppingCartSession.Add(shoppingCart);

@@ -11,10 +11,14 @@
         private const string HyperLinkForCreationError = "/Administration/Brands/Create";
 
         private readonly IBrandsService brandService;
+        private readonly IErrorService errorService;
 
-        public BrandsController(IBrandsService brandService)
+        public BrandsController(
+            IBrandsService brandService,
+            IErrorService errorService)
         {
             this.brandService = brandService;
+            this.errorService = errorService;
         }
 
         public IActionResult Create()
@@ -34,7 +38,7 @@
 
             if (brand == null)
             {
-                var creationErrorViewModel = new CreationErrorViewModel { ErrorMessage = CreationAlreadyExistsErrorMessage, HyperLink = HyperLinkForCreationError };
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(CreationAlreadyExistsErrorMessage, HyperLinkForCreationError);
                 return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
             }
 

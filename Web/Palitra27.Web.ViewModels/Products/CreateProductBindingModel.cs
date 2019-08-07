@@ -7,20 +7,20 @@
     public class CreateProductBindingModel
     {
         [Required]
-        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
         public string Brand { get; set; }
 
         [Required]
-        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
-        public string ProductName { get; set; }
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
+        public string Name { get; set; }
 
         [Required]
-        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
+        [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
         public string Category { get; set; }
 
         [Required]
-        [Range(1, double.MaxValue, ErrorMessage = "The \"{0}\" must be between {1} and {2}.")]
-        public decimal Price { get; set; }
+        [StringLength(15, MinimumLength = 1, ErrorMessage = "The \"{0}\" is too big, no one would buy it....")]
+        public string Price { get; set; }
 
         [Required]
         public IFormFile Image { get; set; }

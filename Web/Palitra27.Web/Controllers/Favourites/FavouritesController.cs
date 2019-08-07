@@ -20,6 +20,7 @@
         {
             var username = this.User.Identity.Name;
             var model = this.favouritesService.AllFavouriteProducts(username);
+
             if (model.Count == 0)
             {
                 return this.Redirect("/Home/Index");
@@ -33,12 +34,14 @@
         public IActionResult Delete(string productId)
         {
             this.favouritesService.RemoveProduct(productId, this.User.Identity.Name);
+
             return this.RedirectToAction("Index");
         }
 
         public IActionResult Add(string productId)
         {
             this.favouritesService.AddProduct(productId, this.User.Identity.Name);
+
             return this.RedirectToAction("Index");
         }
     }

@@ -10,14 +10,15 @@
 
         private readonly IEmailSender emailSender;
 
-        public ContactsController(IEmailSender emailSender)
+        public ContactsController(
+            IEmailSender emailSender)
         {
             this.emailSender = emailSender;
         }
 
         public IActionResult Info()
         {
-            return this.View(new ContactBindingModel { });
+            return this.View();
         }
 
         [HttpPost]
