@@ -48,11 +48,11 @@
                                             <div class="d-flex">
                                                 @if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
                                                 {
-                                                    <a href="/Administration/Products/ChooseOne/@product.Id"><img height="320px" width="300px" src="@product.Image" alt=""></a>
+                                                    <a href="/Administration/Products/ChooseOne/@product.Id"><img height="320" width="300" src="@product.Image" alt=""></a>
                                                 }
                                                 else
                                                 {
-                                                    <a href="/Products/Info/@product.Id"><img height="320px" width="300px" src="@product.Image" alt=""></a>
+                                                    <a href="/Products/Info/@product.Id"><img height="320" width="300" src="@product.Image" alt=""></a>
                                                 }
                                             </div>
                                             <div class="media-body">
@@ -104,17 +104,6 @@
                                 </div>
                             </td>
                         </tr>
-                            <tr class="bottom_button">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <div class="cupon_text d-flex justify-content-end">
-                                        <input type="text" placeholder="Coupon Code">
-                                        <a class="primary-btn" href="#">Apply</a>
-                                    </div>
-                                </td>
-                            </tr>
                             <tr>
                                 <td></td>
                                 <td></td>

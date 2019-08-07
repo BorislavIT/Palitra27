@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.Category;
     using Palitra27.Web.ViewModels.Categories;
 
@@ -10,6 +11,8 @@
         CategoryDTO CreateCategory(CreateCategoryBindingModel model);
 
         CategoryDTO RemoveCategory(CreateCategoryBindingModel model);
+
+        Category FindBrandByNameAndCheckIsDeleted(string name);
 
         List<CategoryDTO> FindAllCategories();
     }

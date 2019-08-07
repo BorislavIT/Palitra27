@@ -7,6 +7,7 @@
     using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Data.Models.DtoModels.Brand;
     using Palitra27.Data.Models.DtoModels.Category;
+    using Palitra27.Data.Models.DtoModels.FavouriteList;
     using Palitra27.Data.Models.DtoModels.Order;
     using Palitra27.Data.Models.DtoModels.Product;
     using Palitra27.Data.Models.DtoModels.Review;
@@ -22,7 +23,6 @@
     {
         public ApplicationProfile()
         {
-
             this.CreateMap<Order, CompleteOrderViewModel>();
             this.CreateMap<Order, ConfirmOrderViewModel>()
                            .ForMember(x => x.TotalPrice, y => y.MapFrom(src => src.TotalPrice));
@@ -85,10 +85,9 @@
             this.CreateMap<Category, CategoryDTO>();
             this.CreateMap<CategoryDTO, Category>();
 
-            this.CreateMap<ApplicationUser, ApplicationUserDTO>()
-                .ForMember(x => x.Username, y => y.MapFrom(d => d.UserName))
-                .ForMember(x => x.UserName, y => y.MapFrom(d => d.UserName))
-                .ForMember(x => x.PhoneNumber, y => y.MapFrom(d => d.PhoneNumber));
+            this.CreateMap<ApplicationUser, ApplicationUserDTO>();
+
+            this.CreateMap<FavouriteList, FavouriteListDTO>();
 
             this.CreateMap<Review, ReviewDTO>();
             this.CreateMap<ReviewDTO, Review>();
@@ -109,6 +108,9 @@
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category))
                 .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand))
                 .ForMember(x => x.Reviews, y => y.MapFrom(c => c.Reviews));
+
+            this.CreateMap<ProductDTO, ProductViewModel>();
+
             this.CreateMap<Product, ProductDTO>()
                         .ForMember(x => x.Category, y => y.MapFrom(c => c.Category))
                         .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand))

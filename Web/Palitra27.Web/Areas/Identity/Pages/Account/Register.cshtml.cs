@@ -35,7 +35,7 @@
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IShoppingCartService shoppingCartService, 
+            IShoppingCartService shoppingCartService,
             ApplicationDbContext dbContext)
         {
             this.userManager = userManager;

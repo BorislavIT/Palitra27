@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.Brand;
     using Palitra27.Data.Models.DtoModels.Category;
     using Palitra27.Web.ViewModels.Brands;

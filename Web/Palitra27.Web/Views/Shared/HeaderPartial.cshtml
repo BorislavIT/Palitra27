@@ -17,77 +17,20 @@
                     <ul class="nav navbar-nav menu_nav ml-auto">
                         <li class="nav-item active"><a class="nav-link" href="/Home/Index">Home</a></li>
                         @if (!this.User.Identity.IsAuthenticated)
+                        {
+                            <partial name="GuestNavBar" />
+                        }
+                        else
+                        {
+                            if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
                             {
-                        <li class="nav-item submenu dropdown">
-                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Account</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Register">Register</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Login">Login</a></li>
-                            </ul>
-                        </li>
+                                <partial name="AdminNavBar" />
                             }
                             else
                             {
-                                if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
-                                {
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Admin Panel</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Brands/Create">Create Brand</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Brands/Delete">Delete Brand</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Categories/Create">Create Category</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Categories/Delete">Delete Category</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Products/Create">Create Product</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Administration/Products/Find">Find Product</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Account</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Manage">Profile</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">Logout</a></li>
-                            </ul>
-                        </li>
-                                }
-                                else
-                                {
-                        <li class="nav-item submenu dropdown">
-                            <a href="/Shop/Index" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Shop/Index">Shop By Categories</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/ShoppingCart/Index">Shopping Cart</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item submenu dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                               aria-expanded="false">Account</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Manage">Profile</a></li>
-                                <li class="nav-item"><a class="nav-link" href="/Identity/Account/Logout">Logout</a></li>
-                            </ul>
-                        </li>
-                                }
+                                <partial name="UserNavBar" />
                             }
+                        }
                         <li class="nav-item"><a class="nav-link" href="/Contacts/Info">Contact Us</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

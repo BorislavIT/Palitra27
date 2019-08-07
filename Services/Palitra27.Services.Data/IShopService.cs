@@ -1,12 +1,12 @@
 ﻿namespace Palitra27.Services.Data
 {
-    using System.Linq;
+    using System.Collections.Generic;
 
-    using Palitra27.Data.Models;
+    using Palitra27.Data.Models.DtoModels.Product;
     using Palitra27.Web.ViewModels.Shop;
 
     public interface IShopService
     {
-        IQueryable<Product> Find(ShopViewModel model);
+        List<ProductDTO> Find(ShopViewModel model);
     }
 }

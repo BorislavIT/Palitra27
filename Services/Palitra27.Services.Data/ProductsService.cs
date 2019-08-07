@@ -17,14 +17,14 @@
 
     public class ProductsService : IProductsService
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
         public ProductsService(
-            ApplicationDbContext context,
+            ApplicationDbContext dbContext,
             IMapper mapper)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
@@ -45,8 +45,8 @@
 
             var product = this.CreateProductByModelBrandAndCategory(model, brand, category);
 
-            this.context.Products.Add(product);
-            this.context.SaveChanges();
+            this.dbContext.Products.Add(product);
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<ProductDTO>(product);
         }
@@ -87,7 +87,7 @@
 
             product = this.EditProductMain(model, product, category, brand);
 
-            this.context.SaveChanges();
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<ProductDTO>(product);
         }
@@ -97,8 +97,8 @@
             var product = this.FindDomainProduct(model.Id);
             var review = this.CreateReviewByModelProductAndUser(model, user, product);
 
-            this.context.Reviews.Add(review);
-            this.context.SaveChanges();
+            this.dbContext.Reviews.Add(review);
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<ReviewDTO>(review);
         }
@@ -113,8 +113,8 @@
             }
 
             product.Description = model.Description;
-            this.context.Products.Update(product);
-            this.context.SaveChanges();
+            this.dbContext.Products.Update(product);
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<ProductDTO>(product);
         }
@@ -144,8 +144,8 @@
 
             product = this.EditProductSpecifications(model, product);
 
-            this.context.Products.Update(product);
-            this.context.SaveChanges();
+            this.dbContext.Products.Update(product);
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<ProductDTO>(product);
         }
@@ -193,7 +193,7 @@
 
         private bool CheckIfProductExists(CreateProductBindingModel model)
         {
-            var product = this.context.Products
+            var product = this.dbContext.Products
              .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
              .FirstOrDefault(x => x.Name == model.Name);
 
@@ -245,7 +245,7 @@
 
         private Brand FindBrandByName(string name)
         {
-            var brand = this.context.Brands
+            var brand = this.dbContext.Brands
                 .Where(x => x.IsDeleted == false)
                .FirstOrDefault(b => b.Name == name);
 
@@ -254,7 +254,7 @@
 
         private Category FindCategoryByName(string name)
         {
-            var category = this.context.Categories
+            var category = this.dbContext.Categories
                 .Where(x => x.IsDeleted == false)
                .FirstOrDefault(c => c.Name == name);
 
@@ -263,7 +263,7 @@
 
         private Product FindDomainProductById (string id)
         {
-            var product = this.context.Products
+            var product = this.dbContext.Products
              .Include(p => p.Reviews)
              .Include(p => p.Category)
              .Include(p => p.Brand)
@@ -275,7 +275,7 @@
 
         private Product FindAndSetProductReviews(Product product)
         {
-            var reviews = this.context.Reviews
+            var reviews = this.dbContext.Reviews
                  .Where(r => r.ProductId == product.Id)
                  .ToList();
 
@@ -314,7 +314,7 @@
 
         private List<Product> FindAllDomainProducts()
         {
-            var products = this.context.Products
+            var products = this.dbContext.Products
                 .Include(x => x.Category)
                 .Include(x => x.Brand)
                 .Include(x => x.Reviews)

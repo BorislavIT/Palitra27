@@ -83,16 +83,16 @@
                         <div class="order_box">
                             <h2>Your Order</h2>
                             <ul class="list">
-                                <li><a href="#">Product <span>Total</span></a></li>
+                                <li><a>Product <span>Total</span></a></li>
                                 @foreach (var item in Model.ShoppingCartProductsViewModels)
                                 {
-                                    <li><a href="#">@item.Name <span class="middle">x @item.Quantity</span> <span class="last">@item.TotalPrice</span></a></li>
+                                    <li><a href="/Products/Info/@item.Id">@item.Name <span class="middle">x @item.Quantity</span> <span class="last">@item.TotalPrice</span></a></li>
 
                                 }
-                                <li><a href="#">VAT<span class="middle">x 1</span> <span class="last">@value</span></a></li>
+                                <li><a>VAT<span class="middle">x 1</span> <span class="last">@value</span></a></li>
                             </ul>
                             <ul class="list list_2">
-                                <li><a href="#">Total <span>@totalCostvalue</span></a></li>
+                                <li><a>Total <span>@totalCostvalue</span></a></li>
                             </ul>
                             <div class="payment_item">
                                 <div class="radion_btn">
@@ -118,7 +118,7 @@
                             <div class="creat_account">
                                 <input type="checkbox" id="f-option4" name="Agree" value="true">
                                 <label for="f-option4">I’ve read and accept the </label>
-                                <a href="#">terms & conditions*</a>
+                                <a>terms & conditions*</a>
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button type="submit" value="submit" class="primary-btn">Proceed to Paypal</button>

@@ -10,14 +10,14 @@
     public class UserService : IUserService
     {
         private readonly IMapper mapper;
-        private readonly ApplicationDbContext db;
+        private readonly ApplicationDbContext dbContext;
 
         public UserService(
-            ApplicationDbContext db,
+            ApplicationDbContext dbContext,
             IMapper mapper)
         {
             this.mapper = mapper;
-            this.db = db;
+            this.dbContext = dbContext;
         }
 
         public ApplicationUserDTO FindUserByUsername(string username)
@@ -35,7 +35,7 @@
             }
 
             user.FirstName = firstName;
-            this.db.SaveChanges();
+            this.dbContext.SaveChanges();
         }
 
         public void EditLastName(ApplicationUser user, string lastName)
@@ -46,12 +46,12 @@
             }
 
             user.LastName = lastName;
-            this.db.SaveChanges();
+            this.dbContext.SaveChanges();
         }
 
         private ApplicationUser FindDomainUserByUsername(string username)
         {
-            var user = this.db.Users
+            var user = this.dbContext.Users
                 .FirstOrDefault(x => x.UserName == username);
 
             if (user == null)

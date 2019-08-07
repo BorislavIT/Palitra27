@@ -13,14 +13,14 @@
 
     public class BrandsService : IBrandsService
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
         public BrandsService(
-            ApplicationDbContext context,
+            ApplicationDbContext dbContext,
             IMapper mapper)
         {
-            this.context = context;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
@@ -31,8 +31,8 @@
             if (checkBrand.IsDeleted == true)
             {
                 checkBrand.IsDeleted = false;
-                this.context.Brands.Update(checkBrand);
-                this.context.SaveChanges();
+                this.dbContext.Brands.Update(checkBrand);
+                this.dbContext.SaveChanges();
 
                 return this.mapper.Map<BrandDTO>(checkBrand);
             }
@@ -45,8 +45,8 @@
             {
                 var brand = this.CreateBrandByName(model);
 
-                this.context.Brands.Add(brand);
-                this.context.SaveChanges();
+                this.dbContext.Brands.Add(brand);
+                this.dbContext.SaveChanges();
 
                 return this.mapper.Map<BrandDTO>(brand);
             }
@@ -61,7 +61,7 @@
 
         public List<BrandDTO> FindAllBrands()
         {
-            var brands = this.context.Brands
+            var brands = this.dbContext.Brands
                 .Where(x => x.IsDeleted == false)
                 .ToList();
 
@@ -70,7 +70,7 @@
 
         public BrandDTO RemoveBrand(CreateBrandBindingModel model)
         {
-            var brand = this.FindBrandByNameAndCheckIsDeleted(model);
+            var brand = this.FindBrandByModelAndCheckIsDeleted(model);
             if (brand == null)
             {
                 return null;
@@ -78,8 +78,8 @@
 
             brand.IsDeleted = true;
 
-            this.context.Update(brand);
-            this.context.SaveChanges();
+            this.dbContext.Update(brand);
+            this.dbContext.SaveChanges();
 
             return this.mapper.Map<BrandDTO>(brand);
         }
@@ -91,13 +91,13 @@
             return brand;
         }
 
-        private Brand FindBrandByNameAndCheckIsDeleted(CreateBrandBindingModel model)
+        private Brand FindBrandByModelAndCheckIsDeleted(CreateBrandBindingModel model)
         {
-            var brand = this.context.Brands
+            var brand = this.dbContext.Brands
                 .Where(x => x.IsDeleted == false)
                .FirstOrDefault(b => b.Name == model.Name);
 
-            if (this.context.Brands.Where(x => x.IsDeleted == false).Count() == 1)
+            if (this.dbContext.Brands.Where(x => x.IsDeleted == false).Count() == 1)
             {
                 return null;
             }
@@ -107,7 +107,7 @@
 
         private Brand FindBrandByName(CreateBrandBindingModel model)
         {
-            var brand = this.context.Brands
+            var brand = this.dbContext.Brands
                .FirstOrDefault(b => b.Name == model.Name);
 
             return brand;

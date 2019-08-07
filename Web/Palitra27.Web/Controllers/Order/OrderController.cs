@@ -115,9 +115,33 @@
             return this.View(actualModel);
         }
 
-        private object CreateOrderShoppingCartViewWithoutCountries(OrderCreateBindingModel fillFormViewModel, List<ShoppingCartProductsViewModel> shoppingCartProductsViewModel)
+        public IActionResult All()
         {
-            return new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, OrderCreateViewModel = fillFormViewModel };
+            var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
+
+            var orders = this.orderService.FindAllUserOrders(user);
+
+            var actualModels = new List<OrderShoppingCartViewModel>();
+
+            foreach (var order in orders)
+            {
+                var shoppingCartProducts = this.orderService.OrderProductsByOrderId(order.Id);
+
+                var shoppingCartProductsViewModel = this.mapper.Map<List<ShoppingCartProductsViewModel>>(shoppingCartProducts);
+
+                var fillFormViewModel = this.mapper.Map<OrderCreateBindingModel>(order);
+
+                var actualModel = this.CreateOrderShoppingCartViewWithoutCountries(fillFormViewModel, shoppingCartProductsViewModel);
+
+                actualModels.Add(actualModel);
+            }
+
+            return this.View(actualModels);
+        }
+
+        private OrderShoppingCartViewModel CreateOrderShoppingCartViewWithoutCountries(OrderCreateBindingModel fillFormViewModel, List<ShoppingCartProductsViewModel> shoppingCartProductsViewModel)
+        {
+            return new OrderShoppingCartViewModel { ShoppingCartProductsViewModels = shoppingCartProductsViewModel, OrderCreateViewModel = fillFormViewModel, Id = fillFormViewModel.Id };
         }
 
         private OrderShoppingCartViewModel CreateOrderShoppingCartViewWithCountries(OrderCreateBindingModel model, List<string> countries, List<ShoppingCartProductsViewModel> shoppingCartProductsViewModel)
@@ -129,6 +153,5 @@
         {
             return new OrderCreateBindingModel() { FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber };
         }
-
     }
 }

@@ -14,18 +14,18 @@
     {
         private const int DefaultProductQuantity = 1;
 
-        private readonly ApplicationDbContext db;
+        private readonly ApplicationDbContext dbContext;
         private readonly IProductsService productService;
         private readonly IUserService userService;
         private readonly IMapper mapper;
 
         public ShoppingCartService(
-            ApplicationDbContext db,
+            ApplicationDbContext dbContext,
             IProductsService productService,
             IUserService userService,
             IMapper mapper)
         {
-            this.db = db;
+            this.dbContext = dbContext;
             this.productService = productService;
             this.userService = userService;
             this.mapper = mapper;
@@ -55,14 +55,14 @@
                     shoppingCartProduct.Quantity += (int)quantity;
                 }
 
-                this.db.SaveChanges();
+                this.dbContext.SaveChanges();
                 return;
             }
 
             shoppingCartProduct = this.CreateShoppingCartProductByProduct(product, quantity, userCart);
 
-            this.db.ShoppingCartProducts.Add(shoppingCartProduct);
-            this.db.SaveChanges();
+            this.dbContext.ShoppingCartProducts.Add(shoppingCartProduct);
+            this.dbContext.SaveChanges();
         }
 
         public void DeleteProductFromShoppingCart(string id, string username)
@@ -77,8 +77,8 @@
 
             var shoppingCart = this.FindShoppingCartProduct(product.Id, user.ShoppingCartId);
 
-            this.db.ShoppingCartProducts.Remove(shoppingCart);
-            this.db.SaveChanges();
+            this.dbContext.ShoppingCartProducts.Remove(shoppingCart);
+            this.dbContext.SaveChanges();
         }
 
         public bool AnyProducts(string username)
@@ -99,8 +99,8 @@
 
             var shoppingCartProducts = this.FindShoppingCartProductsByUser(user);
 
-            this.db.ShoppingCartProducts.RemoveRange(shoppingCartProducts);
-            this.db.SaveChanges();
+            this.dbContext.ShoppingCartProducts.RemoveRange(shoppingCartProducts);
+            this.dbContext.SaveChanges();
         }
 
         public void EditProductQuantityInShoppingCart(string productId, string username, int quantity)
@@ -121,8 +121,8 @@
 
             shoppingCartProduct.Quantity = quantity;
 
-            this.db.Update(shoppingCartProduct);
-            this.db.SaveChanges();
+            this.dbContext.Update(shoppingCartProduct);
+            this.dbContext.SaveChanges();
         }
 
         public List<ShoppingCartProductDTO> FindAllShoppingCartProducts(string username)
@@ -155,13 +155,13 @@
 
         private ShoppingCartProduct FindShoppingCartProduct(string productId, string shoppingCartId)
         {
-            return this.db.ShoppingCartProducts
+            return this.dbContext.ShoppingCartProducts
                 .FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId);
         }
 
         private ShoppingCart FindShoppingCartByUserId(ApplicationUserDTO user)
         {
-            var userCart = this.db.ShoppingCarts
+            var userCart = this.dbContext.ShoppingCarts
                 .FirstOrDefault(x => x.User.Id == user.Id);
 
             return userCart;
@@ -192,7 +192,7 @@
 
         private ShoppingCartProduct FindShoppingCartProductByProductId(Product product)
         {
-            var shoppingCartProduct = this.db.ShoppingCartProducts
+            var shoppingCartProduct = this.dbContext.ShoppingCartProducts
                .FirstOrDefault(x => x.ProductId == product.Id);
 
             return shoppingCartProduct;
@@ -200,7 +200,7 @@
 
         private List<ShoppingCartProduct> FindShoppingCartProductsByUser(ApplicationUserDTO user)
         {
-            var shoppingCartProducts = this.db.ShoppingCartProducts
+            var shoppingCartProducts = this.dbContext.ShoppingCartProducts
                .Where(x => x.ShoppingCartId == user.ShoppingCartId)
                .ToList();
 
@@ -209,7 +209,7 @@
 
         private List<ShoppingCartProduct> FindShoppingCartProductsByUserName(ApplicationUserDTO user)
         {
-            var shoppingCartProducts = this.db.ShoppingCartProducts.Include(x => x.Product)
+            var shoppingCartProducts = this.dbContext.ShoppingCartProducts.Include(x => x.Product)
                                                .Include(x => x.ShoppingCart)
                                                .Where(x => x.ShoppingCart.User.UserName == user.Username)
                                                .Where(x => x.Product.Brand.IsDeleted == false && x.Product.Category.IsDeleted == false)
@@ -220,7 +220,7 @@
 
         private bool CheckIfAnyProductsInShoppingCartByUsername(string username)
         {
-            return this.db.ShoppingCartProducts
+            return this.dbContext.ShoppingCartProducts
                 .Any(x => x.ShoppingCart.User.UserName == username);
         }
     }

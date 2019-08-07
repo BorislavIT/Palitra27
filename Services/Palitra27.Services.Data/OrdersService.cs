@@ -15,16 +15,16 @@
     public class OrdersService : IOrdersService
     {
         private readonly IShoppingCartService shoppingCartService;
-        private readonly ApplicationDbContext db;
+        private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
         public OrdersService(
             IShoppingCartService shoppingCartService,
-            ApplicationDbContext db,
+            ApplicationDbContext dbContext,
             IMapper mapper)
         {
             this.shoppingCartService = shoppingCartService;
-            this.db = db;
+            this.dbContext = dbContext;
             this.mapper = mapper;
         }
 
@@ -46,9 +46,9 @@
             order.OrderProducts = orderProducts;
             order.TotalPrice = this.CalculateTotalPrice(order);
 
-            this.db.OrderProducts.AddRange(orderProducts);
-            this.db.Orders.Add(order);
-            this.db.SaveChanges();
+            this.dbContext.OrderProducts.AddRange(orderProducts);
+            this.dbContext.Orders.Add(order);
+            this.dbContext.SaveChanges();
 
             return order.Id;
         }
@@ -72,19 +72,29 @@
 
         public List<string> FindAllCountries()
         {
-            return this.db.Countries.Select(x => x.Name)
+            return this.dbContext.Countries.Select(x => x.Name)
                 .ToList();
+        }
+
+        public List<OrderDTO> FindAllUserOrders(ApplicationUserDTO user)
+        {
+            return this.mapper.Map<List<OrderDTO>>(
+                this.dbContext.Orders
+                .Include(x => x.Country)
+                .Include(x => x.User)
+                .Where(x => x.UserId == user.Id)
+                );
         }
 
         private List<OrderProduct> FindOrderProductsByOrderId(string id)
         {
-            return this.db.OrderProducts.Include(x => x.Product)
+            return this.dbContext.OrderProducts.Include(x => x.Product)
                                         .Where(x => x.OrderId == id).ToList();
         }
 
         private Country FindCountryByName(string name)
         {
-            return this.db.Countries.FirstOrDefault(x => x.Name == name);
+            return this.dbContext.Countries.FirstOrDefault(x => x.Name == name);
         }
 
         private decimal CalculateTotalPrice(Order order)
@@ -109,7 +119,7 @@
 
         private Order FindUserOrderByIdAndUsername(string id, string username)
         {
-            var order = this.db.Orders
+            var order = this.dbContext.Orders
                               .Include(x => x.User)
                               .Include(x => x.Country)
                               .FirstOrDefault(x => x.Id == id && x.User.UserName == username);

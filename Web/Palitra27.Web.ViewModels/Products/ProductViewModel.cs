@@ -1,10 +1,5 @@
 ﻿namespace Palitra27.Web.ViewModels.Products
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-
-    using AutoMapper;
     using Palitra27.Data.Models;
     using Palitra27.Services.Mapping;
 

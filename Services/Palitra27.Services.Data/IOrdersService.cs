@@ -16,5 +16,7 @@
         OrderDTO FindUserOrderById(string id, string username);
 
         List<OrderProduct> OrderProductsByOrderId(string id);
+
+        List<OrderDTO> FindAllUserOrders(ApplicationUserDTO user);
     }
 }

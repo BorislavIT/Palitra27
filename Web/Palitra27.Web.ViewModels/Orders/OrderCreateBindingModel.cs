@@ -7,6 +7,8 @@
 
     public class OrderCreateBindingModel
     {
+        public string Id { get; set; }
+
         [Required]
         [StringLength(15, MinimumLength = 3, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string FirstName { get; set; }
