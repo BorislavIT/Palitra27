@@ -28,18 +28,20 @@
         {
             var checkBrand = this.FindBrandByName(model);
 
-            if (checkBrand.IsDeleted == true)
-            {
-                checkBrand.IsDeleted = false;
-                this.dbContext.Brands.Update(checkBrand);
-                this.dbContext.SaveChanges();
-
-                return this.mapper.Map<BrandDTO>(checkBrand);
-            }
-
             if (checkBrand != null)
             {
-                return null;
+                if (checkBrand.IsDeleted == true)
+                {
+                    checkBrand.IsDeleted = false;
+                    this.dbContext.Brands.Update(checkBrand);
+                    this.dbContext.SaveChanges();
+
+                    return this.mapper.Map<BrandDTO>(checkBrand);
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {

@@ -14,11 +14,11 @@
         private const string HyperLinkForDoesntExistError = "/Administration/Categories/Create";
 
         private readonly ICategoriesService categoryService;
-        private readonly IErrorService errorService;
+        private readonly IErrorsService errorService;
 
         public CategoriesController(
             ICategoriesService categoriesService,
-            IErrorService errorService)
+            IErrorsService errorService)
         {
             this.categoryService = categoriesService;
             this.errorService = errorService;

@@ -20,14 +20,14 @@
         private readonly ICategoriesService categoriesService;
         private readonly IBrandsService brandsService;
         private readonly IMapper mapper;
-        private readonly IErrorService errorService;
+        private readonly IErrorsService errorService;
 
         public ProductsController(
             IProductsService productsService,
             ICategoriesService categoriesService,
             IBrandsService brandsService,
             IMapper mapper,
-            IErrorService errorService)
+            IErrorsService errorService)
         {
             this.productsService = productsService;
             this.categoriesService = categoriesService;

@@ -26,18 +26,20 @@
         {
             var checkCategory = this.FindCategoryByName(model);
 
-            if (checkCategory.IsDeleted == true)
-            {
-                checkCategory.IsDeleted = false;
-                this.dbContext.Categories.Update(checkCategory);
-                this.dbContext.SaveChanges();
-
-                return this.mapper.Map<CategoryDTO>(checkCategory);
-            }
-
             if (checkCategory != null)
             {
-                return null;
+                if (checkCategory.IsDeleted == true)
+                {
+                    checkCategory.IsDeleted = false;
+                    this.dbContext.Categories.Update(checkCategory);
+                    this.dbContext.SaveChanges();
+
+                    return this.mapper.Map<CategoryDTO>(checkCategory);
+                }
+                else
+                {
+                    return null;
+                }
             }
 
             var category = this.CreateCategoryByName(model);

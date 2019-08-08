@@ -10,19 +10,19 @@
     using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
     using Palitra27.Data.Models.DtoModels.ShoppingCartProduct;
 
-    public class ShoppingCartService : IShoppingCartService
+    public class ShoppingCartsService : IShoppingCartsService
     {
         private const int DefaultProductQuantity = 1;
 
         private readonly ApplicationDbContext dbContext;
         private readonly IProductsService productService;
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
         private readonly IMapper mapper;
 
-        public ShoppingCartService(
+        public ShoppingCartsService(
             ApplicationDbContext dbContext,
             IProductsService productService,
-            IUserService userService,
+            IUsersService userService,
             IMapper mapper)
         {
             this.dbContext = dbContext;

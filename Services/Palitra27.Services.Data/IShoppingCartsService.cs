@@ -5,7 +5,7 @@
     using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.ShoppingCartProduct;
 
-    public interface IShoppingCartService
+    public interface IShoppingCartsService
     {
         void AddProductInShoppingCart(string id, string username, int? quntity = null);
 

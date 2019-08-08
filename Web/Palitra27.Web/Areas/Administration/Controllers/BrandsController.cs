@@ -13,11 +13,11 @@
         private const string HyperLinkForDoesntExistError = "/Administration/Brands/Create";
 
         private readonly IBrandsService brandService;
-        private readonly IErrorService errorService;
+        private readonly IErrorsService errorService;
 
         public BrandsController(
             IBrandsService brandService,
-            IErrorService errorService)
+            IErrorsService errorService)
         {
             this.brandService = brandService;
             this.errorService = errorService;

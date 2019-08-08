@@ -14,13 +14,13 @@
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IProductsService productsService;
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
         private readonly IMapper mapper;
 
         public FavouritesService(
             ApplicationDbContext dbContext,
             IProductsService productsService,
-            IUserService userService,
+            IUsersService userService,
             IMapper mapper)
         {
             this.dbContext = dbContext;

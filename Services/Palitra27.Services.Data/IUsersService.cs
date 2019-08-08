@@ -3,7 +3,7 @@
     using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
 
-    public interface IUserService
+    public interface IUsersService
     {
         ApplicationUserDTO FindUserByUsername(string username);
 

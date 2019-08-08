@@ -23,24 +23,38 @@
     {
         public ApplicationProfile()
         {
-            this.CreateMap<Order, CompleteOrderViewModel>();
-            this.CreateMap<Order, ConfirmOrderViewModel>()
-                           .ForMember(x => x.TotalPrice, y => y.MapFrom(src => src.TotalPrice));
-            this.CreateMap<Order, OrderDetailsViewModel>();
-            this.CreateMap<Order, IndexUnprocessedОrdersViewModels>();
-            this.CreateMap<Order, IndexProcessedOrdersViewModels>();
-            this.CreateMap<Order, MyOrderViewModel>();
-            this.CreateMap<Order, DeliveredOrdersViewModels>();
+            this.CreateMap<Category, CategoryDTO>();
+            this.CreateMap<CategoryDTO, Category>();
+
+            this.CreateMap<Brand, BrandDTO>();
+            this.CreateMap<BrandDTO, Brand>();
+
+            this.CreateMap<Order, OrderDTO>();
+            this.CreateMap<OrderDTO, Order>();
+
+            this.CreateMap<Review, ReviewDTO>();
+            this.CreateMap<ReviewDTO, Review>();
+
+            this.CreateMap<ShoppingCartProductDTO, ShoppingCartProduct>();
+            this.CreateMap<ShoppingCartProduct, ShoppingCartProductDTO>();
+
+            this.CreateMap<ShoppingCart, ShoppingCartDTO>();
+            this.CreateMap<ShoppingCartDTO, ShoppingCart>();
+
+            this.CreateMap<ApplicationUser, ApplicationUserDTO>();
+
+            this.CreateMap<FavouriteList, FavouriteListDTO>();
+
+            this.CreateMap<ProductDTO, ProductViewModel>();
+            this.CreateMap<Product, ShoppingCartProductsViewModel>();
+            this.CreateMap<ProductEditBindingModel, ProductDTO>();
+            this.CreateMap<ProductDTO, ShoppingCartProductsViewModel>();
 
             this.CreateMap<FavouriteProduct, FavouriteProductViewModel>()
                 .ForMember(x => x.Name, y => y.MapFrom(src => src.Product.Name))
                 .ForMember(x => x.Id, y => y.MapFrom(src => src.ProductId))
                 .ForMember(x => x.Image, y => y.MapFrom(src => src.Product.Image))
                 .ForMember(x => x.Price, y => y.MapFrom(src => src.Product.Price));
-
-            this.CreateMap<OrderDTO, OrderCreateBindingModel>()
-                .ForMember(x => x.Country, y => y.MapFrom(src => src.Country.Name))
-                .ForMember(x => x.OrderStatus, y => y.MapFrom(src => src.Status));
 
             this.CreateMap<ApplicationUserDTO, Order>()
               .ForMember(x => x.UserId, y => y.MapFrom(src => src.Id))
@@ -52,25 +66,9 @@
              .ForMember(x => x.CountryId, y => y.MapFrom(src => src.Id))
              .ForMember(x => x.Country, y => y.MapFrom(src => src));
 
-            this.CreateMap<OrderCreateBindingModel, Order>()
-                .ForMember(x => x.PhoneNumber, y => y.MapFrom(src => src.PhoneNumber))
-                .ForMember(x => x.Country, y => y.Ignore())
-                .ForMember(x => x.CountryId, y => y.Ignore())
-                .ForMember(x => x.PaymentStatus, y => y.MapFrom(src => PaymentStatus.Unpaid))
-                .ForMember(x => x.OrderDate, y => y.MapFrom(src => DateTime.UtcNow))
-                .ForMember(x => x.Status, y => y.MapFrom(src => OrderStatus.Processed))
-                .ForMember(x => x.DeliveryPrice, y => y.MapFrom(src => src.DeliveryPrice))
-                .ForMember(x => x.DeliveryDate, y => y.MapFrom(src => DateTime.UtcNow.AddDays(7)))
-                .ForMember(x => x.Id, y => y.Ignore());
-
-            this.CreateMap<Brand, BrandDTO>();
-            this.CreateMap<BrandDTO, Brand>();
-
             this.CreateMap<AddReviewBindingModel, Review>()
                 .ForMember(x => x.DateOfCreation, y => y.MapFrom(src => DateTime.Now));
 
-            this.CreateMap<Order, OrderDTO>();
-            this.CreateMap<OrderDTO, Order>();
             this.CreateMap<OrderProduct, ShoppingCartProductsViewModel>()
                 .ForMember(x => x.Name, y => y.MapFrom(src => src.Product.Name))
                 .ForMember(x => x.Id, y => y.MapFrom(src => src.Product.Id))
@@ -82,18 +80,21 @@
             this.CreateMap<Order, OrderCreateBindingModel>()
                 .ForMember(x => x.Country, y => y.MapFrom(src => src.Country.Name));
 
-            this.CreateMap<Category, CategoryDTO>();
-            this.CreateMap<CategoryDTO, Category>();
+            this.CreateMap<OrderDTO, OrderCreateBindingModel>()
+                .ForMember(x => x.Country, y => y.MapFrom(src => src.Country.Name))
+                .ForMember(x => x.OrderStatus, y => y.MapFrom(src => src.Status));
 
-            this.CreateMap<ApplicationUser, ApplicationUserDTO>();
+            this.CreateMap<OrderCreateBindingModel, Order>()
+               .ForMember(x => x.PhoneNumber, y => y.MapFrom(src => src.PhoneNumber))
+               .ForMember(x => x.Country, y => y.Ignore())
+               .ForMember(x => x.CountryId, y => y.Ignore())
+               .ForMember(x => x.PaymentStatus, y => y.MapFrom(src => PaymentStatus.Unpaid))
+               .ForMember(x => x.OrderDate, y => y.MapFrom(src => DateTime.UtcNow))
+               .ForMember(x => x.Status, y => y.MapFrom(src => OrderStatus.Processed))
+               .ForMember(x => x.DeliveryPrice, y => y.MapFrom(src => src.DeliveryPrice))
+               .ForMember(x => x.DeliveryDate, y => y.MapFrom(src => DateTime.UtcNow.AddDays(7)))
+               .ForMember(x => x.Id, y => y.Ignore());
 
-            this.CreateMap<FavouriteList, FavouriteListDTO>();
-
-            this.CreateMap<Review, ReviewDTO>();
-            this.CreateMap<ReviewDTO, Review>();
-
-            this.CreateMap<ShoppingCartProductDTO, ShoppingCartProduct>();
-            this.CreateMap<ShoppingCartProduct, ShoppingCartProductDTO>();
             this.CreateMap<ShoppingCartProductDTO, ShoppingCartProductsViewModel>()
                 .ForMember(x => x.TotalPrice, y => y.MapFrom(src => src.Quantity * src.Product.Price))
                 .ForMember(x => x.Price, y => y.MapFrom(src => src.Product.Price))
@@ -101,20 +102,16 @@
                 .ForMember(x => x.Id, y => y.MapFrom(src => src.Product.Id))
                 .ForMember(x => x.Image, y => y.MapFrom(src => src.Product.Image));
 
-            this.CreateMap<ShoppingCart, ShoppingCartDTO>();
-            this.CreateMap<ShoppingCartDTO, ShoppingCart>();
-
             this.CreateMap<ProductDTO, Product>()
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category))
                 .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand))
                 .ForMember(x => x.Reviews, y => y.MapFrom(c => c.Reviews));
 
-            this.CreateMap<ProductDTO, ProductViewModel>();
-
             this.CreateMap<Product, ProductDTO>()
                         .ForMember(x => x.Category, y => y.MapFrom(c => c.Category))
                         .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand))
                 .ForMember(x => x.Reviews, y => y.MapFrom(c => c.Reviews));
+
             this.CreateMap<ProductDTO, ProductInfoViewModel>()
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category.Name))
                 .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand.Name))
@@ -123,12 +120,9 @@
                 .ForMember(x => x.Weight, y => y.MapFrom(c => c.Weight == 0 ? 0 : Math.Round(c.Weight)))
                 .ForMember(x => x.Height, y => y.MapFrom(c => c.Height == 0 ? 0 : Math.Round(c.Height)));
 
-            this.CreateMap<Product, ShoppingCartProductsViewModel>();
-            this.CreateMap<ProductEditBindingModel, ProductDTO>();
             this.CreateMap<Product, ProductInfoViewModel>()
                 .ForMember(x => x.Category, y => y.MapFrom(c => c.Category.Name))
                 .ForMember(x => x.Brand, y => y.MapFrom(c => c.Brand.Name));
-            this.CreateMap<ProductDTO, ShoppingCartProductsViewModel>();
         }
     }
 }

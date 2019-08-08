@@ -7,12 +7,12 @@
     using Palitra27.Data.Models;
     using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
 
-    public class UserService : IUserService
+    public class UsersService : IUsersService
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext dbContext;
 
-        public UserService(
+        public UsersService(
             ApplicationDbContext dbContext,
             IMapper mapper)
         {

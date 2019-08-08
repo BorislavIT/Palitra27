@@ -19,13 +19,13 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly IEmailSender emailSender;
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            IUserService userService)
+            IUsersService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;

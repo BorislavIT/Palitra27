@@ -7,11 +7,11 @@
     public class UserController : BaseController
     {
         private readonly IProductsService productsService;
-        private readonly IUserService userService;
+        private readonly IUsersService userService;
 
         public UserController(
             IProductsService productsService,
-            IUserService userService)
+            IUsersService userService)
         {
             this.productsService = productsService;
             this.userService = userService;

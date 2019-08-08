@@ -1,9 +1,7 @@
 ﻿namespace Palitra27.Web.Controllers.Product
 {
     using AutoMapper;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Palitra27.Common;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Products;
 
@@ -14,12 +12,12 @@
 
         private readonly IProductsService productsService;
         private readonly IMapper mapper;
-        private readonly IErrorService errorService;
+        private readonly IErrorsService errorService;
 
         public ProductsController(
             IProductsService productsService,
             IMapper mapper,
-            IErrorService errorService)
+            IErrorsService errorService)
         {
             this.productsService = productsService;
             this.mapper = mapper;

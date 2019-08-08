@@ -119,14 +119,14 @@
             services.AddTransient<ISmsSender, NullMessageSender>();
             services.AddTransient<IProductsService, ProductsService>();
             services.AddTransient<IShopService, ShopService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
-            services.AddTransient<IShoppingCartService, ShoppingCartService>();
+            services.AddTransient<IShoppingCartsService, ShoppingCartsService>();
             services.AddTransient<IOrdersService, OrdersService>();
             services.AddTransient<IImagesService, ImagesService>();
             services.AddTransient<IBrandsService, BrandsService>();
             services.AddTransient<IFavouritesService, FavouritesService>();
-            services.AddTransient<IErrorService, ErrorService>();
+            services.AddTransient<IErrorsService, ErrorsService>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
 

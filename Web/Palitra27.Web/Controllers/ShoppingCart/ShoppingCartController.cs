@@ -13,12 +13,12 @@
     {
         private const int DefaultQuantity = 1;
 
-        private readonly IShoppingCartService shoppingCartService;
+        private readonly IShoppingCartsService shoppingCartService;
         private readonly IProductsService productSevice;
         private readonly IMapper mapper;
 
         public ShoppingCartController(
-            IShoppingCartService shoppingCartService,
+            IShoppingCartsService shoppingCartService,
             IProductsService productSevice,
             IMapper mapper)
         {

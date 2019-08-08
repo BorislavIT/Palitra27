@@ -1,7 +1,6 @@
 ﻿namespace Palitra27.Web.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     using AutoMapper;
@@ -26,7 +25,7 @@
         public void CreateProductShouldCreateProduct()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"CreateProductShouldCreateProduct_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -59,7 +58,7 @@
         public void CreateProductShouldntCreateProductIfInvalidBrandOrCategory()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"CreateProductShouldntCreateProductIfInvalidBrandOrCategory_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -91,7 +90,7 @@
         public void CreateProductShouldntCreateProductIfAlreadyExists()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"CreateProductShouldntCreateProductIfAlreadyExists_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -123,7 +122,7 @@
         public void FindProductByIdShouldReturnProduct()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindProductByIdShouldReturnProduct_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -158,7 +157,7 @@
         public void FindDomainProductShouldReturnDomainProduct()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindDomainProductShouldReturnDomainProduct_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -193,8 +192,29 @@
         public void FindProductByIdShouldReturnNullIfProductDoesntExist()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindProductByIdShouldReturnNullIfProductDoesntExist_Product_Database")
                         .Options;
+
+            var dbContext = new ApplicationDbContext(options);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ApplicationProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var productService = new ProductsService(dbContext, mapper);
+
+            var invalidGuidId = productService.FindProductById(Guid.NewGuid().ToString());
+
+            Assert.Null(invalidGuidId);
+        }
+
+        [Fact]
+        public void EditProductMainShouldReturnNullIfProductDoesntExist()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                       .UseInMemoryDatabase(databaseName: $"EditProductShouldEditMainProductParams_Product_Database")
+                       .Options;
 
             var dbContext = new ApplicationDbContext(options);
             var mockMapper = new MapperConfiguration(cfg =>
@@ -207,16 +227,27 @@
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
 
-            var invalidGuidId = productService.FindProductById(Guid.NewGuid().ToString());
+            var brand = this.CreateBrandDTO(brandService);
+            var category = this.CreateCategoryDTO(categoriesService);
 
-            Assert.Null(invalidGuidId);
+            var productName = Guid.NewGuid().ToString().Substring(0, 15);
+
+            var productBindingModel = this.CreateProductBindingModelByName(brand, category, productName);
+
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.FindProductById("asd");
+
+            var editedProduct = productService.EditProduct(new ProductEditBindingModel { });
+
+            Assert.Null(editedProduct);
         }
 
         [Fact]
-        public void FindProductByIdShouldIncludeReviews()
+        public void FindProductByIdShoulReturnProduct()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindProductByIdShoulReturnProduct_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -250,7 +281,7 @@
         public void EditProductShouldEditMainProductParams()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"EditProductShouldEditMainProductParams_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -286,7 +317,7 @@
         public void EditDescriptionShouldEditDescription()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"EditDescriptionShouldEditDescription_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -322,7 +353,7 @@
         public void EditSpecificationsShouldEditSpecifications()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"EditSpecificationsShouldEditSpecifications_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -358,7 +389,7 @@
         public void AddReviewShouldAddReview()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"AddReviewShouldAddReview_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -371,7 +402,7 @@
             var productService = new ProductsService(dbContext, mapper);
             var brandService = new BrandsService(dbContext, mapper);
             var categoriesService = new CategoriesService(dbContext, mapper);
-            var usersService = new UserService(dbContext, mapper);
+            var usersService = new UsersService(dbContext, mapper);
 
             var brand = this.CreateBrandDTO(brandService);
             var category = this.CreateCategoryDTO(categoriesService);
@@ -406,7 +437,7 @@
         public void FindAllProductsShouldReturnAllProducts()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindAllProductsShouldReturnAllProducts_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -433,8 +464,6 @@
 
             var allProducts = productService.FindAllProducts();
 
-            Assert.IsType<List<ProductDTO>>(allProducts);
-            Assert.NotEmpty(allProducts);
             Assert.True(allProducts.FirstOrDefault(x => x.Id == productDTO.Id) != null);
         }
 
@@ -444,7 +473,7 @@
         public void FindProductByIdShouldReturnNullIfInvalidId(string id)
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddReviews_Product_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindProductByIdShouldReturnNullIfInvalidId_Product_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -475,8 +504,8 @@
         {
             return new CreateProductBindingModel
             {
-                Category = category.Name,
-                Brand = brand.Name,
+                Category = category.Name ?? null,
+                Brand = brand.Name ?? null,
                 Price = "23",
                 Name = name,
             };
@@ -484,7 +513,7 @@
 
         private ProductEditBindingModel CreateProductEditBindingModel(ProductDTO product, IMapper mapper)
         {
-            return new ProductEditBindingModel { Id = product.Id, Name = Guid.NewGuid().ToString().Substring(0, 15), Brand = product.Brand.Name, Category = product.Category.Name, MiniDescription = product.MiniDescription, Price = product.Price.ToString() };
+            return new ProductEditBindingModel { Id = product.Id, Name = Guid.NewGuid().ToString().Substring(0, 15), Brand = product.Brand.Name ?? null, Category = product.Category.Name ?? null, MiniDescription = product.MiniDescription, Price = product.Price.ToString() };
         }
 
         private EditDescriptionBindingModel CreateProductEditDescriptionBindingModel(ProductDTO product)

@@ -14,12 +14,12 @@
 
     public class OrdersService : IOrdersService
     {
-        private readonly IShoppingCartService shoppingCartService;
+        private readonly IShoppingCartsService shoppingCartService;
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
 
         public OrdersService(
-            IShoppingCartService shoppingCartService,
+            IShoppingCartsService shoppingCartService,
             ApplicationDbContext dbContext,
             IMapper mapper)
         {

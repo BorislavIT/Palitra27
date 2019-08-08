@@ -27,7 +27,7 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<RegisterModel> logger;
         private readonly IEmailSender emailSender;
-        private readonly IShoppingCartService shoppingCartService;
+        private readonly IShoppingCartsService shoppingCartService;
         private readonly ApplicationDbContext dbContext;
 
         public RegisterModel(
@@ -35,7 +35,7 @@
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            IShoppingCartService shoppingCartService,
+            IShoppingCartsService shoppingCartService,
             ApplicationDbContext dbContext)
         {
             this.userManager = userManager;

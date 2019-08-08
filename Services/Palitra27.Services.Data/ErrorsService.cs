@@ -2,7 +2,7 @@
 {
     using Palitra27.Web.ViewModels.Errors;
 
-    public class ErrorService : IErrorService
+    public class ErrorsService : IErrorsService
     {
         public ErrorViewModel CreateCreateionErrorViewModel(string errorMessage, string hyperLink)
         {

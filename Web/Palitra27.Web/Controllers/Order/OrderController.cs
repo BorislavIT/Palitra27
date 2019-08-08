@@ -18,18 +18,18 @@
         private const string NoProductsInShoppingCartErrorMessage = "Unfortunately your shopping cart is empty, fill it up and,  ";
         private const string HyperLinkForDoesntExistError = "/Shop/Index";
 
-        private readonly IUserService usersService;
+        private readonly IUsersService usersService;
         private readonly IOrdersService orderService;
-        private readonly IShoppingCartService shoppingCartService;
+        private readonly IShoppingCartsService shoppingCartService;
         private readonly IMapper mapper;
-        private readonly IErrorService errorService;
+        private readonly IErrorsService errorService;
 
         public OrderController(
-            IUserService usersService,
+            IUsersService usersService,
             IOrdersService orderService,
-            IShoppingCartService shoppingCartService,
+            IShoppingCartsService shoppingCartService,
             IMapper mapper,
-            IErrorService errorService)
+            IErrorsService errorService)
         {
             this.usersService = usersService;
             this.orderService = orderService;
