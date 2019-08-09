@@ -168,6 +168,36 @@
             return this.Redirect($"/Administration/Products/Edit/{product.Id}");
         }
 
+        public IActionResult EditSpecifications(string id)
+        {
+            var product = this.productsService.FindProductById(id);
+
+            if (product == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(ProductDoesntExistErrorMessage, HyperLinkForDoesntExistError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
+
+            var model = this.CreateAdminChooseViewModel(id);
+
+            return this.View(model);
+        }
+
+        public IActionResult Delete(string id)
+        {
+            var product = this.productsService.RemoveProduct(id);
+
+            if (product == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(ProductDoesntExistErrorMessage, HyperLinkForDoesntExistError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
+
+            return this.Redirect("/Home/Index");
+        }
+
         public IActionResult ChooseOne(string id)
         {
             var product = this.productsService.FindProductById(id);

@@ -12,8 +12,6 @@
 
         CategoryDTO RemoveCategory(CreateCategoryBindingModel model);
 
-        Category FindBrandByNameAndCheckIsDeleted(string name);
-
         List<CategoryDTO> FindAllCategories();
     }
 }

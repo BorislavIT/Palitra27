@@ -212,7 +212,7 @@
             var shoppingCartProducts = this.dbContext.ShoppingCartProducts.Include(x => x.Product)
                                                .Include(x => x.ShoppingCart)
                                                .Where(x => x.ShoppingCart.User.UserName == user.Username)
-                                               .Where(x => x.Product.Brand.IsDeleted == false && x.Product.Category.IsDeleted == false)
+                                               .Where(x => x.Product.Brand.IsDeleted == false && x.Product.Category.IsDeleted == false && x.Product.IsDeleted == false)
                                                .ToList();
 
             return shoppingCartProducts;

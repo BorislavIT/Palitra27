@@ -59,11 +59,6 @@
             return this.mapper.Map<List<CategoryDTO>>(categories);
         }
 
-        public Category FindBrandByNameAndCheckIsDeleted(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public CategoryDTO RemoveCategory(CreateCategoryBindingModel model)
         {
             var category = this.FindCategoryByModelAndCheckIsDeleted(model);

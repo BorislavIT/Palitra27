@@ -1,4 +1,4 @@
-﻿@model  Palitra27.Web.ViewModels.Errors.ErrorViewModel;
+﻿@model Palitra27.Web.ViewModels.Errors.ErrorViewModel;
 
 @{
     ViewData["Title"] = "NotFound";
@@ -22,13 +22,13 @@
         </div>
     </section>
     <!-- End Banner Area -->
-</div>
 
-<center>
-    <h1>😞</h1>
-    <h2 class="section_gap_error justify-content-end">
-        We are really terribly sorry!
-        @Model.ErrorMessage <a href="@Model.HyperLink">try again with a new one!</a>
-    </h2>
-</center>
+    <center>
+        <h1>😞</h1>
+        <h2 class="section_gap_error justify-content-end">
+            We are really terribly sorry!
+            @Model.ErrorMessage <a href="@Model.HyperLink">try again with a new one!</a>
+        </h2>
+    </center>
+</div>
 

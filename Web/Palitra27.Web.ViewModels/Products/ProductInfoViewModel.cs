@@ -12,6 +12,7 @@
         public string Id { get; set; }
 
         [Required]
+        [RegularExpression(@"[A-Za-z0-9-]+", ErrorMessage = "The product name is should have only English letters.")]
         [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
         public string Name { get; set; }
 
@@ -39,8 +40,10 @@
         [Range(0, 1000, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1} letters.")]
         public decimal Weight { get; set; }
 
+        [RegularExpression(@"[A-Za-z0-9-.\s]+", ErrorMessage = "The description should have only English letters.")]
         public string Description { get; set; }
 
+        [RegularExpression(@"[A-Za-z0-9-.\s]+", ErrorMessage = "The mini description should have only English letters.")]
         public string MiniDescription { get; set; }
     }
 }

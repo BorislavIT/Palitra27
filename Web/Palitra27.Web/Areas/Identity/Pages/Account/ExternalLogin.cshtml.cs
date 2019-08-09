@@ -1,6 +1,7 @@
 ﻿namespace Palitra27.Web.Areas.Identity.Pages.Account
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -13,6 +14,8 @@
     using Palitra27.Common;
     using Palitra27.Data;
     using Palitra27.Data.Models;
+    using Palitra27.Services.Data;
+    using Palitra27.Web.ViewModels.ShoppingCart;
 
     [AllowAnonymous]
 #pragma warning disable SA1649 // File name should match first type name
@@ -23,17 +26,20 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ILogger<ExternalLoginModel> logger;
         private readonly ApplicationDbContext dbContext;
+        private readonly IShoppingCartsService shoppingCartsService;
 
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             ILogger<ExternalLoginModel> logger,
-            ApplicationDbContext dbContext)
+            ApplicationDbContext dbContext,
+            IShoppingCartsService shoppingCartsService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.logger = logger;
             this.dbContext = dbContext;
+            this.shoppingCartsService = shoppingCartsService;
         }
 
         [BindProperty]
@@ -141,6 +147,18 @@
                         this.logger.LogInformation(
                             "User created an account using {Name} provider.",
                             info.LoginProvider);
+
+                        var cart = SessionHelper.GetObjectFromJson<List<ShoppingCartProductsViewModel>>(this.HttpContext.Session, GlobalConstants.SessionShoppingCartKey);
+                        if (cart != null)
+                        {
+                            foreach (var product in cart)
+                            {
+                                this.shoppingCartsService.AddProductInShoppingCart(product.Id, this.Input.Email, product.Quantity);
+                            }
+
+                            HttpContext.Session.Remove(GlobalConstants.SessionShoppingCartKey);
+                        }
+
                         return this.LocalRedirect(returnUrl);
                     }
                 }

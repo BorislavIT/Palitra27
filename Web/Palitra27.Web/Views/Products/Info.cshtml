@@ -59,7 +59,7 @@
                         <p class="miniDescription">@Model.MiniDescription</p>
                         <div class="product_count">
                             <label for="quantity">Quantity:</label>
-                            <input type="text" name="quantity" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
+                            <input type="number" name="quantity" id="sst" maxlength="12" value="1" min="1" title="Quantity:" class="input-text qty">
                             <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
                                     class="increase items-count" type="button">
                                 <i class="lnr lnr-chevron-up"></i>
@@ -80,6 +80,7 @@
     </div>
 </form>
 <!--================End Single Product Area =================-->
+
 <!--================Start Product Description Area =================-->
 <section class="product_description_area">
     <div class="container">
@@ -218,11 +219,6 @@
                         <div class="col-lg-6">
                             <div class="review_box">
                                 <h4>Add a Review</h4>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Full name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Full name'" required>
-                                    </div>
-                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <p>

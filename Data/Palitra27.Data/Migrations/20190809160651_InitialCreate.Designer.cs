@@ -10,7 +10,7 @@ using Palitra27.Data;
 namespace Palitra27.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190807192807_InitialCreate")]
+    [Migration("20190809160651_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -342,7 +342,7 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("ZIP")
                         .IsRequired()
-                        .HasMaxLength(4);
+                        .HasMaxLength(10);
 
                     b.HasKey("Id");
 
@@ -381,10 +381,6 @@ namespace Palitra27.Data.Migrations
                     b.Property<string>("CategoryId")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreatedOn");
-
-                    b.Property<DateTime?>("DeletedOn");
-
                     b.Property<decimal>("Depth");
 
                     b.Property<string>("Description");
@@ -396,8 +392,6 @@ namespace Palitra27.Data.Migrations
                     b.Property<bool>("IsDeleted");
 
                     b.Property<string>("MiniDescription");
-
-                    b.Property<DateTime?>("ModifiedOn");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -414,8 +408,6 @@ namespace Palitra27.Data.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("IsDeleted");
 
                     b.ToTable("Products");
                 });

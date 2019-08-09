@@ -119,6 +119,105 @@
         }
 
         [Fact]
+        public void RemoveProductShouldRemoveProduct()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldRemoveProduct_Product_Database")
+                        .Options;
+
+            var dbContext = new ApplicationDbContext(options);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ApplicationProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var productService = new ProductsService(dbContext, mapper);
+            var brandService = new BrandsService(dbContext, mapper);
+            var categoriesService = new CategoriesService(dbContext, mapper);
+
+            var brand = this.CreateBrandDTO(brandService);
+            var category = this.CreateCategoryDTO(categoriesService);
+
+            var productName = Guid.NewGuid().ToString().Substring(0, 15);
+
+            var productBindingModel = this.CreateProductBindingModelByName(brand, category, productName);
+
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
+            productService.RemoveProduct(productDTO.Id);
+
+            Assert.True(dbContext.Products.FirstOrDefault(x => x.Id == productDTO.Id).IsDeleted == true);
+        }
+
+        [Fact]
+        public void RemoveProductShouldReturnNullIfAlreadyDeleted()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldReturnNullIfAlreadyDeleted_Product_Database")
+                        .Options;
+
+            var dbContext = new ApplicationDbContext(options);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ApplicationProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var productService = new ProductsService(dbContext, mapper);
+            var brandService = new BrandsService(dbContext, mapper);
+            var categoriesService = new CategoriesService(dbContext, mapper);
+
+            var brand = this.CreateBrandDTO(brandService);
+            var category = this.CreateCategoryDTO(categoriesService);
+
+            var productName = Guid.NewGuid().ToString().Substring(0, 15);
+
+            var productBindingModel = this.CreateProductBindingModelByName(brand, category, productName);
+
+            var image = new Mock<IFormFile>();
+
+            var productDTO = productService.Create(productBindingModel, image.Object);
+            productService.RemoveProduct(productDTO.Id);
+            var productToCheck = productService.RemoveProduct(productDTO.Id);
+
+            Assert.Null(productToCheck);
+        }
+
+        [Fact]
+        public void RemoveProductShouldReturnNullIfInvalidId()
+        {
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldReturnNullIfInvalidId_Product_Database")
+                        .Options;
+
+            var dbContext = new ApplicationDbContext(options);
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new ApplicationProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var productService = new ProductsService(dbContext, mapper);
+            var brandService = new BrandsService(dbContext, mapper);
+            var categoriesService = new CategoriesService(dbContext, mapper);
+
+            var brand = this.CreateBrandDTO(brandService);
+            var category = this.CreateCategoryDTO(categoriesService);
+
+            var productName = Guid.NewGuid().ToString().Substring(0, 15);
+
+            var productBindingModel = this.CreateProductBindingModelByName(brand, category, productName);
+
+            var image = new Mock<IFormFile>();
+
+            var productToCheck = productService.RemoveProduct("totallyLegitProductId");
+
+            Assert.Null(productToCheck);
+        }
+
+        [Fact]
         public void FindProductByIdShouldReturnProduct()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()

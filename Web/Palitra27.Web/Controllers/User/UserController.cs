@@ -1,6 +1,8 @@
 ﻿namespace Palitra27.Web.Controllers.User
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Palitra27.Common;
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Products;
 
@@ -18,6 +20,7 @@
         }
 
         [HttpPost]
+        [Authorize(Roles = GlobalConstants.AdministratorRoleName + ", " + GlobalConstants.UserRoleName)]
         public IActionResult AddReview(AddReviewBindingModel addReviewBindingModel)
         {
             var user = this.userService.FindUserByUsername(this.User.Identity.Name);

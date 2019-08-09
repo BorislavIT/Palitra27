@@ -28,7 +28,7 @@
                     <div class="hover">
                         <h4>New to our website?</h4>
                         <p>There are advances being made in science and technology everyday, and a good example of this is the</p>
-                        <a class="primary-btn" href="Identity/Account/Register">Create an Account</a>
+                        <a class="primary-btn" href="/Identity/Account/Register">Create an Account</a>
                     </div>
                 </div>
             </div>
@@ -67,11 +67,11 @@
                                 <div>
                                     @if (provider.Name == "Facebook")
                                     {
-                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fab fa-facebook"></i> Login with @provider.DisplayName</button>
+                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-facebook-square"></i> Login with @provider.DisplayName</button>
                                     }
                                     else if (provider.Name == "Google")
                                     {
-                                        <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fab fa-google-plus-g"></i> Login with @provider.DisplayName</button>
+                                <button type="submit" class="btn btn-danger" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account"><i class="fa fa-google"></i>&nbsp;&nbsp; Login with @provider.DisplayName &nbsp;&nbsp;</button>
                                     }
                                 </div>
 

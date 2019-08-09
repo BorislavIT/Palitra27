@@ -13,6 +13,8 @@
     {
         ProductDTO Create(CreateProductBindingModel model, IFormFile image);
 
+        ProductDTO RemoveProduct(string id);
+
         ProductDTO FindProductById(string id);
 
         ProductDTO EditProduct(ProductEditBindingModel model);

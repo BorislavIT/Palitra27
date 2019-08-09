@@ -35,6 +35,8 @@
     <Compile Remove="Migrations\20190805165944_yeppp.Designer.cs" />
     <Compile Remove="Migrations\20190807115421_AddedMoreDatabaseValidations.cs" />
     <Compile Remove="Migrations\20190807115421_AddedMoreDatabaseValidations.Designer.cs" />
+    <Compile Remove="Migrations\20190809162026_CascadeDelete.cs" />
+    <Compile Remove="Migrations\20190809162026_CascadeDelete.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

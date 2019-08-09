@@ -19,7 +19,7 @@
     <div class="container">
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
-                <h1>Admin Edit Product</h1>
+                <h1>Edit Product</h1>
                 <nav class="d-flex align-items-center">
                     <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
                     <a href="#">Admin<span class="lnr lnr-arrow-right"></span></a>
@@ -104,6 +104,9 @@
                         </div>
                         <div class="card_area d-flex justify-content-center ">
                             <button type="submit" value="submit" class="primary-btn custmobtN">Edit</button>
+                        </div>
+                        <div class="card_area d-flex justify-content-center padding-top-10">
+                            <a asp-controller="Products" asp-action="Delete" asp-route-id="@Model.ProductInfoViewModel.Id" class="primary-btn custmobtN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delete Product</a>
                         </div>
                     </div>
                 </div>

@@ -31,7 +31,7 @@
         public decimal DeliveryPrice { get; set; }
 
         [Required]
-        [StringLength(4, MinimumLength = 4, ErrorMessage = "The field \"{0}\" must have at least {2} letters and at most {1}.")]
+        [StringLength(10, MinimumLength = 4, ErrorMessage = "The field \"{0}\" must have at least {2} letters and at most {1}.")]
         public string ZIP { get; set; }
 
         [Required]
@@ -73,7 +73,7 @@
 
         [Required]
         public string UserId { get; set; }
-        
+
         [Required]
         public virtual ApplicationUser User { get; set; }
 

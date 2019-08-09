@@ -35,23 +35,19 @@
 
             var product = this.productsService.FindDomainProduct(id);
 
-            var favouriteList = this.FindFavouriteListByUserId(user);
-
-            var favouriteProduct = this.FindFavouriteProductByProductId(product);
-
-            if (this.ProductOrUserIsNullOrFavouriteProductIsntNull(user, product, favouriteProduct))
+            if (this.ProductOrUserIsNullOrFavouriteProductIsntNull(user, product))
             {
                 return;
             }
-            else
-            {
-                var favouriteProductToAdd = this.CreateFavouriteProduct(product, favouriteList);
 
-                this.dbContext.FavouriteProducts.Add(favouriteProductToAdd);
-                favouriteList.FavouriteProducts.Add(favouriteProductToAdd);
-                this.dbContext.FavouriteLists.Update(favouriteList);
-                this.dbContext.SaveChanges();
-            }
+            var favouriteList = this.FindFavouriteListByUserId(user);
+
+            var favouriteProductToAdd = this.CreateFavouriteProduct(product, favouriteList);
+
+            this.dbContext.FavouriteProducts.Add(favouriteProductToAdd);
+            favouriteList.FavouriteProducts.Add(favouriteProductToAdd);
+            this.dbContext.FavouriteLists.Update(favouriteList);
+            this.dbContext.SaveChanges();
         }
 
         public List<FavouriteProductViewModel> AllFavouriteProducts(string username)
@@ -87,9 +83,10 @@
             }
         }
 
-        private bool ProductOrUserIsNullOrFavouriteProductIsntNull(ApplicationUserDTO user, Product product, FavouriteProduct favouriteProduct)
+        private bool ProductOrUserIsNullOrFavouriteProductIsntNull(ApplicationUserDTO user, Product product)
         {
-            if (product == null || user == null || favouriteProduct != null)
+
+            if (product == null || user == null || this.dbContext.FavouriteProducts.FirstOrDefault(x => x.ProductId == product.Id) != null)
             {
                 return true;
             }

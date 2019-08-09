@@ -32,6 +32,21 @@
         {
             if (this.CheckIfProductExists(model))
             {
+                var productExists = this.dbContext.Products.FirstOrDefault(x => x.Name == model.Name);
+                if (productExists.IsDeleted == true)
+                {
+                    productExists.IsDeleted = false;
+                    this.dbContext.Products.Update(productExists);
+                    this.dbContext.SaveChanges();
+
+                    var brandExists = this.FindBrandByName(model.Brand);
+                    var categoryExists = this.FindCategoryByName(model.Category);
+
+                    var productToMap = this.CreateProductByModelBrandAndCategory(model, brandExists, categoryExists);
+
+                    return this.mapper.Map<ProductDTO>(productToMap);
+                }
+
                 return null;
             }
 
@@ -162,6 +177,23 @@
             return this.mapper.Map<List<ProductDTO>>(products);
         }
 
+        public ProductDTO RemoveProduct(string id)
+        {
+            var product = this.dbContext.Products
+                .FirstOrDefault(x => x.Id == id);
+
+            if (this.CheckIfProductIsNull(product) || product.IsDeleted == true)
+            {
+                return null;
+            }
+
+            product.IsDeleted = true;
+            this.dbContext.Products.Update(product);
+            this.dbContext.SaveChanges();
+
+            return this.mapper.Map<ProductDTO>(product);
+        }
+
         private byte[] GetByteArrayFromImage(IFormFile file)
         {
             using (var target = new MemoryStream())
@@ -267,7 +299,7 @@
              .Include(p => p.Reviews)
              .Include(p => p.Category)
              .Include(p => p.Brand)
-             .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
+             .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false && x.IsDeleted == false)
              .FirstOrDefault(p => p.Id == id);
 
             return product;
@@ -318,7 +350,7 @@
                 .Include(x => x.Category)
                 .Include(x => x.Brand)
                 .Include(x => x.Reviews)
-                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false)
+                .Where(x => x.Brand.IsDeleted == false && x.Category.IsDeleted == false && x.IsDeleted == false)
                 .ToList();
 
             return products;

@@ -84,12 +84,23 @@
                     else
                     {
                         shoppingCart.Quantity = quantity;
-
                     }
 
                     shoppingCart.TotalPrice = shoppingCart.Quantity * shoppingCart.Price;
 
                     shoppingCartSession.Add(shoppingCart);
+
+                    SessionHelper.SetObjectAsJson(this.HttpContext.Session, GlobalConstants.SessionShoppingCartKey, shoppingCartSession);
+                }
+                else
+                {
+                    var product = shoppingCartSession.First(x => x.Id == id);
+
+                    var shoppingCart = this.mapper.Map<ShoppingCartProductsViewModel>(product);
+
+                    shoppingCart.Quantity += quantity;
+
+                    shoppingCart.TotalPrice = shoppingCart.Quantity * shoppingCart.Price;
 
                     SessionHelper.SetObjectAsJson(this.HttpContext.Session, GlobalConstants.SessionShoppingCartKey, shoppingCartSession);
                 }

@@ -54,11 +54,6 @@
             var user = this.dbContext.Users
                 .FirstOrDefault(x => x.UserName == username);
 
-            if (user == null)
-            {
-                return null;
-            }
-
             return user;
         }
     }

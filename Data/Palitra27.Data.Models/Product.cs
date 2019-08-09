@@ -3,10 +3,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    using Palitra27.Data.Common.Models;
-
-    public class Product : BaseDeletableModel<string>
+    public class Product
     {
+        [Key]
+        public string Id { get; set; }
+
         [Required]
         public string BrandId { get; set; }
 
@@ -41,6 +42,8 @@
         public decimal Depth { get; set; }
 
         public decimal Weight { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
     }

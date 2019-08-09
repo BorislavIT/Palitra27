@@ -1,9 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace Palitra27.Data.Migrations
+﻿namespace Palitra27.Data.Migrations
 {
+    using System;
+
+    using Microsoft.EntityFrameworkCore.Metadata;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -243,10 +244,6 @@ namespace Palitra27.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    DeletedOn = table.Column<DateTime>(nullable: true),
                     BrandId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(maxLength: 15, nullable: false),
                     CategoryId = table.Column<string>(nullable: false),
@@ -257,7 +254,8 @@ namespace Palitra27.Data.Migrations
                     Width = table.Column<decimal>(nullable: false),
                     Height = table.Column<decimal>(nullable: false),
                     Depth = table.Column<decimal>(nullable: false),
-                    Weight = table.Column<decimal>(nullable: false)
+                    Weight = table.Column<decimal>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -287,7 +285,7 @@ namespace Palitra27.Data.Migrations
                     DeliveryDate = table.Column<DateTime>(nullable: false),
                     TotalPrice = table.Column<decimal>(nullable: false),
                     DeliveryPrice = table.Column<decimal>(nullable: false),
-                    ZIP = table.Column<string>(maxLength: 4, nullable: false),
+                    ZIP = table.Column<string>(maxLength: 10, nullable: false),
                     CountryId = table.Column<string>(nullable: false),
                     FirstName = table.Column<string>(maxLength: 15, nullable: false),
                     LastName = table.Column<string>(maxLength: 15, nullable: false),
@@ -491,11 +489,6 @@ namespace Palitra27.Data.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_IsDeleted",
-                table: "Products",
-                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ProductId",
