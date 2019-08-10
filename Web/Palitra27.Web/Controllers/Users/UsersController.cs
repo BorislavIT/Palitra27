@@ -6,12 +6,12 @@
     using Palitra27.Services.Data;
     using Palitra27.Web.ViewModels.Products;
 
-    public class UserController : BaseController
+    public class UsersController : BaseController
     {
         private readonly IProductsService productsService;
         private readonly IUsersService userService;
 
-        public UserController(
+        public UsersController(
             IProductsService productsService,
             IUsersService userService)
         {

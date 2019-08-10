@@ -1,6 +1,5 @@
 ﻿namespace Palitra27.Web.Controllers.Order
 {
-    using System;
     using System.Collections.Generic;
 
     using AutoMapper;
@@ -13,7 +12,7 @@
     using Palitra27.Web.ViewModels.ShoppingCart;
 
     [Authorize(Roles = GlobalConstants.UserRoleName + "," + GlobalConstants.AdministratorRoleName)]
-    public class OrderController : BaseController
+    public class OrdersController : BaseController
     {
         private const string NoProductsInShoppingCartErrorMessage = "Unfortunately your shopping cart is empty, fill it up and,  ";
         private const string HyperLinkForDoesntExistError = "/Shop/Index";
@@ -30,7 +29,7 @@
         private readonly IMapper mapper;
         private readonly IErrorsService errorService;
 
-        public OrderController(
+        public OrdersController(
             IUsersService usersService,
             IOrdersService orderService,
             IShoppingCartsService shoppingCartService,
@@ -96,7 +95,7 @@
 
                 this.shoppingCartService.RemoveAllProductsFromShoppingCart(this.User.Identity.Name);
 
-                return this.Redirect($"/Order/Details/{orderId}");
+                return this.Redirect($"/Orders/Details/{orderId}");
             }
             else
             {

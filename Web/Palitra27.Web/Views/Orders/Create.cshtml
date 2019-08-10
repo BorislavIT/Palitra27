@@ -18,7 +18,7 @@
                 <h1>Checkout</h1>
                 <nav class="d-flex align-items-center">
                     <a href="/Home/Index">Home<span class="lnr lnr-arrow-right"></span></a>
-                    <a href="/Order/Create">Checkout</a>
+                    <a href="/Orders/Create">Checkout</a>
                 </nav>
             </div>
         </div>
@@ -26,7 +26,7 @@
 </section>
 <!-- End Banner Area -->
 <!--================Checkout Area =================-->
-<form class="contact_form" action="/Order/Create" method="post" novalidate="novalidate">
+<form class="contact_form" action="/Orders/Create" method="post" novalidate="novalidate">
     @Html.AntiForgeryToken()
     <section class="checkout_area section_gap">
         <div class="container">
