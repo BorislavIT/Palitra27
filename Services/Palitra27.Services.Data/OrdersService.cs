@@ -19,8 +19,8 @@
         private readonly IMapper mapper;
 
         public OrdersService(
-            IShoppingCartsService shoppingCartService,
             ApplicationDbContext dbContext,
+            IShoppingCartsService shoppingCartService,
             IMapper mapper)
         {
             this.shoppingCartService = shoppingCartService;
@@ -82,8 +82,7 @@
                 this.dbContext.Orders
                 .Include(x => x.Country)
                 .Include(x => x.User)
-                .Where(x => x.UserId == user.Id)
-                );
+                .Where(x => x.UserId == user.Id));
         }
 
         private List<OrderProduct> FindOrderProductsByOrderId(string id)
@@ -120,9 +119,8 @@
         private Order FindUserOrderByIdAndUsername(string id, string username)
         {
             var order = this.dbContext.Orders
-                              .Include(x => x.User)
-                              .Include(x => x.Country)
-                              .FirstOrDefault(x => x.Id == id && x.User.UserName == username);
+                .Include(x => x.Country)
+                .FirstOrDefault(x => x.Id == id && x.User.UserName == username);
 
             if (order == null)
             {

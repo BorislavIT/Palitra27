@@ -8,24 +8,32 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.RazorPages;
     using Microsoft.Extensions.Logging;
+    using Palitra27.Common;
     using Palitra27.Data.Models;
+    using Palitra27.Services.Data;
 
 #pragma warning disable SA1649 // File name should match first type name
     public class DeletePersonalDataModel : PageModel
 #pragma warning restore SA1649 // File name should match first type name
     {
+        private const string AdminAccountDeleteErrorMessage = "You cannot delete an administrator's account.";
+        private const string HyperLinkForAdminAccountDeleteError = "/Home/Index";
+
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<DeletePersonalDataModel> logger;
+        private readonly IErrorsService errorsService;
 
         public DeletePersonalDataModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            IErrorsService errorsService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.errorsService = errorsService;
         }
 
         [BindProperty]
@@ -48,6 +56,12 @@
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await this.userManager.GetUserAsync(this.User);
+            if (user.UserName == GlobalConstants.AdminUsername)
+            {
+                var creationErrorViewModel = this.errorsService.CreateCreateionErrorViewModel(AdminAccountDeleteErrorMessage, HyperLinkForAdminAccountDeleteError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
             if (user == null)
             {
                 return this.NotFound($"Unable to load user with ID '{this.userManager.GetUserId(this.User)}'.");

@@ -10,19 +10,21 @@
     using Moq;
     using Palitra27.Data;
     using Palitra27.Data.Models;
-    using Palitra27.Data.Models.DtoModels.Product;
+    using Palitra27.Data.Models.DtoModels.ApplicationUserDTO;
+    using Palitra27.Data.Models.Enums;
     using Palitra27.Services.Data;
     using Palitra27.Web.MappingConfigurations;
+    using Palitra27.Web.ViewModels.Orders;
     using Palitra27.Web.ViewModels.Products;
     using Xunit;
 
-    public class FavouritesServiceTests
+    public class OrdersServiceTests
     {
         [Fact]
-        public void AddProductShouldAddProduct()
+        public void CreateOrderShouldCreateOrder()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddProductShouldAddProduct_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"CreateOrderShouldCreateOrder_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -33,6 +35,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -43,33 +47,25 @@
 
             var image = new Mock<IFormFile>();
 
+            this.SeedDbWithCountries(dbContext);
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
 
-            var products = productsService.FindAllProducts();
-            var product = products[0];
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
+            var products = productsService.FindAllProducts();
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
 
-            favouritesService.AddProduct(product.Id, user.UserName);
-
-            Assert.Equal(1, user.FavouriteList.FavouriteProducts.Count);
+            Assert.True(dbContext.Orders.Count() == 1);
         }
 
         [Fact]
-        public void AddProductShouldntAddProductIfProductIsInvalid()
+        public void CreateOrderShouldntCreateOrderIfNoPrductsInShoppingCart()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddProductShouldntAddProductIfProductIsInvalid_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"CreateOrderShouldntCreateOrderIfNoPrductsInShoppingCart_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -80,6 +76,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -91,36 +89,22 @@
             var image = new Mock<IFormFile>();
 
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
+            this.SeedDbWithCountries(dbContext);
 
-            var products = productsService.FindAllProducts();
-            var product = new ProductDTO { Id = string.Empty };
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
+            var products = productsService.FindAllProducts();
 
-            dbContext.Users.Update(user);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-                FavouriteProducts = new List<FavouriteProduct>(),
-            };
-
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
-
-            favouritesService.AddProduct(product.Id, user.UserName);
-
-            Assert.Equal(0, user.FavouriteList.FavouriteProducts.Count);
+            Assert.True(dbContext.Orders.Count() == 0);
         }
 
         [Fact]
-        public void AddProductShouldntAddProductIfProductIsAlreadyIn()
+        public void FindUserOrderByIdShouldReturnUserOrder()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddProductShouldntAddProductIfProductIsAlreadyIn_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindUserOrderByIdShouldReturnUserOrder_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -131,6 +115,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -143,32 +129,24 @@
 
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
 
-            var products = productsService.FindAllProducts();
-            var product = products[0];
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
+            var products = productsService.FindAllProducts();
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
+            this.SeedDbWithCountries(dbContext);
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
+            var order = ordersService.FindUserOrderById(orderId, user.UserName);
 
-            favouritesService.AddProduct(product.Id, user.UserName);
-            favouritesService.AddProduct(product.Id, user.UserName);
-
-            Assert.Equal(1, user.FavouriteList.FavouriteProducts.Count);
+            Assert.NotNull(dbContext.Orders.FirstOrDefault(x => x.Id == order.Id));
         }
 
         [Fact]
-        public void AddProductShouldntAddProductIfInvalidUsername()
+        public void FindUserByOrderShouldReturnNullIfInvalidUser()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AddProductShouldntAddProductIfInvalidUsername_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindUserByOrderShouldReturnNullIfInvalidUser_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -179,6 +157,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -191,30 +171,24 @@
 
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
 
+            var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
             var products = productsService.FindAllProducts();
-            var product = products[0];
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                UserId = "totallyLegitUserId",
-                Id = favouriteListId,
-                FavouriteProducts = new List<FavouriteProduct>(),
-            };
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
+            this.SeedDbWithCountries(dbContext);
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
+            var order = ordersService.FindUserOrderById("totallyLegitUserId", user.UserName);
 
-            favouritesService.AddProduct(product.Id, "totallyLegitUsername");
-
-            Assert.Empty(dbContext.FavouriteLists.FirstOrDefault(x => x.UserId == "totallyLegitUserId").FavouriteProducts);
+            Assert.Null(order);
         }
 
         [Fact]
-        public void AllFavouriteProductsShouldReturnNullIfEmpty()
+        public void FindUserByOrderShouldReturnNullIfInvalidOrderId()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AllFavouriteProductsShouldReturnNullIfEmpty_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindUserByOrderShouldReturnNullIfInvalidOrderId_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -225,6 +199,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -237,29 +213,24 @@
 
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
 
-            var products = productsService.FindAllProducts();
-            var product = products[0];
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
+            var products = productsService.FindAllProducts();
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
+            this.SeedDbWithCountries(dbContext);
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
+            var order = ordersService.FindUserOrderById(orderId, "totallyLegitUserUsername");
 
-            Assert.Empty(favouritesService.AllFavouriteProducts(user.UserName));
+            Assert.Null(order);
         }
 
         [Fact]
-        public void AllFavouriteProductsShouldReturnAllFavouriteProducts()
+        public void OrderProductsByIdShouldReturnOrderProducts()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"AllFavouriteProductsShouldReturnAllFavouriteProducts_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"OrderProductsByIdShouldReturnOrderProducts_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -270,6 +241,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -281,81 +254,46 @@
             var image = new Mock<IFormFile>();
 
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
+            this.SeedDbWithCountries(dbContext);
 
-            var products = productsService.FindAllProducts();
-            var product = products[0];
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
+            var products = productsService.FindAllProducts();
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
+            var orderProducts = ordersService.OrderProductsByOrderId(orderId);
 
-            favouritesService.AddProduct(product.Id, user.UserName);
-
-            Assert.Single(favouritesService.AllFavouriteProducts(user.UserName));
+            Assert.True(orderProducts.Count == 1 && orderProducts[0].Quantity == 2);
         }
 
         [Fact]
-        public void RemoveProductShouldRemoveProduct()
+        public void FindAllCountriesShouldReturnListWithAllCountryNames()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldRemoveProduct_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindAllCountriesShouldReturnListWithAllCountryNames_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
 
             var mapper = this.SetUpAutoMapper();
 
-            var brandService = new BrandsService(dbContext, mapper);
-            var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
-            var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
 
-            this.SeeDbdWithBrands(dbContext);
-            this.SeedDbWithCategories(dbContext);
+            this.SeedDbWithCountries(dbContext);
 
-            var brands = brandService.FindAllBrands();
-            var categories = categoriesService.FindAllCategories();
-
-            var image = new Mock<IFormFile>();
-
-            this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
-
-            var products = productsService.FindAllProducts();
-            var product = products[0];
-            var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
-
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
-
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
-
-            favouritesService.AddProduct(product.Id, user.UserName);
-            Assert.Equal(1, user.FavouriteList.FavouriteProducts.Count);
-
-            favouritesService.RemoveProduct(product.Id, user.UserName);
-            Assert.Equal(0, user.FavouriteList.FavouriteProducts.Count);
+            Assert.True(dbContext.Countries.Count() == ordersService.FindAllCountries().Count);
         }
 
         [Fact]
-        public void RemoveProductShouldntRemoveProductIfInvalidProduct()
+        public void FindAllUserOrdersShouldReturnAllUserOrders()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldntRemoveProductIfInvalidProduct_FavouriteList_Database")
+                        .UseInMemoryDatabase(databaseName: $"FindAllUserOrdersShouldReturnAllUserOrders_Orders_Database")
                         .Options;
 
             var dbContext = new ApplicationDbContext(options);
@@ -366,6 +304,8 @@
             var categoriesService = new CategoriesService(dbContext, mapper);
             var usersService = new UsersService(dbContext, mapper);
             var productsService = new ProductsService(dbContext, mapper);
+            var shoppingCartsService = new ShoppingCartsService(dbContext, productsService, usersService, mapper);
+            var ordersService = new OrdersService(dbContext, shoppingCartsService, mapper);
             var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
 
             this.SeeDbdWithBrands(dbContext);
@@ -376,73 +316,22 @@
 
             var image = new Mock<IFormFile>();
 
+            this.SeedDbWithCountries(dbContext);
             this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
 
-            var products = productsService.FindAllProducts();
-            var product = products[0];
             var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
-
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
-
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
-
-            favouritesService.AddProduct(product.Id, user.UserName);
-            favouritesService.RemoveProduct("totallyLegitProductId", user.UserName);
-            Assert.Equal(1, user.FavouriteList.FavouriteProducts.Count);
-        }
-
-        [Fact]
-        public void RemoveProductShouldntRemoveProductIfInvalidUser()
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                        .UseInMemoryDatabase(databaseName: $"RemoveProductShouldntRemoveProductIfInvalidUser_FavouriteList_Database")
-                        .Options;
-
-            var dbContext = new ApplicationDbContext(options);
-
-            var mapper = this.SetUpAutoMapper();
-
-            var brandService = new BrandsService(dbContext, mapper);
-            var categoriesService = new CategoriesService(dbContext, mapper);
-            var usersService = new UsersService(dbContext, mapper);
-            var productsService = new ProductsService(dbContext, mapper);
-            var favouritesService = new FavouritesService(dbContext, productsService, usersService, mapper);
-
-            this.SeeDbdWithBrands(dbContext);
-            this.SeedDbWithCategories(dbContext);
-
-            var brands = brandService.FindAllBrands();
-            var categories = categoriesService.FindAllCategories();
-
-            var image = new Mock<IFormFile>();
-
-            this.SeedDbWithUserAndProduct(dbContext, productsService, mapper.Map<Category>(categories[0]), mapper.Map<Brand>(brands[0]), image.Object);
-
             var products = productsService.FindAllProducts();
-            var product = products[0];
-            var user = dbContext.Users.FirstOrDefault(x => x.UserName == "1");
 
-            var favouriteListId = Guid.NewGuid().ToString();
-            var favouriteList = new FavouriteList
-            {
-                User = user,
-                UserId = user.Id,
-                Id = favouriteListId,
-            };
+            var shoppingCarts = dbContext.ShoppingCarts;
+            var shoppingCartss = dbContext.ShoppingCartProducts;
 
-            dbContext.FavouriteLists.Add(favouriteList);
-            dbContext.SaveChanges();
+            var cart = this.SeedDbShoppingCartWithProducts(dbContext, user.UserName, products[0].Id);
 
-            favouritesService.AddProduct(product.Id, user.UserName);
-            favouritesService.RemoveProduct(product.Id, "totallyLegitUsername");
-            Assert.Equal(1, user.FavouriteList.FavouriteProducts.Count);
+            var model = this.CreateOrderCreateBindingModel();
+            var orderId = ordersService.CreateOrder(model, mapper.Map<ApplicationUserDTO>(user));
+            var orders = ordersService.FindAllUserOrders(mapper.Map<ApplicationUserDTO>(user));
+
+            Assert.True(orders.Count == 1);
         }
 
         private void SeedDbWithUserAndProduct(ApplicationDbContext dbContext, ProductsService productsService, Category category, Brand brand, IFormFile formfile)
@@ -450,9 +339,35 @@
             for (int i = 0; i < 5; i++)
             {
                 productsService.Create(new CreateProductBindingModel { Brand = brand.Name, Category = category.Name, Name = Guid.NewGuid().ToString(), Price = "15" }, formfile);
-                dbContext.Users.Add(new ApplicationUser { UserName = $"{i}", FavouriteList = new FavouriteList() });
+                dbContext.Users.Add(new ApplicationUser { UserName = $"{i}", FavouriteList = new FavouriteList(), ShoppingCart = new ShoppingCart { ShoppingCartProducts = new List<ShoppingCartProduct>() } });
                 dbContext.SaveChanges();
             }
+        }
+
+        private ShoppingCart SeedDbShoppingCartWithProducts(ApplicationDbContext dbContext, string userName, string productId)
+        {
+            var shoppingCart = dbContext.ShoppingCarts
+                .FirstOrDefault(x => x.Id == dbContext.Users
+                .FirstOrDefault(y => y.UserName == userName).Id);
+            var shoppingcartProducts = new List<ShoppingCartProduct>();
+            var shoppingCartProduct = new ShoppingCartProduct { ProductId = dbContext.Products.FirstOrDefault(x => x.Id == productId).Id, ShoppingCartId = shoppingCart.Id, Quantity = 2 };
+            shoppingcartProducts.Add(shoppingCartProduct);
+
+            dbContext.ShoppingCartProducts.AddRange(shoppingcartProducts);
+            shoppingCart.ShoppingCartProducts = shoppingcartProducts;
+            dbContext.ShoppingCarts.Update(shoppingCart);
+            dbContext.SaveChanges();
+            return shoppingCart;
+        }
+
+        private void SeedDbWithCountries(ApplicationDbContext dbContext)
+        {
+            var country = new Country { Name = "Bulgaria" };
+            var country1 = new Country { Name = "asddsa" };
+            var country2 = new Country { Name = "asdddddd" };
+
+            dbContext.Countries.AddRange(new List<Country> { country, country1, country2});
+            dbContext.SaveChanges();
         }
 
         private void SeedDbWithCategories(ApplicationDbContext dbContext)
@@ -471,6 +386,11 @@
                 dbContext.Brands.Add(new Brand { Name = Guid.NewGuid().ToString().Substring(0, 15) });
                 dbContext.SaveChanges();
             }
+        }
+
+        private OrderCreateBindingModel CreateOrderCreateBindingModel()
+        {
+            return new OrderCreateBindingModel { FirstName = "legitFirstName", LastName = "legitLastName", City = "legitCity", Agree = true, OrderDate = DateTime.UtcNow, AddressLine2 = "totallyLegitAddressLine2", AddressLine1 = "totallyLegitAddressLine1", Country = "Bulgaria", DeliveryDate = DateTime.UtcNow, DeliveryPrice = 0, OrderStatus = OrderStatus.Processed, PaymentType = PaymentType.Paypal, PhoneNumber = "12342123", Region = "totallyLegitRegion", TotalPrice = 0, ZIP = "totallyLegitZip" };
         }
 
         private IMapper SetUpAutoMapper()

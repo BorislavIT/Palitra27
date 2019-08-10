@@ -53,6 +53,11 @@
 
         public void OnGet(string returnUrl = null)
         {
+            if (this.User.Identity.IsAuthenticated)
+            {
+                this.Response.Redirect("/Home/Index");
+            }
+
             this.ReturnUrl = returnUrl;
         }
 
@@ -118,6 +123,7 @@
         public class InputModel
         {
             [Required]
+            [RegularExpression(@"[A-Za-z0-9-]+", ErrorMessage = "The {0} must have only english letters and numbers.")]
             [StringLength(15, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
             [Display(Name = "Username")]
             public string Username { get; set; }

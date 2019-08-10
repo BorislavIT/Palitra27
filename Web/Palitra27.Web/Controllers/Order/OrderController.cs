@@ -18,6 +18,12 @@
         private const string NoProductsInShoppingCartErrorMessage = "Unfortunately your shopping cart is empty, fill it up and,  ";
         private const string HyperLinkForDoesntExistError = "/Shop/Index";
 
+        private const string DoesntExistOrNotYoursErrorMessage = "The order you're looking for isn't yours or doesn't exist.";
+        private const string HyperLinkForDoesntExistOrNotYoursError = "/Home/Index";
+
+        private const string NoOrdersErrorMessage = "You have no orders, make some and then try again!";
+        private const string HyperLinkForNoOrdersErorr = "/Shop/Index";
+
         private readonly IUsersService usersService;
         private readonly IOrdersService orderService;
         private readonly IShoppingCartsService shoppingCartService;
@@ -88,7 +94,7 @@
                     return this.View(actualModel);
                 }
 
-                this.shoppingCartService.DeleteAllProductFromShoppingCart(this.User.Identity.Name);
+                this.shoppingCartService.RemoveAllProductsFromShoppingCart(this.User.Identity.Name);
 
                 return this.Redirect($"/Order/Details/{orderId}");
             }
@@ -103,6 +109,13 @@
         public IActionResult Details(string id)
         {
             var order = this.orderService.FindUserOrderById(id, this.User.Identity.Name);
+
+            if (order == null)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(DoesntExistOrNotYoursErrorMessage, HyperLinkForDoesntExistOrNotYoursError);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
 
             var shoppingCartProducts = this.orderService.OrderProductsByOrderId(order.Id);
 
@@ -120,6 +133,13 @@
             var user = this.usersService.FindUserByUsername(this.User.Identity.Name);
 
             var orders = this.orderService.FindAllUserOrders(user);
+
+            if (orders.Count == 0)
+            {
+                var creationErrorViewModel = this.errorService.CreateCreateionErrorViewModel(NoOrdersErrorMessage, HyperLinkForNoOrdersErorr);
+
+                return this.RedirectToAction("CreationError", "Error", creationErrorViewModel);
+            }
 
             var actualModels = new List<OrderShoppingCartViewModel>();
 

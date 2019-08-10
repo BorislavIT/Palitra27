@@ -24,6 +24,11 @@
         {
             var user = this.FindDomainUserByUsername(username);
 
+            if (user == null)
+            {
+                return null;
+            }
+
             return this.mapper.Map<ApplicationUserDTO>(user);
         }
 

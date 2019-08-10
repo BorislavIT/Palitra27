@@ -31,18 +31,17 @@
             this.mapper = mapper;
         }
 
-        public void AddProductInShoppingCart(string productId, string username, int? quantity = null)
+        public void AddProductInShoppingCart(string id, string username, int? quantity = null)
         {
-            var product = this.productService.FindDomainProduct(productId);
+            var product = this.productService.FindDomainProduct(id);
             var user = this.userService.FindUserByUsername(username);
-            var userCart = this.FindShoppingCartByUserId(user);
-
             if (this.CheckIfProductOrUserIsNull(product, user))
             {
                 return;
             }
 
-            var shoppingCartProduct = this.FindShoppingCartProduct(productId, userCart.Id);
+            var userCart = this.FindShoppingCartByUserId(user);
+            var shoppingCartProduct = this.FindShoppingCartProduct(id, userCart.Id);
 
             if (shoppingCartProduct != null)
             {
@@ -55,17 +54,19 @@
                     shoppingCartProduct.Quantity += (int)quantity;
                 }
 
+                this.dbContext.ShoppingCarts.Update(userCart);
                 this.dbContext.SaveChanges();
                 return;
             }
 
             shoppingCartProduct = this.CreateShoppingCartProductByProduct(product, quantity, userCart);
-
+            userCart.ShoppingCartProducts.Add(shoppingCartProduct);
             this.dbContext.ShoppingCartProducts.Add(shoppingCartProduct);
+            this.dbContext.ShoppingCarts.Update(userCart);
             this.dbContext.SaveChanges();
         }
 
-        public void DeleteProductFromShoppingCart(string id, string username)
+        public void RemoveProductFromShoppingCart(string id, string username)
         {
             var product = this.productService.FindDomainProduct(id);
             var user = this.userService.FindUserByUsername(username);
@@ -75,9 +76,9 @@
                 return;
             }
 
-            var shoppingCart = this.FindShoppingCartProduct(product.Id, user.ShoppingCartId);
+            var shoppingCartProduct = this.FindShoppingCartProduct(product.Id, user.ShoppingCartId);
 
-            this.dbContext.ShoppingCartProducts.Remove(shoppingCart);
+            this.dbContext.ShoppingCartProducts.Remove(shoppingCartProduct);
             this.dbContext.SaveChanges();
         }
 
@@ -88,7 +89,7 @@
             return result;
         }
 
-        public void DeleteAllProductFromShoppingCart(string username)
+        public void RemoveAllProductsFromShoppingCart(string username)
         {
             var user = this.userService.FindUserByUsername(username);
 
@@ -103,9 +104,9 @@
             this.dbContext.SaveChanges();
         }
 
-        public void EditProductQuantityInShoppingCart(string productId, string username, int quantity)
+        public void EditProductQuantityInShoppingCart(string id, string username, int quantity)
         {
-            var product = this.productService.FindDomainProduct(productId);
+            var product = this.productService.FindDomainProduct(id);
             var user = this.userService.FindUserByUsername(username);
 
             if (this.CheckIfProductOrUserIsNull(product, user) || quantity <= 0)
@@ -153,10 +154,10 @@
             return shoppingCartProducts;
         }
 
-        private ShoppingCartProduct FindShoppingCartProduct(string productId, string shoppingCartId)
+        private ShoppingCartProduct FindShoppingCartProduct(string id, string shoppingCartId)
         {
             return this.dbContext.ShoppingCartProducts
-                .FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == productId);
+                .FirstOrDefault(x => x.ShoppingCartId == shoppingCartId && x.ProductId == id);
         }
 
         private ShoppingCart FindShoppingCartByUserId(ApplicationUserDTO user)

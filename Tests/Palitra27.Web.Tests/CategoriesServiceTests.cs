@@ -10,8 +10,6 @@
     using Palitra27.Services.Data;
     using Palitra27.Web.MappingConfigurations;
     using Palitra27.Web.ViewModels.Categories;
-    using Palitra27.Web.ViewModels.Categories;
-    using Palitra27.Web.ViewModels.Products;
     using Xunit;
 
     public class CategoriesServiceTests

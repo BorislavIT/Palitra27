@@ -45,6 +45,8 @@ namespace Palitra27.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId");
+
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
@@ -53,6 +55,8 @@ namespace Palitra27.Data.Migrations
                         .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -65,12 +69,16 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("ProviderKey");
 
+                    b.Property<string>("ApplicationUserId");
+
                     b.Property<string>("ProviderDisplayName");
 
                     b.Property<string>("UserId")
                         .IsRequired();
 
                     b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -83,7 +91,11 @@ namespace Palitra27.Data.Migrations
 
                     b.Property<string>("RoleId");
 
+                    b.Property<string>("ApplicationUserId");
+
                     b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RoleId");
 
@@ -464,36 +476,48 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.ApplicationRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.ApplicationUser")
                         .WithMany("Claims")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("Palitra27.Data.Models.ApplicationUser")
                         .WithMany("Logins")
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
+                    b.HasOne("Palitra27.Data.Models.ApplicationUser")
+                        .WithMany("Roles")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("Palitra27.Data.Models.ApplicationRole")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.ApplicationUser")
-                        .WithMany("Roles")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -501,7 +525,7 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.FavouriteList", b =>
@@ -509,7 +533,7 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
                         .WithOne("FavouriteList")
                         .HasForeignKey("Palitra27.Data.Models.FavouriteList", "Id")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.FavouriteProduct", b =>
@@ -517,12 +541,12 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.FavouriteList", "FavouriteList")
                         .WithMany("FavouriteProducts")
                         .HasForeignKey("FavouriteListId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Order", b =>
@@ -530,12 +554,12 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Country", "Country")
                         .WithMany()
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.OrderProduct", b =>
@@ -543,12 +567,12 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Order", "Order")
                         .WithMany("OrderProducts")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Product", b =>
@@ -556,12 +580,12 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Brand", "Brand")
                         .WithMany()
                         .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.Review", b =>
@@ -569,7 +593,7 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.ShoppingCart", b =>
@@ -577,7 +601,7 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.ApplicationUser", "User")
                         .WithOne("ShoppingCart")
                         .HasForeignKey("Palitra27.Data.Models.ShoppingCart", "Id")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Palitra27.Data.Models.ShoppingCartProduct", b =>
@@ -585,12 +609,12 @@ namespace Palitra27.Data.Migrations
                     b.HasOne("Palitra27.Data.Models.Product", "Product")
                         .WithMany("ShoppingCartProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Palitra27.Data.Models.ShoppingCart", "ShoppingCart")
                         .WithMany("ShoppingCartProducts")
                         .HasForeignKey("ShoppingCartId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

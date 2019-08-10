@@ -15,9 +15,9 @@
 
         List<ShoppingCartProduct> FindAllDomainShoppingCartProducts(string username);
 
-        void DeleteProductFromShoppingCart(string id, string username);
+        void RemoveProductFromShoppingCart(string id, string username);
 
-        void DeleteAllProductFromShoppingCart(string username);
+        void RemoveAllProductsFromShoppingCart(string username);
 
         bool AnyProducts(string username);
     }

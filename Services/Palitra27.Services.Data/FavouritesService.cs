@@ -66,26 +66,23 @@
 
             var product = this.productsService.FindDomainProduct(id);
 
-            var favouriteProduct = this.FindFavouriteProductByProductId(product);
-
-            if (this.ProductOrUserOrFavouriteProductIsNull(user, product, favouriteProduct))
+            if (this.ProductOrUserOrFavouriteProductIsNull(user, product))
             {
                 return;
             }
-            else
-            {
-                var favouriteList = this.FindFavouriteListByProductId(favouriteProduct);
-                favouriteList.FavouriteProducts.Remove(favouriteProduct);
-                this.dbContext.FavouriteLists.Update(favouriteList);
 
-                this.dbContext.FavouriteProducts.Remove(favouriteProduct);
-                this.dbContext.SaveChanges();
-            }
+            var favouriteProduct = this.FindFavouriteProductByProductId(product);
+
+            var favouriteList = this.FindFavouriteListByProductId(favouriteProduct);
+            favouriteList.FavouriteProducts.Remove(favouriteProduct);
+            this.dbContext.FavouriteLists.Update(favouriteList);
+
+            this.dbContext.FavouriteProducts.Remove(favouriteProduct);
+            this.dbContext.SaveChanges();
         }
 
         private bool ProductOrUserIsNullOrFavouriteProductIsntNull(ApplicationUserDTO user, Product product)
         {
-
             if (product == null || user == null || this.dbContext.FavouriteProducts.FirstOrDefault(x => x.ProductId == product.Id) != null)
             {
                 return true;
@@ -94,9 +91,9 @@
             return false;
         }
 
-        private bool ProductOrUserOrFavouriteProductIsNull(ApplicationUserDTO user, Product product, FavouriteProduct favouriteProduct)
+        private bool ProductOrUserOrFavouriteProductIsNull(ApplicationUserDTO user, Product product)
         {
-            if (product == null || user == null || favouriteProduct == null)
+            if (product == null || user == null || this.dbContext.FavouriteProducts.FirstOrDefault(x => x.ProductId == product.Id) == null)
             {
                 return true;
             }

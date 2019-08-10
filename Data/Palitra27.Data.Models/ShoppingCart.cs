@@ -10,6 +10,6 @@
 
         public virtual ApplicationUser User { get; set; }
 
-        public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; }
+        public virtual ICollection<ShoppingCartProduct> ShoppingCartProducts { get; set; } = new List<ShoppingCartProduct>();
     }
 }

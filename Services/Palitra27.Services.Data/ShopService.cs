@@ -62,7 +62,7 @@
                 {
                     products = products
                      .Where(p => p.Price >= model.PriceLower && p.Price <= model.PriceUpper)
-                     .Where(c => c.Category == category)
+                     .Where(c => c.Category.Name == category.Name)
                      .ToList();
                 }
             }

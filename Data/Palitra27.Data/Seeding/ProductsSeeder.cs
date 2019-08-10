@@ -45,7 +45,7 @@
                     var review = new Review() { Message = "Very good", Stars = 4, UserName = admin.UserName, DateOfCreation = DateTime.UtcNow };
                     var list = new List<Review>() { review };
 
-                    var product = new Product { Name = $"product-{z}", Brand = allBrands[i], Category = allCategories[i], Image = "https://www.hbbody.com.gr/images/products/SPRAY-FILL.png", Price = random.Next(0, 20), Reviews = list };
+                    var product = new Product { Name = $"product-{Guid.NewGuid().ToString().Substring(0,5)}", Brand = allBrands[i], Category = allCategories[i], Image = "https://www.hbbody.com.gr/images/products/SPRAY-FILL.png", Price = random.Next(1, 200), Reviews = list };
                     productsList.Add(product);
                 }
             }

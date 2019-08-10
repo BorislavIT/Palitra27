@@ -102,12 +102,12 @@
                         <div class="col-md-12 form-group section_gap_top_custom">
                             <textarea class="form-control1" name="miniDescription">@Model.ProductInfoViewModel.MiniDescription</textarea>
                         </div>
-                        <div class="card_area d-flex justify-content-center ">
+                        <div class="card_area d-flex justify-content-center">
                             <button type="submit" value="submit" class="primary-btn custmobtN">Edit</button>
                         </div>
-                        <div class="card_area d-flex justify-content-center padding-top-10">
-                            <a asp-controller="Products" asp-action="Delete" asp-route-id="@Model.ProductInfoViewModel.Id" class="primary-btn custmobtN">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Delete Product</a>
-                        </div>
+                            <div class="card_area d-flex justify-content-center padding-top-10">
+                                <a asp-controller="Products" asp-action="Delete" asp-route-id="@Model.ProductInfoViewModel.Id" class="genric-btn danger e-large">Delete</a>
+                            </div>
                     </div>
                 </div>
             </div>
