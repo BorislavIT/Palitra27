@@ -4,7 +4,6 @@
     using System.Reflection;
 
     using AutoMapper;
-    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -93,12 +92,6 @@
             {
                 facebookOptions.AppId = this.configuration["Authentication:Facebook:AppId"];
                 facebookOptions.AppSecret = this.configuration["Authentication:Facebook:AppSecret"];
-            });
-
-            services.AddAuthentication().AddGoogle(googleOptions =>
-            {
-                googleOptions.ClientId = this.configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = this.configuration["Authentication:Google:ClientSecret"];
             });
 
             // Identity stores
