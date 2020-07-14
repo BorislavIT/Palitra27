@@ -7,7 +7,7 @@
         public string Id { get; set; }
 
         [Required]
-        [RegularExpression(@"[A-Za-z0-9-]+", ErrorMessage = "The product name is should have only English letters.")]
+        [RegularExpression(@"[A-Za-z0-9- ']+", ErrorMessage = "The product name is should have only English letters.")]
         [StringLength(15, MinimumLength = 5, ErrorMessage = "The field \"{0}\" must have at least {2} and at most {1}.")]
 
         public string Name { get; set; }
